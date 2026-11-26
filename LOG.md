@@ -976,3 +976,8 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Android: the first tap (the one that starts the motion sensor) now also asks for full screen, so the address bar and buttons go.
 - iPhone and everything else: the page no longer scrolls, bounces or zooms, runs under the notch with safe margins, and tells the browser to tint its bars the page's dark grey so they blend in.
 - Checked at phone size in the preview (settings applied, nothing scrolls, no errors). Not tried on a real iPhone or Android phone.
+
+### v66: a brake lamp in the steering wheel (James: "some user feedback when braking - maybe a cool little red light appears in the middle of the steering wheel?", then "it should look kinda ole school")
+- Braking with a clenched fist or a touch on the phone gave nothing back. There is now a small warning lamp in the wheel's hub: chrome bezel, ruby lens, and a bulb that glows in proportion to how hard the brakes are on.
+- Old school means it behaves like a filament, not a switch: quick to light, slower to die away, with a soft red halo and a hot spot off-centre at full brake.
+- It shows whatever is braking the car, so it also lights on the grid (the car is held on the brake) and when Beginner mode brakes for you.

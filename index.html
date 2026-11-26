@@ -708,6 +708,13 @@ rim.add(new THREE.Mesh(new THREE.TorusGeometry(RIM_R, 0.017, 8, 28), lam(0xb9b4a
 box(rim, 0.26, 0.03, 0.008, 0, 0, 0, metal); box(rim, 0.03, 0.13, 0.008, 0, -0.065, 0, metal);
 { const h = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.02, 12), carbon); h.rotation.x = Math.PI / 2; rim.add(h); }
 rod(sw, new V3(0, 0, 0), new V3(0, 0, -0.3), 0.015, metal);
+// a small red lamp in the hub that glows with the brake: the only feedback a clenched fist or a touch on the phone gets
+const brakeLamp = new THREE.Mesh(new THREE.CircleGeometry(0.013, 16), new THREE.MeshBasicMaterial({ color: 0x1c0605 })); brakeLamp.position.z = 0.0115; rim.add(brakeLamp);
+const brakeHalo = new THREE.Mesh(new THREE.CircleGeometry(0.034, 20), new THREE.MeshBasicMaterial({ color: 0xff2a10, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); brakeHalo.position.z = 0.012; rim.add(brakeHalo);
+// old school: a chrome bezel round a ruby lens, with a bulb behind it that warms up and dies away like a filament, not a switch
+{ const bz = new THREE.Mesh(new THREE.RingGeometry(0.013, 0.0175, 20), new THREE.MeshBasicMaterial({ color: 0xa9a59a })); bz.position.z = 0.0117; rim.add(bz); }
+const brakeHot = new THREE.Mesh(new THREE.CircleGeometry(0.006, 12), new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); brakeHot.position.set(-0.002, 0.002, 0.0121); rim.add(brakeHot);
+let lampV = 0;
 // driver
 box(cock, 0.4, 0.34, 0.2, 0, 0.48, 0.06, suit); box(cock, 0.48, 0.1, 0.2, 0, 0.65, 0.06, suit);
 const head = new THREE.Group(); head.position.set(0, 0.81, 0); cock.add(head);
@@ -1877,6 +1884,8 @@ function frame(dtForced) {
   { const m = Math.abs(car.vx) > 13 ? tyreBlurT : tyreT; if (tyreMat.map !== m) tyreMat.map = m; }     // marks blur into rings once the wheel is turning fast
   fw.forEach((w, i) => {
     w.hub.rotation.y = car.steer; w.spin.rotation.x = car.spin;
+    if (i === 0) { const tb = clamp(car.brk, 0, 1); lampV += (tb - lampV) * Math.min(1, dt * (tb > lampV ? 14 : 5)); const b = lampV;      /* quick to light, slower to fade */
+      brakeLamp.material.color.setRGB(0.16 + 0.84 * b, 0.03 + 0.25 * b, 0.03 + 0.07 * b); brakeHalo.material.opacity = 0.5 * b * b; brakeHot.material.opacity = 0.8 * b * b * b; }
     w.hub.position.y = w.y0 + ns(T + i * 7, 71, 113, 157) * 0.006 * rough;
   });
   const saw = ns(T, 9, 17, 29) * 0.05 * sf + ns(T, 23, 41, 7) * Math.min(0.25, car.slip * 1.2) * (v > 8 ? 1 : 0);
@@ -1967,7 +1976,7 @@ $('start').addEventListener('click', () => {
 });
 
 // handle for testing and for scripted B-roll
-window.G = { smudge, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
+window.G = { smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
 })();
 </script>
 </body>
