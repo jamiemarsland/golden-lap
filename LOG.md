@@ -988,3 +988,8 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - iPhone: Apple gives web pages no vibration, so the page flips a hidden switch control, which makes recent iPhones give their small "tick". One strength only, three quick ticks for a barrier. Unofficial, and untested on a real iPhone.
 - The phone gives one tick when you tap start so you know it works, and has a line to turn vibration off.
 - Tested here only as far as possible without a phone: the game sends the gear-change signals during a lap, and the phone page loads and its switch flips. Whether it can be felt is for a real phone to say.
+
+### v68: no haptics on iPhone, and the reason (James: "not working on iphon")
+- Looked it up. The switch-control trick worked from iOS 17.4 to 26.4; the library that popularised it says Apple closed it in iOS 26.5, and WebKit has a bug titled "haptic feedback for switch should require user activation". Even where it survives, a tick that needs a finger on the screen cannot be fired by a kerb. So on a current iPhone there is no way for a web page to vibrate the phone.
+- The "Vibration is on" line now only appears on phones that can really vibrate (Android). The old trick is left in for older iPhones, where it does no harm.
+- Android haptics remain, still untested on a real Android phone.
