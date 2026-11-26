@@ -1,0 +1,17 @@
+# big or personal things that don't belong in the repository
+*.mp4
+*.webm
+*.wav
+node_modules/
+.DS_Store
+video/raw/
+video/vo/
+video/film/assets/
+video/trailer/assets/
+video/**/.hyperframes/
+video/film/renders/
+video/trailer/renders/
+golden-lap/.git/
+golden-lap/.spacefast/
+.claude/
+video/logo-src/

@@ -1,0 +1,62 @@
+<template>
+  <style>
+#root{position:absolute;inset:0;font-family:Inter,sans-serif;color:#f4efe6}
+.in{display:block}
+.kick{position:absolute;left:192px;width:1500px;font-size:30px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#f3e36b}
+.kick .in,.step .in,.tag .in{display:inline-block;background:rgba(14,15,17,.72);padding:10px 18px}
+.line .in,.cap .in{display:inline-block;background:rgba(14,15,17,.62);padding:10px 22px}
+.line{position:absolute;left:192px;width:1500px;font-size:68px;line-height:1.12;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.cap{position:absolute;left:192px;width:1500px;font-family:'EB Garamond',serif;font-size:78px;font-style:italic;line-height:1.15;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.big{position:absolute;left:192px;width:1560px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:230px;line-height:1;color:#f3e36b;text-shadow:6px 0 0 rgba(255,0,80,.35),-6px 0 0 rgba(0,200,255,.3)}
+.yell{position:absolute;left:192px;top:240px;width:1560px;font-weight:700;font-size:112px;line-height:1.02;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.55),6px 0 0 rgba(255,0,80,.4),-6px 0 0 rgba(0,200,255,.35)}
+.step{position:absolute;left:192px;width:1300px;font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700}
+.tag{position:absolute;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#f3e36b}
+.tag .in{border-left:5px solid #f3e36b}
+.typed{position:absolute;left:192px;width:1400px;font-family:'JetBrains Mono',monospace;font-size:40px;line-height:1.35}
+.typed .in{display:inline-block;background:rgba(14,15,17,.86);border:1px solid rgba(244,239,230,.3);padding:22px 28px}
+.typed b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.16em;text-transform:uppercase;color:#f3e36b;margin-bottom:10px}
+.shot{position:absolute;left:192px;width:900px;border:3px dashed rgba(244,239,230,.55);font-family:'EB Garamond',serif;font-size:40px;line-height:1.25}
+.shot .in{padding:26px 30px;background:rgba(14,15,17,.55)}
+.shot b,.card b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.18em;text-transform:uppercase;color:#f3e36b;margin-bottom:12px;font-weight:700}
+.card{position:absolute;top:400px;width:720px;font-family:'EB Garamond',serif;font-size:58px;line-height:1.15}
+.card .in{padding:32px 36px;border:2px solid rgba(244,239,230,.4);background:rgba(14,15,17,.6)}
+.stamp{position:absolute;font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:700;color:#ff5a3a;text-transform:uppercase;letter-spacing:.08em}
+.stamp .in{display:inline-block;border:6px solid #ff5a3a;padding:6px 22px;background:rgba(14,15,17,.7)}
+.ring{position:absolute} .ring .in{width:100%;height:100%;border:4px solid #ff5a3a;box-sizing:border-box}
+.tk,.tov,.ts,.tt{position:absolute;left:160px;width:1600px;text-align:center}
+.tk{top:300px;font-size:30px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#f3e36b}
+.tov{top:372px;font-family:'EB Garamond',serif;font-size:132px;line-height:1.05}
+.ts{top:548px;font-family:'EB Garamond',serif;font-size:72px;font-style:italic}
+.tt{top:716px;font-size:30px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  </style>
+  <div id="root" data-composition-id="look" data-width="1920" data-height="1080">
+    <div id="look-line0" class="clip line" style="top:150px" data-start="1.8" data-duration="6.29"><span class="in" id="look-line0-in">Most of the look is the camera, and the tape.</span></div>
+    <div id="look-kick1" class="clip kick" style="top:140px" data-start="8.69" data-duration="5.9"><span class="in" id="look-kick1-in">Filter off</span></div>
+    <div id="look-kick2" class="clip kick" style="top:140px" data-start="14.99" data-duration="6.7"><span class="in" id="look-kick2-in">Filter on</span></div>
+    <div id="look-step3" class="clip step" style="top:760px" data-start="17.56" data-duration="7.93"><span class="in" id="look-step3-in">Bend the lens</span></div>
+    <div id="look-step4" class="clip step" style="top:820px" data-start="18.55" data-duration="6.94"><span class="in" id="look-step4-in">Smear the colour</span></div>
+    <div id="look-step5" class="clip step" style="top:880px" data-start="20.33" data-duration="5.16"><span class="in" id="look-step5-in">Blow out the sky</span></div>
+    <div id="look-kick6" class="clip kick" style="top:140px" data-start="22.19" data-duration="6.13"><span class="in" id="look-kick6-in">Twenty minutes in</span></div>
+  </div>
+  <script>
+    (() => {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#look-line0-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 1.8);
+      tl.to("#look-line0-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 7.79);
+      tl.fromTo("#look-kick1-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 8.69);
+      tl.to("#look-kick1-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 14.29);
+      tl.fromTo("#look-kick2-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 14.99);
+      tl.to("#look-kick2-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 21.39);
+      tl.fromTo("#look-step3-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 17.56);
+      tl.to("#look-step3-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 25.19);
+      tl.fromTo("#look-step4-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 18.55);
+      tl.to("#look-step4-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 25.19);
+      tl.fromTo("#look-step5-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 20.33);
+      tl.to("#look-step5-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 25.19);
+      tl.fromTo("#look-kick6-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 22.19);
+      tl.to("#look-kick6-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 28.02);
+      tl.to({}, { duration: 0.01 }, 28.6);
+      window.__timelines["look"] = tl;
+    })();
+  </script>
+</template>

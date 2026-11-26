@@ -1,0 +1,69 @@
+<template>
+  <style>
+#root{position:absolute;inset:0;font-family:Inter,sans-serif;color:#f4efe6}
+.in{display:block}
+.kick{position:absolute;left:192px;width:1500px;font-size:30px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#f3e36b}
+.kick .in,.step .in,.tag .in{display:inline-block;background:rgba(14,15,17,.72);padding:10px 18px}
+.line .in,.cap .in{display:inline-block;background:rgba(14,15,17,.62);padding:10px 22px}
+.line{position:absolute;left:192px;width:1500px;font-size:68px;line-height:1.12;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.cap{position:absolute;left:192px;width:1500px;font-family:'EB Garamond',serif;font-size:78px;font-style:italic;line-height:1.15;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.big{position:absolute;left:192px;width:1560px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:230px;line-height:1;color:#f3e36b;text-shadow:6px 0 0 rgba(255,0,80,.35),-6px 0 0 rgba(0,200,255,.3)}
+.yell{position:absolute;left:192px;top:240px;width:1560px;font-weight:700;font-size:112px;line-height:1.02;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.55),6px 0 0 rgba(255,0,80,.4),-6px 0 0 rgba(0,200,255,.35)}
+.step{position:absolute;left:192px;width:1300px;font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700}
+.tag{position:absolute;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#f3e36b}
+.tag .in{border-left:5px solid #f3e36b}
+.typed{position:absolute;left:192px;width:1400px;font-family:'JetBrains Mono',monospace;font-size:40px;line-height:1.35}
+.typed .in{display:inline-block;background:rgba(14,15,17,.86);border:1px solid rgba(244,239,230,.3);padding:22px 28px}
+.typed b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.16em;text-transform:uppercase;color:#f3e36b;margin-bottom:10px}
+.shot{position:absolute;left:192px;width:900px;border:3px dashed rgba(244,239,230,.55);font-family:'EB Garamond',serif;font-size:40px;line-height:1.25}
+.shot .in{padding:26px 30px;background:rgba(14,15,17,.55)}
+.shot b,.card b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.18em;text-transform:uppercase;color:#f3e36b;margin-bottom:12px;font-weight:700}
+.card{position:absolute;top:400px;width:720px;font-family:'EB Garamond',serif;font-size:58px;line-height:1.15}
+.card .in{padding:32px 36px;border:2px solid rgba(244,239,230,.4);background:rgba(14,15,17,.6)}
+.stamp{position:absolute;font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:700;color:#ff5a3a;text-transform:uppercase;letter-spacing:.08em}
+.stamp .in{display:inline-block;border:6px solid #ff5a3a;padding:6px 22px;background:rgba(14,15,17,.7)}
+.ring{position:absolute} .ring .in{width:100%;height:100%;border:4px solid #ff5a3a;box-sizing:border-box}
+.tk,.tov,.ts,.tt{position:absolute;left:160px;width:1600px;text-align:center}
+.tk{top:300px;font-size:30px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#f3e36b}
+.tov{top:372px;font-family:'EB Garamond',serif;font-size:132px;line-height:1.05}
+.ts{top:548px;font-family:'EB Garamond',serif;font-size:72px;font-style:italic}
+.tt{top:716px;font-size:30px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  </style>
+  <div id="root" data-composition-id="payoff" data-width="1920" data-height="1080">
+    <div id="payoff-kick0" class="clip kick" style="top:140px" data-start="0.8" data-duration="9.57"><span class="in" id="payoff-kick0-in">The corners F1 drivers say they love</span></div>
+    <div id="payoff-kick1" class="clip kick" style="top:204px" data-start="6.62" data-duration="3.75"><span class="in" id="payoff-kick1-in">Rain</span></div>
+    <div id="payoff-kick2" class="clip kick" style="top:268px" data-start="7.01" data-duration="3.36"><span class="in" id="payoff-kick2-in">Fog</span></div>
+    <div id="payoff-kick3" class="clip kick" style="top:332px" data-start="7.34" data-duration="3.03"><span class="in" id="payoff-kick3-in">Your phone as the wheel</span></div>
+    <div id="payoff-line4" class="clip line" style="top:150px" data-start="10.72" data-duration="8.69"><span class="in" id="payoff-line4-in">50+ versions. One weekend. No code.</span></div>
+    <div id="payoff-cap5" class="clip cap" style="top:240px" data-start="15.76" data-duration="3.65"><span class="in" id="payoff-cap5-in">It needed an eye, and the patience to say: not quite.</span></div>
+    <div id="payoff-kick6" class="clip kick" style="top:330px" data-start="19.91" data-duration="5.54"><span class="in" id="payoff-kick6-in">A longer lap. A fresh leaderboard.</span></div>
+    <div id="payoff-big7" class="clip big" style="top:390px" data-start="23.66" data-duration="1.79"><span class="in" id="payoff-big7-in">P1: ?</span></div>
+    <div id="payoff-tk8" class="clip tk" style="top:380px" data-start="25.85" data-duration="9.75"><span class="in" id="payoff-tk8-in">Have a drive. And beat me, if you can.</span></div>
+    <div id="payoff-tov9" class="clip tov" style="top:450px;font-size:104px" data-start="26.35" data-duration="9.25"><span class="in" id="payoff-tov9-in">golden-lap.space.fast</span></div>
+  </div>
+  <script>
+    (() => {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#payoff-kick0-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.8);
+      tl.to("#payoff-kick0-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 10.07);
+      tl.fromTo("#payoff-kick1-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 6.62);
+      tl.to("#payoff-kick1-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 10.07);
+      tl.fromTo("#payoff-kick2-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 7.01);
+      tl.to("#payoff-kick2-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 10.07);
+      tl.fromTo("#payoff-kick3-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 7.34);
+      tl.to("#payoff-kick3-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 10.07);
+      tl.fromTo("#payoff-line4-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 10.72);
+      tl.to("#payoff-line4-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 19.11);
+      tl.fromTo("#payoff-cap5-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 15.76);
+      tl.to("#payoff-cap5-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 19.11);
+      tl.fromTo("#payoff-kick6-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 19.91);
+      tl.to("#payoff-kick6-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 25.15);
+      tl.fromTo("#payoff-big7-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 23.66);
+      tl.to("#payoff-big7-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 25.15);
+      tl.fromTo("#payoff-tk8-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 25.85);
+      tl.fromTo("#payoff-tov9-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 26.35);
+      tl.to({}, { duration: 0.01 }, 35.58);
+      window.__timelines["payoff"] = tl;
+    })();
+  </script>
+</template>

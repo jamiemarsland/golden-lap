@@ -1,0 +1,49 @@
+<template>
+  <style>
+#root{position:absolute;inset:0;font-family:Inter,sans-serif;color:#f4efe6}
+.in{display:block}
+.kick{position:absolute;left:192px;width:1500px;font-size:30px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#f3e36b}
+.kick .in,.step .in,.tag .in{display:inline-block;background:rgba(14,15,17,.72);padding:10px 18px}
+.line .in,.cap .in{display:inline-block;background:rgba(14,15,17,.62);padding:10px 22px}
+.line{position:absolute;left:192px;width:1500px;font-size:68px;line-height:1.12;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.cap{position:absolute;left:192px;width:1500px;font-family:'EB Garamond',serif;font-size:78px;font-style:italic;line-height:1.15;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.big{position:absolute;left:192px;width:1560px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:230px;line-height:1;color:#f3e36b;text-shadow:6px 0 0 rgba(255,0,80,.35),-6px 0 0 rgba(0,200,255,.3)}
+.yell{position:absolute;left:192px;top:240px;width:1560px;font-weight:700;font-size:112px;line-height:1.02;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.55),6px 0 0 rgba(255,0,80,.4),-6px 0 0 rgba(0,200,255,.35)}
+.step{position:absolute;left:192px;width:1300px;font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700}
+.tag{position:absolute;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#f3e36b}
+.tag .in{border-left:5px solid #f3e36b}
+.typed{position:absolute;left:192px;width:1400px;font-family:'JetBrains Mono',monospace;font-size:40px;line-height:1.35}
+.typed .in{display:inline-block;background:rgba(14,15,17,.86);border:1px solid rgba(244,239,230,.3);padding:22px 28px}
+.typed b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.16em;text-transform:uppercase;color:#f3e36b;margin-bottom:10px}
+.shot{position:absolute;left:192px;width:900px;border:3px dashed rgba(244,239,230,.55);font-family:'EB Garamond',serif;font-size:40px;line-height:1.25}
+.shot .in{padding:26px 30px;background:rgba(14,15,17,.55)}
+.shot b,.card b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.18em;text-transform:uppercase;color:#f3e36b;margin-bottom:12px;font-weight:700}
+.card{position:absolute;top:400px;width:720px;font-family:'EB Garamond',serif;font-size:58px;line-height:1.15}
+.card .in{padding:32px 36px;border:2px solid rgba(244,239,230,.4);background:rgba(14,15,17,.6)}
+.stamp{position:absolute;font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:700;color:#ff5a3a;text-transform:uppercase;letter-spacing:.08em}
+.stamp .in{display:inline-block;border:6px solid #ff5a3a;padding:6px 22px;background:rgba(14,15,17,.7)}
+.ring{position:absolute} .ring .in{width:100%;height:100%;border:4px solid #ff5a3a;box-sizing:border-box}
+.tk,.tov,.ts,.tt{position:absolute;left:160px;width:1600px;text-align:center}
+.tk{top:300px;font-size:30px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#f3e36b}
+.tov{top:372px;font-family:'EB Garamond',serif;font-size:132px;line-height:1.05}
+.ts{top:548px;font-family:'EB Garamond',serif;font-size:72px;font-style:italic}
+.tt{top:716px;font-size:30px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  </style>
+  <div id="root" data-composition-id="title" data-width="1920" data-height="1080">
+    <div id="title-tk0" class="clip tk" data-start="0.5" data-duration="4.5"><span class="in" id="title-tk0-in">This Little Thing.</span></div>
+    <div id="title-tov1" class="clip tov" data-start="0.9" data-duration="4.1"><span class="in" id="title-tov1-in">How I built a racing game</span></div>
+    <div id="title-ts2" class="clip ts" data-start="1.7" data-duration="3.3"><span class="in" id="title-ts2-in">with <svg viewBox="0 0 24 24" width="62" height="62" style="vertical-align:-10px;margin:0 12px 0 14px"><path fill="#D97757" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg>Claude <span style="font-style:normal;opacity:.7;margin:0 18px">+</span> <svg viewBox="0 0 1024 1024" width="62" height="62" style="vertical-align:-10px;margin:0 14px 0 0"><rect width="1024" height="1024" rx="150" fill="#1EFE57"/><path fill="#000" transform="translate(21.6902 22.4527) scale(3.48975)" d="M144.237 162.275L78.975 156.525C50.225 153.938 37 144.45 37 115.7L37 92.125C37 63.0875 51.375 49 80.125 49L200.875 49C229.625 49 244 63.375 244 92.125V109.375H157.75V97.875L123.25 97.875V99.025C123.25 110.525 124.687 111.388 136.188 112.25L199.15 117.713C227.9 120.013 244 132.663 244 161.413V188.438C244 217.188 229.625 231.563 200.875 231.563L80.125 231.563C51.0875 231.563 37 217.188 37 188.438V165.438H123.25L123.25 182.688L157.75 182.688L157.75 176.075C157.75 164.575 155.738 163.138 144.237 162.275Z"/></svg>Spacefast</span></div>
+    <div id="title-tt3" class="clip tt" data-start="2.6" data-duration="2.4"><span class="in" id="title-tt3-in">Bare hands. &nbsp;One weekend. &nbsp;No code.</span></div>
+  </div>
+  <script>
+    (() => {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#title-tk0-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.5);
+      tl.fromTo("#title-tov1-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.9);
+      tl.fromTo("#title-ts2-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 1.7);
+      tl.fromTo("#title-tt3-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 2.6);
+      tl.to({}, { duration: 0.01 }, 4.98);
+      window.__timelines["title"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,62 @@
+<template>
+  <style>
+#root{position:absolute;inset:0;font-family:Inter,sans-serif;color:#f4efe6}
+.in{display:block}
+.kick{position:absolute;left:192px;width:1500px;font-size:30px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#f3e36b}
+.kick .in,.step .in,.tag .in{display:inline-block;background:rgba(14,15,17,.72);padding:10px 18px}
+.line .in,.cap .in{display:inline-block;background:rgba(14,15,17,.62);padding:10px 22px}
+.line{position:absolute;left:192px;width:1500px;font-size:68px;line-height:1.12;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.cap{position:absolute;left:192px;width:1500px;font-family:'EB Garamond',serif;font-size:78px;font-style:italic;line-height:1.15;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.big{position:absolute;left:192px;width:1560px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:230px;line-height:1;color:#f3e36b;text-shadow:6px 0 0 rgba(255,0,80,.35),-6px 0 0 rgba(0,200,255,.3)}
+.yell{position:absolute;left:192px;top:240px;width:1560px;font-weight:700;font-size:112px;line-height:1.02;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.55),6px 0 0 rgba(255,0,80,.4),-6px 0 0 rgba(0,200,255,.35)}
+.step{position:absolute;left:192px;width:1300px;font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700}
+.tag{position:absolute;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#f3e36b}
+.tag .in{border-left:5px solid #f3e36b}
+.typed{position:absolute;left:192px;width:1400px;font-family:'JetBrains Mono',monospace;font-size:40px;line-height:1.35}
+.typed .in{display:inline-block;background:rgba(14,15,17,.86);border:1px solid rgba(244,239,230,.3);padding:22px 28px}
+.typed b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.16em;text-transform:uppercase;color:#f3e36b;margin-bottom:10px}
+.shot{position:absolute;left:192px;width:900px;border:3px dashed rgba(244,239,230,.55);font-family:'EB Garamond',serif;font-size:40px;line-height:1.25}
+.shot .in{padding:26px 30px;background:rgba(14,15,17,.55)}
+.shot b,.card b{display:block;font-family:Inter,sans-serif;font-size:28px;letter-spacing:.18em;text-transform:uppercase;color:#f3e36b;margin-bottom:12px;font-weight:700}
+.card{position:absolute;top:400px;width:720px;font-family:'EB Garamond',serif;font-size:58px;line-height:1.15}
+.card .in{padding:32px 36px;border:2px solid rgba(244,239,230,.4);background:rgba(14,15,17,.6)}
+.stamp{position:absolute;font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:700;color:#ff5a3a;text-transform:uppercase;letter-spacing:.08em}
+.stamp .in{display:inline-block;border:6px solid #ff5a3a;padding:6px 22px;background:rgba(14,15,17,.7)}
+.ring{position:absolute} .ring .in{width:100%;height:100%;border:4px solid #ff5a3a;box-sizing:border-box}
+.tk,.tov,.ts,.tt{position:absolute;left:160px;width:1600px;text-align:center}
+.tk{top:300px;font-size:30px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#f3e36b}
+.tov{top:372px;font-family:'EB Garamond',serif;font-size:132px;line-height:1.05}
+.ts{top:548px;font-family:'EB Garamond',serif;font-size:72px;font-style:italic}
+.tt{top:716px;font-size:30px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  </style>
+  <div id="root" data-composition-id="win" data-width="1920" data-height="1080">
+    <div id="win-kick0" class="clip kick" style="top:140px" data-start="0.2" data-duration="9.38"><span class="in" id="win-kick0-in">Two slow corners before the tunnel</span></div>
+    <div id="win-step1" class="clip step" style="top:204px" data-start="0.9" data-duration="8.68"><span class="in" id="win-step1-in">78 and 103 km/h</span></div>
+    <div id="win-step2" class="clip step" style="top:264px" data-start="3.99" data-duration="5.59"><span class="in" id="win-step2-in">Opened up: 134 km/h at the slowest</span></div>
+    <div id="win-line3" class="clip line" style="top:470px" data-start="5.73" data-duration="5.03"><span class="in" id="win-line3-in">The computer, on the new lap: 1:00.3</span></div>
+    <div id="win-kick4" class="clip kick" style="top:140px" data-start="10.96" data-duration="5.76"><span class="in" id="win-kick4-in">With my hands</span></div>
+    <div id="win-big5" class="clip big" style="top:200px;color:#8fe08a;font-size:176px" data-start="10.86" data-duration="5.86"><span class="in" id="win-big5-in">0:53.513</span></div>
+    <div id="win-cap6" class="clip cap" style="top:470px" data-start="13.13" data-duration="3.59"><span class="in" id="win-cap6-in">Nearly seven seconds quicker than the machine.</span></div>
+  </div>
+  <script>
+    (() => {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#win-kick0-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.2);
+      tl.to("#win-kick0-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 9.28);
+      tl.fromTo("#win-step1-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.9);
+      tl.to("#win-step1-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 9.28);
+      tl.fromTo("#win-step2-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 3.99);
+      tl.to("#win-step2-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 9.28);
+      tl.fromTo("#win-line3-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 5.73);
+      tl.to("#win-line3-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 10.46);
+      tl.fromTo("#win-kick4-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 10.96);
+      tl.to("#win-kick4-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 16.42);
+      tl.fromTo("#win-big5-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 10.86);
+      tl.to("#win-big5-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 16.42);
+      tl.fromTo("#win-cap6-in", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 13.13);
+      tl.to("#win-cap6-in", { opacity: 0, duration: 0.28, ease: "power1.in" }, 16.42);
+      tl.to({}, { duration: 0.01 }, 17.0);
+      window.__timelines["win"] = tl;
+    })();
+  </script>
+</template>

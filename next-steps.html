@@ -1,0 +1,281 @@
+<title>Golden Lap Next Steps</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
+<style>
+  /* Layout: one reading column; each idea is a short pitch followed by a full-width "screen" drawn in the game's own colours. */
+  :root {
+    --bg: #eef0ea; --panel: #e2e5dc; --fg: #1b1e22; --muted: #5a6066; --rule: #c9cdc2;
+    --teal: #1d6f7a; --red: #b5391a; --gold: #f3e36b; --gold-ink: #17181a;
+    --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif; --body: Barlow, "Helvetica Neue", Arial, sans-serif; --mono: "Courier New", Courier, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #15171a; --panel: #1f2226; --fg: #e8e6dc; --muted: #a2a59c; --rule: #34383d; --teal: #74bcc6; --red: #ee7a57; color-scheme: dark } }
+  :root[data-theme="dark"] { --bg: #15171a; --panel: #1f2226; --fg: #e8e6dc; --muted: #a2a59c; --rule: #34383d; --teal: #74bcc6; --red: #ee7a57; color-scheme: dark }
+  body { background: var(--bg); color: var(--fg); font: 17px/1.55 var(--body); padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.05; }
+  h1 { font-size: clamp(40px, 8vw, 64px); letter-spacing: .01em; text-transform: uppercase; }
+  h1 span { background: var(--gold); color: var(--gold-ink); padding: 0 .18em; }
+  h2 { font-size: 30px; text-transform: uppercase; letter-spacing: .03em; margin-top: 30px; padding-top: 18px; border-top: 2px solid var(--fg); }
+  h3 { font-size: 25px; }
+  p { margin: 0; max-width: 66ch; }
+  .lede { font-size: 20px; line-height: 1.45; }
+  .kicker { font: 700 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .facts div { background: var(--panel); padding: 12px 14px; }
+  .facts b { display: block; font: 700 24px var(--mono); font-variant-numeric: tabular-nums; }
+  .facts span { font-size: 14px; color: var(--muted); }
+  .idea { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .idea ul { margin: 0; padding-left: 20px; max-width: 66ch; }
+  .idea li { margin: 3px 0; }
+  .tag { font: 700 12px var(--mono); letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+  figure { margin: 4px 0 0; }
+  figure svg { display: block; width: 100%; height: auto; background: #0e0f11; }
+  figcaption { font-size: 14px; color: var(--muted); padding-top: 6px; }
+  .tw { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 700 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .size { font: 700 13px var(--mono); }
+  .note { background: var(--panel); padding: 14px 16px; border-left: 4px solid var(--teal); }
+</style>
+
+<main>
+  <div class="kicker">Golden Lap · proposals · 25 November 2026</div>
+  <h1>What would make <span>Golden Lap</span> better</h1>
+  <p class="lede">The driving, the look and the sound are in good shape. What the game lacks is a reason to come back tomorrow, a reason to send it to a friend, and a board you can fully trust. Nine ideas follow, each with a mockup, then a suggested order.</p>
+
+  <div class="facts">
+    <div><b>2,740 m</b><span>lap length, version 32</span></div>
+    <div><b>1:00.3</b><span>autopilot lap on the current layout</span></div>
+    <div><b>1:00.340</b><span>your best by hand, on the previous layout</span></div>
+    <div><b>6 s</b><span>how much quicker your hands were than your keys</span></div>
+  </div>
+  <p class="note">Every screen below is a drawing, not the game. Names, times and positions in them are made up, apart from your own name and best lap. Effort sizes are my rough guesses and nothing here has been built or tested.</p>
+
+  <h2>Reasons to come back</h2>
+
+  <section class="idea">
+    <div class="tag">Idea 1 · medium</div>
+    <h3>Race the ghost of your best lap</h3>
+    <p>Right now you only learn whether you were quicker at the two sector lines. A faint car driving your best lap, a few metres ahead or behind, tells you every second. It also fits your rule about other cars: it is never close enough to be a close-up, and you only catch it by beating yourself.</p>
+    <ul>
+      <li>Record the car's position 20 times a second on every lap; keep the best.</li>
+      <li>A running gap at the top of the screen, green when you are ahead.</li>
+      <li>Later: race the ghost of whoever is top of the board.</li>
+    </ul>
+    <figure><svg id="m1" viewBox="0 0 480 270" role="img" aria-label="Mockup: onboard view with a faint yellow ghost car ahead and a time gap at the top"></svg><figcaption>Mockup. The ghost is your own best lap; the gap updates continuously.</figcaption></figure>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Idea 2 · medium</div>
+    <h3>Today's lap</h3>
+    <p>One circuit gets solved. A new condition each day (low sun, rain, fog, dusk with the tunnel lights on) makes the same lap a fresh problem, and a board that resets at midnight means a newcomer can be first by lunchtime. The all-time dry board stays as the main one.</p>
+    <ul>
+      <li>Rain is mostly a look and a sound: darker road, spray, wipers of light on the lens, less grip.</li>
+      <li>Everyone gets the same condition on the same day.</li>
+    </ul>
+    <figure><svg id="m2" viewBox="0 0 480 270" role="img" aria-label="Mockup: start screen announcing today's lap in rain at dusk with a daily leaderboard"></svg><figcaption>Mockup. The start screen stays as simple as it is now, with one extra line.</figcaption></figure>
+  </section>
+
+  <h2>Reasons to share</h2>
+
+  <section class="idea">
+    <div class="tag">Idea 3 · small</div>
+    <h3>A finish card worth posting</h3>
+    <p>The camera view already dresses the player in the helmet with the track behind them. At the line, freeze that frame and turn it into a picture: their face in the helmet, the time, their position, the circuit outline. One button saves it. That picture is the advert for the game.</p>
+    <figure><svg id="m3" viewBox="0 0 480 270" role="img" aria-label="Mockup: a finish card with a helmet portrait, lap time, position and circuit outline"></svg><figcaption>Mockup. Nothing leaves the browser unless the player saves the picture themselves.</figcaption></figure>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Idea 4 · small, needs idea 1</div>
+    <h3>Challenge links</h3>
+    <p>A link that carries one lap. Whoever opens it sees who set it and how, and races that ghost. This turns the leaderboard from a list into a dare, and it is the natural last shot of your video.</p>
+    <figure><svg id="m4" viewBox="0 0 480 270" role="img" aria-label="Mockup: start screen showing a challenge from Jamie M to beat 1:00.340"></svg><figcaption>Mockup. Opening a challenge link replaces the tagline with the dare.</figcaption></figure>
+  </section>
+
+  <h2>Hands that work for everyone</h2>
+
+  <section class="idea">
+    <div class="tag">Idea 5 · small</div>
+    <h3>A ten-second hand check</h3>
+    <p>Hands are now the default, and they took you several rounds to get right: Centre Stage, where your hands rest, how far to tilt. A stranger gets one try before giving up. A short check before the first lap confirms each thing works and tells them plainly what to fix if not.</p>
+    <ul>
+      <li>Four ticks: both hands seen, tilt left, tilt right, squeeze to brake.</li>
+      <li>If hands are not found in five seconds: sit back, turn off Centre Stage, or switch to keys.</li>
+      <li>Shown once, then remembered.</li>
+    </ul>
+    <figure><svg id="m5" viewBox="0 0 480 270" role="img" aria-label="Mockup: hand check screen with a large camera view and a four item checklist"></svg><figcaption>Mockup. The camera view is large here and shrinks to its usual corner when the lap starts.</figcaption></figure>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Idea 6 · large</div>
+    <h3>Your phone as the steering wheel</h3>
+    <p>Some people will not allow a camera, and some will be watching on a TV. Scan a code, hold the phone like a wheel, tilt to steer. The phone's tilt sensor is more precise than a webcam's guess at your hands, and it works in the dark.</p>
+    <ul>
+      <li>Needs a live connection between phone and screen, which is the new part. Spacefast's realtime channels may cover it; I have not checked.</li>
+      <li>Laps would be labelled PHONE on the board, as HANDS and SIMPLE are now.</li>
+    </ul>
+    <figure><svg id="m6" viewBox="0 0 480 270" role="img" aria-label="Mockup: pairing screen with a code to scan and a phone held like a steering wheel"></svg><figcaption>Mockup. The square is a stand-in for a real scannable code.</figcaption></figure>
+  </section>
+
+  <h2>A board you can trust</h2>
+
+  <section class="idea">
+    <div class="tag">Idea 7 · medium</div>
+    <h3>Track limits and checked laps</h3>
+    <p>Two gaps have been in the log since the board went up. Lap times are reported by the browser, so anyone who opens the developer tools can post any time they like. And nothing stops a lap that cuts across the grass. The moment the game is shared, the top of the board will be nonsense unless both are closed.</p>
+    <ul>
+      <li>Track limits: all four wheels off the road deletes the lap, with the corner named.</li>
+      <li>Checked laps: send the recording from idea 1 with the time; the server refuses times whose recording does not add up.</li>
+      <li>A name filter, since anyone can type anything.</li>
+    </ul>
+    <figure><svg id="m7" viewBox="0 0 480 270" role="img" aria-label="Mockup: onboard view off the track with a lap deleted for track limits message"></svg><figcaption>Mockup. The player is told at once, and where, so it feels like a ruling and not a bug.</figcaption></figure>
+  </section>
+
+  <h2>More of the feeling</h2>
+
+  <section class="idea">
+    <div class="tag">Idea 8 · medium, needs idea 1</div>
+    <h3>A television replay</h3>
+    <p>After a lap you see a time and a table. A replay from trackside cameras, cut like a broadcast with a caption bar, lets the player see what they just did, and gives your video its outside shots of the car. The car has a back half now, so most of the model exists.</p>
+    <figure><svg id="m8" viewBox="0 0 480 270" role="img" aria-label="Mockup: trackside replay of the car passing a grandstand with a broadcast caption"></svg><figcaption>Mockup. Five or six fixed cameras around the lap, switching as the car passes.</figcaption></figure>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Idea 9 · small each</div>
+    <h3>Smaller touches</h3>
+    <ul>
+      <li><b>Crowd and place.</b> A cheer past the grandstand, gulls and water on the waterfront, a tannoy on the grid. Sound has mattered more than anything else so far.</li>
+      <li><b>Sparks and heat.</b> Sparks from the floor over the crest, heat shimmer off the engine cover in the nose-camera view.</li>
+      <li><b>Touch steering.</b> On a phone the game currently has no controls at all. Left and right halves of the screen plus simple mode would make it playable.</li>
+      <li><b>Lower-power mode.</b> The camera now runs three trackers and an extra render. If frame rates suffer on older laptops, drop the cut-out first.</li>
+    </ul>
+  </section>
+
+  <h2>Suggested order</h2>
+  <p>I would start with the hand check, because every other idea is wasted on a player who could not get the steering to work. Then the ghost, since three other ideas are built on its recording.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Order</th><th>Idea</th><th>Size</th><th>What it buys</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Hand check</td><td class="size">Small</td><td>Strangers get through the first thirty seconds</td></tr>
+      <tr><td>2</td><td>Ghost of your best lap</td><td class="size">Medium</td><td>"One more go", and the recording that ideas 4, 7 and 8 need</td></tr>
+      <tr><td>3</td><td>Finish card</td><td class="size">Small</td><td>People post it</td></tr>
+      <tr><td>4</td><td>Track limits and checked laps</td><td class="size">Medium</td><td>The board survives being shared</td></tr>
+      <tr><td>5</td><td>Challenge links</td><td class="size">Small</td><td>People send it to one specific friend</td></tr>
+      <tr><td>6</td><td>Today's lap</td><td class="size">Medium</td><td>A reason to return tomorrow</td></tr>
+      <tr><td>7</td><td>Television replay</td><td class="size">Medium</td><td>Spectacle, and footage for the video</td></tr>
+      <tr><td>8</td><td>Phone as wheel</td><td class="size">Large</td><td>Players with no camera, and living-room screens</td></tr>
+    </tbody>
+  </table></div>
+  <p>If the video is the deadline, the order changes: finish card, replay and challenge links make the best footage, and the checked-laps work can wait until the link goes public.</p>
+</main>
+
+<script>
+(() => {
+  const Y = '#f3e36b', MONO = 'font-family="Courier New, monospace" font-weight="700"';
+  const t = (x, y, s, txt, o = {}) => `<text x="${x}" y="${y}" font-size="${s}" ${MONO} fill="${o.fill || Y}" text-anchor="${o.a || 'start'}" ${o.ls ? `letter-spacing="${o.ls}"` : ''} opacity="${o.op || 1}">${txt}</text>`;
+  // The onboard view the game really has: road, trees, front-left tyre, cockpit, helmet on the right.
+  function scene(o = {}) {
+    const sky = o.dusk ? ['#56607a', '#c99a7a'] : ['#b9cfd6', '#eee6cc'], grass = o.dusk ? '#4c5a4a' : '#86a66a', road = o.dusk ? '#4a4c52' : '#8d8f8c', tree = o.dusk ? ['#2f3d33', '#38483a'] : ['#5f7f52', '#6f8c58'];
+    let s = `<defs><linearGradient id="sk${o.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient></defs>`;
+    s += `<rect width="480" height="270" fill="url(#sk${o.id})"/><rect y="112" width="480" height="158" fill="${grass}"/>`;
+    for (let i = 0; i < 16; i++) { const x = (i * 67 + 20) % 480, r = 16 + (i * 7) % 14; if (x > 190 && x < 300) continue; s += `<circle cx="${x}" cy="${104 - (i % 3) * 5}" r="${r}" fill="${tree[i % 2]}"/>`; }
+    s += `<polygon points="226,112 262,112 520,270 -60,270" fill="${road}"/>`;
+    s += `<polygon points="238,112 244,112 250,270 150,270" fill="#000" opacity=".16"/><polygon points="248,112 253,112 380,270 300,270" fill="#000" opacity=".12"/>`;
+    for (let i = 0; i < 6; i++) { const y0 = 116 + i * i * 4.3, y1 = y0 + 3 + i * 2.2; const xl = y => 226 - (y - 112) * 1.81, xr = y => 262 + (y - 112) * 1.63;
+      s += `<polygon points="${xl(y0)},${y0} ${xl(y0) + 4 + i * 2},${y0} ${xl(y1) + 5 + i * 2},${y1} ${xl(y1)},${y1}" fill="${i % 2 ? '#e8e4d8' : '#c23f1c'}"/>`;
+      s += `<polygon points="${xr(y0)},${y0} ${xr(y0) - 4 - i * 2},${y0} ${xr(y1) - 5 - i * 2},${y1} ${xr(y1)},${y1}" fill="${i % 2 ? '#c23f1c' : '#e8e4d8'}"/>`; }
+    if (o.rain) for (let i = 0; i < 70; i++) { const x = (i * 97) % 480, y = (i * 53) % 250; s += `<line x1="${x}" y1="${y}" x2="${x - 4}" y2="${y + 13}" stroke="#dfe6ee" stroke-width="1" opacity=".35"/>`; }
+    return s;
+  }
+  function cockpit() {
+    return `<path d="M120,270 L150,205 Q240,170 330,205 L372,270 Z" fill="#0c0d10"/><path d="M150,205 Q240,170 330,205" fill="none" stroke="#b9b5a9" stroke-width="2.5"/>
+      <ellipse cx="96" cy="214" rx="46" ry="52" fill="#141416"/><ellipse cx="96" cy="214" rx="27" ry="32" fill="none" stroke="#2b2b2e" stroke-width="3"/>
+      <line x1="138" y1="204" x2="196" y2="196" stroke="#1a1a1d" stroke-width="4"/><line x1="140" y1="226" x2="200" y2="212" stroke="#1a1a1d" stroke-width="4"/>
+      <rect x="150" y="176" width="30" height="16" fill="#111"/><rect x="153" y="179" width="24" height="10" fill="#b9c6cc"/>
+      <ellipse cx="262" cy="232" rx="34" ry="30" fill="none" stroke="#e9e6dc" stroke-width="8"/><rect x="238" y="228" width="48" height="8" fill="#e9e6dc"/>
+      <ellipse cx="412" cy="232" rx="78" ry="92" fill="#c8c4b8"/><path d="M336,205 Q412,150 488,205 L488,226 Q412,172 336,226 Z" fill="#c23f1c"/><path d="M335,236 Q412,186 489,236 L489,246 Q412,198 335,246 Z" fill="#1d6f7a"/>`;
+  }
+  const hud = (kmh, lap) => t(22, 236, 22, kmh + ' KM/H') + t(22, 252, 10, 'GEAR 5', { op: .8 }) + `<rect x="344" y="14" width="122" height="20" fill="#000" opacity=".5"/>` + t(458, 28, 12, 'LAP ' + lap, { a: 'end' });
+  const dim = (a = .55) => `<rect width="480" height="270" fill="#000" opacity="${a}"/>`;
+  const btn = (x, y, w, h, label, on = true) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${on ? Y : 'none'}" stroke="${Y}"/>` + t(x + w / 2, y + h / 2 + 4, 11, label, { a: 'middle', fill: on ? '#111' : Y, ls: 1 });
+  const row = (x, y, a, b, c, fill) => t(x, y, 10, a, { fill: fill || '#fff' }) + t(x + 22, y, 10, b, { fill: fill || '#fff' }) + t(x + 190, y, 10, c, { a: 'end', fill: fill || Y });
+  const set = (id, html) => { document.getElementById(id).innerHTML = html; };
+
+  // 1 ghost
+  set('m1', scene({ id: 1 }) +
+    `<g opacity=".55"><rect x="228" y="121" width="30" height="5" fill="${Y}"/><rect x="236" y="115" width="14" height="9" fill="${Y}"/><rect x="224" y="118" width="7" height="10" fill="#333"/><rect x="255" y="118" width="7" height="10" fill="#333"/><rect x="226" y="111" width="34" height="3" fill="${Y}"/></g>` +
+    cockpit() + hud(247, '0:31.208') +
+    `<rect x="178" y="14" width="124" height="34" fill="#000" opacity=".55"/>` + t(240, 31, 16, '-0.214', { a: 'middle', fill: '#8fe08a' }) + t(240, 43, 8, 'AHEAD OF YOUR BEST', { a: 'middle', fill: '#fff', ls: 1 }) +
+    `<rect x="190" y="52" width="100" height="3" fill="#333"/><rect x="240" y="52" width="14" height="3" fill="#8fe08a"/><rect x="239.5" y="50" width="1" height="7" fill="#fff"/>`);
+
+  // 2 daily
+  set('m2', scene({ id: 2, dusk: true, rain: true }) + cockpit() + dim(.5) +
+    t(240, 62, 28, 'GOLDEN LAP', { a: 'middle', ls: 6 }) + t(240, 84, 11, "TODAY'S LAP: RAIN AT DUSK", { a: 'middle', fill: '#fff', ls: 1 }) +
+    btn(196, 96, 88, 26, 'START') + btn(120, 132, 76, 18, 'HANDS') + btn(202, 132, 76, 18, 'ALL-TIME', false) + btn(284, 132, 76, 18, 'TODAY') +
+    t(240, 172, 9, 'NEW CONDITIONS IN 06:14:22', { a: 'middle', fill: '#fff', op: .8, ls: 1 }) +
+    row(145, 196, '1', 'RIVAL ONE', '1:04.118') + row(145, 211, '2', 'JAMIE M', '1:04.530', Y) + row(145, 226, '3', 'RIVAL TWO', '1:05.902'));
+
+  // 3 finish card
+  set('m3', `<rect width="480" height="270" fill="#17181b"/>` +
+    `<g transform="translate(138,14)"><rect width="204" height="242" fill="#ece8dc"/><rect x="8" y="8" width="188" height="122" fill="#b9cfd6"/>
+      <rect x="8" y="88" width="188" height="42" fill="#8d8f8c"/><polygon points="96,88 108,88 150,130 54,130" fill="#77797a"/>
+      <rect x="60" y="52" width="84" height="5" fill="#111"/><rect x="60" y="62" width="84" height="3" fill="#111"/>
+      <path d="M62,130 Q70,74 102,60 Q134,74 142,130 Z" fill="#101114"/>
+      <ellipse cx="102" cy="84" rx="30" ry="36" fill="#c8c4b8"/><path d="M73,72 Q102,48 131,72 L131,80 Q102,58 73,80 Z" fill="#c23f1c"/>
+      <rect x="78" y="82" width="48" height="16" rx="6" fill="#d9a98c" stroke="#0d0d10" stroke-width="2"/><circle cx="92" cy="90" r="2.2" fill="#222"/><circle cx="112" cy="90" r="2.2" fill="#222"/>
+      <text x="102" y="164" font-size="30" ${MONO} fill="#17181b" text-anchor="middle">0:59.812</text>
+      <text x="102" y="181" font-size="9" ${MONO} fill="#b5391a" text-anchor="middle" letter-spacing="1.5">P3 OF 214 · HANDS</text>
+      <path d="M28,226 L28,200 Q30,192 40,194 L58,198 Q66,200 64,208 L62,216 Q62,224 72,224 L88,224 Q94,226 92,232 L34,232 Q28,232 28,226 Z" fill="none" stroke="#17181b" stroke-width="2.5"/><circle cx="28" cy="214" r="3" fill="#c23f1c"/>
+      <text x="196" y="214" font-size="11" ${MONO} fill="#17181b" text-anchor="end">JAMIE M</text><text x="196" y="228" font-size="8" ${MONO} fill="#5a6066" text-anchor="end">GOLDEN-LAP.SPACE.FAST</text></g>` +
+    btn(360, 216, 98, 24, 'SAVE PICTURE') + t(409, 254, 8, 'OR PRESS ENTER TO GO AGAIN', { a: 'middle', fill: '#fff', op: .7 }));
+
+  // 4 challenge
+  set('m4', scene({ id: 4 }) + cockpit() + dim(.55) +
+    t(240, 70, 28, 'GOLDEN LAP', { a: 'middle', ls: 6 }) +
+    `<rect x="96" y="88" width="288" height="62" fill="#000" opacity=".5" stroke="${Y}"/>` +
+    t(240, 108, 10, 'JAMIE M SET', { a: 'middle', fill: '#fff', ls: 1 }) + t(240, 130, 20, '1:00.340', { a: 'middle' }) + t(240, 143, 9, 'STEERING WITH THEIR HANDS', { a: 'middle', fill: '#fff', ls: 1 }) +
+    btn(176, 164, 128, 28, 'BEAT IT') + t(240, 212, 9, 'YOU WILL RACE THEIR GHOST', { a: 'middle', fill: '#fff', op: .8, ls: 1 }));
+
+  // 5 hand check
+  set('m5', scene({ id: 5 }) + cockpit() + dim(.6) +
+    `<rect x="60" y="40" width="220" height="124" fill="#2a2c30" stroke="${Y}"/>
+     <ellipse cx="170" cy="82" rx="20" ry="24" fill="#c8c4b8"/><rect x="156" y="78" width="28" height="9" rx="4" fill="#3a3a3a"/><path d="M120,164 Q124,112 170,108 Q216,112 220,164 Z" fill="#3b3e44"/>
+     <circle cx="170" cy="134" r="46" fill="none" stroke="#101012" stroke-width="7"/><circle cx="170" cy="134" r="46" fill="none" stroke="${Y}" stroke-width="2"/>
+     <circle cx="124" cy="134" r="11" fill="#8d8d88"/><circle cx="216" cy="134" r="11" fill="#8d8d88"/>` +
+    t(170, 180, 9, 'HOLD YOUR HANDS LIKE THIS', { a: 'middle', ls: 1 }) + t(300, 54, 11, 'HAND CHECK', { ls: 2 }) +
+    [['BOTH HANDS SEEN', 1], ['TILT LEFT', 1], ['TILT RIGHT', 0], ['SQUEEZE TO BRAKE', 0]].map((r, i) =>
+      `<rect x="300" y="${66 + i * 24}" width="13" height="13" fill="${r[1] ? '#8fe08a' : 'none'}" stroke="${r[1] ? '#8fe08a' : '#fff'}"/>` + (r[1] ? `<path d="M303,${73 + i * 24} l3,3 l5,-7" fill="none" stroke="#111" stroke-width="2"/>` : '') + t(320, 77 + i * 24, 10, r[0], { fill: r[1] ? '#8fe08a' : '#fff' })).join('') +
+    btn(300, 170, 120, 18, 'USE KEYS INSTEAD', false) + t(240, 222, 9, 'HANDS NOT FOUND? SIT BACK, OR TURN OFF CENTRE STAGE', { a: 'middle', fill: '#fff', op: .8 }));
+
+  // 6 phone
+  let qr = ''; for (let y = 0; y < 13; y++) for (let x = 0; x < 13; x++) { const c = (x < 4 && y < 4) || (x > 8 && y < 4) || (x < 4 && y > 8) ? ((x % 12 === 0 || y % 12 === 0 || x === 3 || y === 3 || x === 9 || y === 9 || (x > 0 && x < 3 && y > 0 && y < 3) || (x > 9 && y > 0 && y < 3) || (x > 0 && x < 3 && y > 9)) ? 1 : 0) : ((x * 7 + y * 13 + x * y) % 3 === 0 ? 1 : 0); if (c) qr += `<rect x="${86 + x * 8}" y="${70 + y * 8}" width="8" height="8" fill="#111"/>`; }
+  set('m6', scene({ id: 6 }) + cockpit() + dim(.6) + t(240, 44, 14, 'STEER WITH YOUR PHONE', { a: 'middle', ls: 2 }) +
+    `<rect x="78" y="62" width="120" height="120" fill="#f4f1e6"/>` + qr + t(138, 198, 9, '1. SCAN THIS', { a: 'middle', fill: '#fff', ls: 1 }) +
+    `<g transform="translate(330,122) rotate(-18)"><rect x="-62" y="-30" width="124" height="60" rx="9" fill="#101114" stroke="#c8c4b8" stroke-width="2"/><rect x="-52" y="-22" width="104" height="44" fill="#22252a"/><circle cx="0" cy="0" r="15" fill="none" stroke="${Y}" stroke-width="3"/><line x1="-15" y1="0" x2="15" y2="0" stroke="${Y}" stroke-width="3"/></g>
+     <path d="M262,84 q-16,22 -6,52" fill="none" stroke="${Y}" stroke-width="2"/><path d="M252,130 l4,8 l6,-7" fill="none" stroke="${Y}" stroke-width="2"/><path d="M398,160 q16,-22 6,-52" fill="none" stroke="${Y}" stroke-width="2"/><path d="M408,114 l-4,-8 l-6,7" fill="none" stroke="${Y}" stroke-width="2"/>` +
+    t(330, 198, 9, '2. HOLD IT LIKE A WHEEL AND TILT', { a: 'middle', fill: '#fff', ls: 1 }) + t(240, 232, 9, 'NO CAMERA NEEDED', { a: 'middle', op: .9, ls: 2 }));
+
+  // 7 track limits
+  set('m7', `<g transform="translate(-100,-30) scale(1.25)">` + scene({ id: 7 }) + `</g>` + cockpit() + hud(188, '0:27.640') + `<rect x="344" y="36" width="122" height="28" fill="#000" opacity=".5"/>` +
+    `<rect x="70" y="56" width="340" height="50" fill="#b5391a" opacity=".92"/>` + t(240, 78, 15, 'LAP TIME DELETED', { a: 'middle', fill: '#fff', ls: 2 }) + t(240, 96, 10, 'TRACK LIMITS AT THE ESSES', { a: 'middle', fill: '#fff', ls: 1 }) +
+    t(458, 46, 9, 'S1 13.812  P2', { a: 'end', fill: '#fff' }) + t(458, 58, 9, 'S2 --.---  VOID', { a: 'end', fill: '#ff8c6e' }) + t(240, 124, 9, 'R TO GO AGAIN', { a: 'middle', fill: '#fff', op: .85, ls: 1 }));
+
+  // 8 replay
+  let crowd = ''; for (let i = 0; i < 260; i++) crowd += `<rect x="${40 + (i * 37) % 400}" y="${58 + (i * 11) % 38}" width="3" height="3" fill="${['#c23f1c', '#e8dfc8', '#1d6f7a', '#f3e36b', '#3a4a6a'][i % 5]}"/>`;
+  set('m8', `<defs><linearGradient id="sk8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9cfd6"/><stop offset="1" stop-color="#eee6cc"/></linearGradient></defs><rect width="480" height="270" fill="url(#sk8)"/>
+    <rect x="36" y="46" width="408" height="8" fill="#d8d2c2"/><rect x="36" y="54" width="408" height="46" fill="#8a8478"/>` + crowd +
+    `<rect y="100" width="480" height="12" fill="#c9c4b6"/><rect y="112" width="480" height="5" fill="#b8bcbc"/><rect y="117" width="480" height="153" fill="#8d8f8c"/><rect y="117" width="480" height="7" fill="#e8e4d8"/>` +
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => `<rect x="${i * 48}" y="117" width="24" height="7" fill="#c23f1c"/>`).join('') +
+    `<g opacity=".25"><rect x="20" y="168" width="150" height="3" fill="#fff"/><rect x="40" y="180" width="120" height="3" fill="#fff"/></g>
+     <ellipse cx="270" cy="200" rx="92" ry="6" fill="#000" opacity=".25"/>
+     <path d="M178,188 L214,180 L250,176 Q262,160 280,160 L300,162 Q318,150 330,166 L348,176 L360,176 L360,192 L178,196 Z" fill="#0c0d10"/>
+     <rect x="340" y="150" width="6" height="28" fill="#0c0d10"/><rect x="330" y="146" width="34" height="7" fill="#0c0d10"/><rect x="330" y="148" width="34" height="2" fill="#c23f1c"/>
+     <circle cx="212" cy="190" r="14" fill="#141416"/><circle cx="212" cy="190" r="6" fill="#2b2b2e"/><circle cx="334" cy="186" r="18" fill="#141416"/><circle cx="334" cy="186" r="8" fill="#2b2b2e"/>
+     <circle cx="286" cy="158" r="10" fill="#c8c4b8"/><path d="M277,154 Q286,146 295,154 L295,157 Q286,150 277,157 Z" fill="#c23f1c"/>
+     <rect x="24" y="222" width="250" height="30" fill="#17181b" opacity=".9"/><rect x="24" y="222" width="6" height="30" fill="${Y}"/>` +
+    t(40, 236, 12, 'JAMIE M', { fill: '#fff' }) + t(40, 247, 8, 'REPLAY · THE LONG RIGHT · 263 KM/H', { op: .9 }) + t(264, 241, 14, '0:59.812', { a: 'end' }) +
+    `<rect x="420" y="18" width="42" height="16" fill="#b5391a"/>` + t(441, 30, 9, 'REPLAY', { a: 'middle', fill: '#fff' }));
+})();
+</script>
