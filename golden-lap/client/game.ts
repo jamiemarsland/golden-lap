@@ -1091,7 +1091,7 @@ function readInput(dt) {
     if (!steerOnly) { tIn = v < tv ? 1 : 0; bIn = v > tv + 1.5 ? clamp((v - tv) / 6, 0, 1) : 0; }
   }
   gridRev = mode === 'grid' ? (phone.on ? (phoneLive() ? phone.brk : 0) : hand.on ? (hand.ok ? hand.rev || 0 : 0) : tIn) : 0;      // revving on the line: stretch the wheel, or press the throttle key
-  if (mode === 'grid') { sIn = 0; tIn = 0; bIn = 1; }
+  if (mode === 'grid') { tIn = 0; bIn = 1; }      /* held on the brake, but the wheel is live: you can feel the steering before the lights go out */
   // Keyboard steering eases in: a tap is a small correction, a held key winds on to full lock. It builds more slowly the faster you go.
   if (!analog) { const dir = Math.sign(sIn); if (dir !== 0 && dir === car.holdDir) car.holdT += dt; else car.holdT = 0; car.holdDir = dir;
     sIn *= Math.pow(Math.min(1, car.holdT / ((0.5 - 0.045 * feel) * (0.5 + 0.9 * Math.min(1, v / 60)))), 1.3); }

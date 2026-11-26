@@ -954,3 +954,6 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Ported the trailer trial into the lens shader (pass B). Every 9 to 23 seconds of dry running above about 125 km/h, something lands on the upper half of the lens: that patch goes soft and milky, sits for 0.45 s, then the airflow drags it outwards and upwards off the picture, stretching into a streak. Faster car, quicker exit.
 - It is a blur and a lift of the picture, not a drawn mark, so it barely shows over dark road and glows against bright sky. Never in the tunnel, never in rain (rain has its own water on the lens), never on the grid.
 - Checked in the preview by freezing one at full strength next to a clean frame: the trees behind it go pale and soft. Not judged in motion at speed.
+
+### v62: the wheel is live on the grid (James, driving with the phone: "the steering doesnt work until the countdown has finished which is a bit weird")
+- The grid code zeroed the steering along with the throttle, for every kind of control. Now only the throttle is held: turn the phone (or your hands, or press a key) during the countdown and the wheel and front tyres turn. The car itself is still pinned to its grid slot. Checked with a key held on the grid: wheel at 0.46 lock, car moved 0 m and turned 0 degrees.
