@@ -981,3 +981,10 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Braking with a clenched fist or a touch on the phone gave nothing back. There is now a small warning lamp in the wheel's hub: chrome bezel, ruby lens, and a bulb that glows in proportion to how hard the brakes are on.
 - Old school means it behaves like a filament, not a switch: quick to light, slower to die away, with a soft red halo and a hot spot off-centre at full brake.
 - It shows whatever is braking the car, so it also lights on the grid (the car is held on the brake) and when Beginner mode brakes for you.
+
+### v67: the phone wheel buzzes (James: "i dont suppose its possible to do any kind of haptic feedback is it?")
+- The link between phone and game was one-way (steering in). It now carries three signals back: a gear change, a barrier hit, and running over a kerb or the grass (repeated about ten times a second while it lasts).
+- Android: real vibration. A short pulse for a gear change, a slightly longer one for kerbs, a double thump for a barrier.
+- iPhone: Apple gives web pages no vibration, so the page flips a hidden switch control, which makes recent iPhones give their small "tick". One strength only, three quick ticks for a barrier. Unofficial, and untested on a real iPhone.
+- The phone gives one tick when you tap start so you know it works, and has a line to turn vibration off.
+- Tested here only as far as possible without a phone: the game sends the gear-change signals during a lap, and the phone page loads and its switch flips. Whether it can be felt is for a real phone to say.

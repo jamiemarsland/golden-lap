@@ -23,7 +23,9 @@ function phoneWheel(code) {
   el.innerHTML = `<div style="color:#f3e36b;font-weight:700;letter-spacing:5px;font-size:20px">GOLDEN LAP</div><div id="pwst" style="letter-spacing:2px">CONNECTING...</div>
     <canvas id="pwc" width="200" height="200" style="width:150px;height:150px"></canvas><div id="pwgo" style="${B}">TAP TO START</div>
     <div id="pwtip" style="font-size:14px;color:#ccc;max-width:420px">Hold the phone sideways like a steering wheel, screen facing you. Turn it to steer. Touch the screen to brake.</div>
-    <div id="pwinv" style="font-size:12px;color:#999;text-decoration:underline;display:none">Steering backwards? Tap here</div>`;
+    <div id="pwinv" style="font-size:12px;color:#999;text-decoration:underline;display:none">Steering backwards? Tap here</div>
+    <div id="pwhap" style="font-size:12px;color:#999;text-decoration:underline;display:none">Vibration is on. Tap to turn off</div>
+    <label id="pwsw" style="position:fixed;left:-200px;top:0;opacity:0;pointer-events:none"><input type="checkbox" switch></label>`;
   document.body.appendChild(el); document.title = 'Golden Lap wheel';
   /* As clean a screen as the phone allows: nothing scrolls, bounces or zooms, the page runs under the notch, and the browser's bars take the page's colour.
      Android can go properly full screen on the first tap (below). An iPhone cannot hide Safari's bars from a web page. */
@@ -33,11 +35,17 @@ function phoneWheel(code) {
     for (const ev of ['gesturestart', 'gesturechange', 'dblclick']) document.addEventListener(ev, e => e.preventDefault(), { passive: false }); }
   const goFull = () => { try { const d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen; if (f && !document.fullscreenElement && !document.webkitFullscreenElement) { const r = f.call(d, { navigationUI: 'hide' }); if (r && r.catch) r.catch(() => {}); } } catch (err) {} };
   const q = id => el.querySelector('#' + id), st = t => { q('pwst').textContent = t; };
-  let ch = null, base = null, inv = 1, brake = 0, ang = 0, lastSend = 0, flat = false, started = false;
+  let ch = null, base = null, inv = 1, brake = 0, ang = 0, lastSend = 0, flat = false, started = false, hapOn = true;
+  /* The game tells the phone what the car is feeling: 'k' a kerb or the grass, 'b' a barrier, 'g' a gear change.
+     Android can vibrate properly. An iPhone gives web pages no vibration, but flipping a hidden switch control makes it tick, so there it is ticks only. */
+  const tick = () => { try { q('pwsw').click(); } catch (err) {} };
+  const haptic = h => { if (!started || !hapOn) return;
+    if (navigator.vibrate) { navigator.vibrate(h === 'b' ? [70, 30, 110] : h === 'g' ? 16 : 24); return; }
+    tick(); if (h === 'b') { setTimeout(tick, 70); setTimeout(tick, 140); } };
   (async () => {
     try { const j = await fetch('/api/pair?p=' + code, { cache: 'no-store' }).then(r => r.json()); if (!j.ok) return st('THAT CODE HAS EXPIRED: SCAN AGAIN');
       const pc = new RTCPeerConnection(RTC);
-      pc.ondatachannel = e => { ch = e.channel; ch.onopen = () => st(started ? 'CONNECTED' : 'CONNECTED: TAP TO START'); ch.onclose = () => { ch = null; st('DISCONNECTED: SCAN AGAIN'); }; };
+      pc.ondatachannel = e => { ch = e.channel; ch.onmessage = ev => { try { const m = JSON.parse(ev.data); if (m.h) haptic(m.h); } catch (err) {} }; ch.onopen = () => st(started ? 'CONNECTED' : 'CONNECTED: TAP TO START'); ch.onclose = () => { ch = null; st('DISCONNECTED: SCAN AGAIN'); }; };
       await pc.setRemoteDescription({ type: 'offer', sdp: j.offer }); await pc.setLocalDescription(await pc.createAnswer()); await waitIce(pc);
       const a = await postJ('/api/pair-answer', { p: code, answer: pc.localDescription.sdp }); if (!a.ok) return st('COULD NOT CONNECT: SCAN AGAIN');
       setTimeout(() => { if (!ch || ch.readyState !== 'open') st('STILL CONNECTING... SAME WI-FI HELPS'); }, 8000);
@@ -51,10 +59,11 @@ function phoneWheel(code) {
   q('pwgo').addEventListener('click', async e => { e.stopPropagation(); goFull();      /* must be asked for inside the tap itself */
     try { if (window.DeviceMotionEvent && DeviceMotionEvent.requestPermission) { const p = await DeviceMotionEvent.requestPermission(); if (p !== 'granted') return st('MOTION ACCESS WAS REFUSED'); } } catch (err) { return st('MOTION SENSORS NOT AVAILABLE'); }
     if (!started) { addEventListener('devicemotion', onMotion); started = true; try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(() => {}); } catch (err) {} }
-    base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block';
+    base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block'; q('pwhap').style.display = 'block'; haptic('g');      /* one tick so you know it works */
     if (ch && ch.readyState === 'open') st('CONNECTED'); });
   q('pwinv').addEventListener('click', e => { e.stopPropagation(); inv = -inv; q('pwinv').textContent = 'Steering direction switched. Tap to switch back'; });
-  for (const id of ['pwgo', 'pwinv']) for (const ev of ['touchstart', 'touchend']) q(id).addEventListener(ev, e => e.stopPropagation(), { passive: true });
+  q('pwhap').addEventListener('click', e => { e.stopPropagation(); hapOn = !hapOn; q('pwhap').textContent = hapOn ? 'Vibration is on. Tap to turn off' : 'Vibration is off. Tap to turn on'; haptic('g'); });
+  for (const id of ['pwgo', 'pwinv', 'pwhap']) for (const ev of ['touchstart', 'touchend']) q(id).addEventListener(ev, e => e.stopPropagation(), { passive: true });
   el.addEventListener('touchstart', e => { brake = 1; e.preventDefault(); }, { passive: false }); el.addEventListener('touchend', e => { if (!e.touches.length) brake = 0; }); el.addEventListener('touchcancel', () => { brake = 0; });
   const c = q('pwc').getContext('2d');
   (function draw() { requestAnimationFrame(draw); c.clearRect(0, 0, 200, 200); c.save(); c.translate(100, 100); c.rotate(-ang * 0.01745);
@@ -908,7 +917,7 @@ async function pairPhone() {
   closePhone(); const my = phone.poll, msg = t => { $('pwmsg').textContent = t; };
   $('pw').style.display = 'flex'; $('pwcode').textContent = ''; msg('Making a code...'); $('pwqr').getContext('2d').clearRect(0, 0, 232, 232);
   try {
-    const pc = phone.pc = new RTCPeerConnection(RTC), ch = pc.createDataChannel('wheel', { ordered: false, maxRetransmits: 0 });      // late steering is worse than lost steering
+    const pc = phone.pc = new RTCPeerConnection(RTC), ch = phone.ch = pc.createDataChannel('wheel', { ordered: false, maxRetransmits: 0 });      // late steering is worse than lost steering
     ch.onmessage = e => { try { const m = JSON.parse(e.data); let s = clamp(m.s / 35, -1, 1); s = Math.sign(s) * Math.pow(Math.max(0, Math.abs(s) - 0.04) / 0.96, 1.2); phone.target = s; phone.brk = m.b ? 1 : 0; phone.t = performance.now(); } catch (err) {} };
     ch.onopen = () => { phone.on = true; phone.t = performance.now(); if (hand.on) stopHands(); $('phonebtn').textContent = 'Phone: CONNECTED'; $('phonebtn').className = 'on'; $('ctlhint').textContent = 'Turn the phone to steer. Touch its screen to brake.'; msg('Connected. Press START when you are ready.'); setTimeout(() => { if (phone.poll === my) $('pw').style.display = 'none'; }, 1400); };
     ch.onclose = () => { if (phone.pc === pc) { closePhone(); setCtl(useHands); say('PHONE DISCONNECTED: KEYBOARD STEERING'); } };
@@ -1732,6 +1741,10 @@ function frame(dtForced) {
   // car and camera
   car.axS += (car.ax - car.axS) * Math.min(1, dt * 8); car.ayS += (car.ay - car.ayS) * Math.min(1, dt * 8);
   car.bump *= Math.exp(-dt * 5);
+  if (phone.on && phone.ch && phone.ch.readyState === 'open' && mode === 'run') {      /* tell the phone what the car is feeling, so it can buzz in your hands */
+    const H = phone.hap || (phone.hap = { g: car.gear, b: 0, k: 0 }), now = performance.now(); let m = '';
+    if (car.bump > H.b + 0.12) m = 'b'; else if (car.gear !== H.g) m = 'g'; else if ((car.kerb || car.off) && v > 8 && now - H.k > 95) { m = 'k'; H.k = now; }
+    H.b = car.bump; H.g = car.gear; if (m) { try { phone.ch.send('{"h":"' + m + '"}'); } catch (err) {} phone.hapN = (phone.hapN || 0) + 1; } }
   const rough = sf + (car.kerb ? 1.6 * Math.min(1, v / 15) : 0) + (car.off ? 2.2 * Math.min(1, v / 15) : 0) + car.bump * 4;
   carObj.position.set(car.x, car.yS, car.z);
   carObj.rotation.set(Math.atan(car.slopeS) + car.axS * 0.0008 + ns(T, 31, 57, 83) * 0.0015 * rough, car.h, -car.ayS * 0.0012 + ns(T, 27, 49, 71) * 0.002 * rough - (car.bankS || 0));
