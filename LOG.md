@@ -960,3 +960,13 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 
 ### v63: phone panel centred (James, with a screenshot: "the qr code should be centered")
 - In the "Steer with your phone" panel the QR code sat left of the heading and text. The panel's contents are now stacked and centred as a column.
+
+### v64: the modes are now Beginner and Pro (James: "i think we should call our modes beginner and pro")
+- "Simple mode: ON/OFF" became one button reading "Mode: BEGINNER" or "Mode: PRO". Same on the speed readout, the leaderboard tags (every row now says which, e.g. "PHONE, BEGINNER", "HANDS, PRO"), the finish card and the help text. The stored tags still say "simple", so old laps keep their place.
+- James also asked whether Pro can post a faster lap, "ideally they should if they are really really good". Worked out from the speed profiles, as flying laps:
+  - the computer's driver: 69.1 s
+  - Beginner at its slowest (88% pace): 73.5 s
+  - Beginner at its ceiling (100% pace): 64.6 s
+  - the car's real limit (all the grip, late braking, full trust in the banking): about 60.6 to 61.2 s
+  - a very good but not perfect Pro lap (97% of the grip): about 61.6 s
+- So yes: Beginner tops out at 90% of the grip, brakes early and half-trusts the banking, which leaves Pro about three to four seconds. But a Pro driver only as good as the computer's is four and a half seconds slower than a tidy Beginner. Nothing changed in the handling.

@@ -873,7 +873,7 @@ addEventListener('keydown', e => {
   if (e.code === 'KeyV') { fxOn = !fxOn; passB.uniforms.fx.value = fxOn ? 1 : 0; }
   if (e.code === 'KeyT') { autopilot = !autopilot; }
   if (e.code === 'KeyK') nextCam();
-  if (e.code === 'KeyX') { setEasy(!easy); say(easy ? 'SIMPLE MODE ON: JUST STEER' : 'SIMPLE MODE OFF'); }
+  if (e.code === 'KeyX') { setEasy(!easy); say(easy ? 'BEGINNER: JUST STEER' : 'PRO: YOU BRAKE TOO'); }
   if (e.code === 'KeyC') { if (hand.on) { stopHands(); setCtl(false); } else { setCtl(true); startHands().catch(() => stopHands()); } }
   if (e.code === 'BracketLeft' || e.code === 'BracketRight') { feel = clamp(feel + (e.code === 'BracketRight' ? 1 : -1), 1, 9); try { localStorage.setItem('goldenlap.feel', feel); } catch (x) {}
     $('flash').textContent = 'STEERING ' + feel + ' OF 9'; $('flash').className = 'plain'; $('flash').style.display = 'block'; flashT = 2; }
@@ -946,7 +946,7 @@ function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
 // ---------- challenge links: one lap, carried in a link, for someone else to race ----------
 let rival = null;      // { n, t, c, s } once a challenge link has loaded; it then replaces your own ghost on track
-const CTL = { phone: 'WITH A PHONE AS THE WHEEL', 'phone-simple': 'WITH A PHONE, SIMPLE MODE', hands: 'WITH THEIR HANDS', keys: 'ON THE KEYBOARD', 'keys-simple': 'IN SIMPLE MODE', 'hands-simple': 'WITH THEIR HANDS, SIMPLE MODE' };
+const CTL = { phone: 'WITH A PHONE AS THE WHEEL, PRO', 'phone-simple': 'WITH A PHONE, BEGINNER', hands: 'WITH THEIR HANDS, PRO', keys: 'ON THE KEYBOARD, PRO', 'keys-simple': 'ON THE KEYBOARD, BEGINNER', 'hands-simple': 'WITH THEIR HANDS, BEGINNER' };   /* the stored tags still say "simple": that was the mode's first name */
 // A challenge is stored small: time, distance round the lap and distance from the centre line, ten times a second. The car's path is rebuilt from the circuit.
 function packLap(r) { const out = []; r.forEach((q, i) => { if (i % 2 === 0 || i === r.length - 1) out.push(Math.round(q[0] * 1000), Math.round(q[5] * 10), Math.round((q[6] || 0) * 10)); }); return out; }
 function unpackLap(d) { const S = [];
@@ -1050,7 +1050,7 @@ function makeCard() {
   const sorted = board.slice().sort((a, b) => a.t - b.t), pos = mine ? sorted.indexOf(mine) + 1 : 0, name = ($('name').value || '').toUpperCase().trim();
   g.fillStyle = '#17181b'; g.textAlign = 'left'; g.font = F(34); g.fillText('G O L D E N   L A P', 40, 700);
   g.font = F(190); g.fillText(fmt(lap.last), 30, 890);
-  g.fillStyle = '#b5391a'; g.font = F(40); g.fillText((pos ? `P${pos} OF ${sorted.length}` : 'LAP COMPLETE') + (mine ? ' · ' + ({ phone: 'PHONE', 'phone-simple': 'PHONE, SIMPLE', hands: 'HANDS', keys: 'KEYS', 'keys-simple': 'SIMPLE', 'hands-simple': 'HANDS, SIMPLE' }[mine.c] || '') : '') + (daily ? ' · ' + ENV.name : ''), 40, 960);
+  g.fillStyle = '#b5391a'; g.font = F(40); g.fillText((pos ? `P${pos} OF ${sorted.length}` : 'LAP COMPLETE') + (mine ? ' · ' + ({ phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[mine.c] || '') : '') + (daily ? ' · ' + ENV.name : ''), 40, 960);
   g.fillStyle = '#5a6066'; g.font = F(30); if (secRows.length === 3) g.fillText(secRows.map((r, i) => `S${i + 1} ${r.sec.toFixed(3)}`).join('   '), 40, 1020);
   // circuit outline, with the start line marked
   g.save(); g.translate(40, 1060); g.scale(1.9, 1.9); g.strokeStyle = '#17181b'; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath();
@@ -1583,8 +1583,8 @@ function toGrid() {
   placeOnTrack(N - 4, 0); lap.t = null; lap.last = null; lap.half = false;
   $('panel').style.display = 'none'; $('lights').style.display = 'block';
 }
-const tagOf = c => { const t = { phone: 'PHONE', 'phone-simple': 'PHONE, SIMPLE', hands: 'HANDS', 'keys-simple': 'SIMPLE', 'hands-simple': 'HANDS, SIMPLE' }[c]; return t ? ` <small>${t}</small>` : ''; };
-function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('easybtn').textContent = 'Simple mode: ' + (easy ? 'ON' : 'OFF'); $('easybtn').className = easy ? 'on' : ''; }
+const tagOf = c => { const t = { phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[c]; return t ? ` <small>${t}</small>` : ''; };
+function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('easybtn').textContent = 'Mode: ' + (easy ? 'BEGINNER' : 'PRO'); $('easybtn').className = ''; }
 function drawTop() {
   const rows = board.slice().sort((a, b) => a.t - b.t).slice(0, 10);
   const html = '<caption>' + (daily ? 'TODAY: ' + ENV.name : 'LEADERBOARD') + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : '<tr><td>No times yet. Set the first one.</td></tr>');
@@ -1782,7 +1782,7 @@ function frame(dtForced) {
   $('lap').textContent = 'LAP ' + fmt(lap.t);
   $('last').textContent = board.length ? 'P1 ' + fmt(board[0].t) : 'NO TIMES YET';
   if (flashT > 0) { flashT -= dt; if (flashT <= 0) $('flash').style.display = 'none'; }
-  $('auto').textContent = autopilot ? 'AUTOPILOT' : 'SIMPLE MODE · PACE ' + Math.round(easyPace * 100) + '%'; $('auto').style.display = (autopilot || easy) && started && mode !== 'done' ? 'block' : 'none';
+  $('auto').textContent = autopilot ? 'AUTOPILOT' : 'BEGINNER · PACE ' + Math.round(easyPace * 100) + '%'; $('auto').style.display = (autopilot || easy) && started && mode !== 'done' ? 'block' : 'none';
   mapC.clearRect(0, 0, 130, 130); mapC.drawImage(mapBase.c, 0, 0);
   for (const rv of rivals) { const [x, y] = mapBase.f(rv.mesh.position.x, rv.mesh.position.z); mapC.fillStyle = '#fff'; mapC.fillRect(x - 2, y - 2, 4, 4); }
   { const [x, y] = mapBase.f(car.x, car.z); mapC.fillStyle = '#ff3b3b'; mapC.fillRect(x - 3, y - 3, 6, 6); }
@@ -1821,7 +1821,7 @@ $('start').addEventListener('click', () => {
 });
 
 // handle for testing and for scripted B-roll
-window.G = { smudge, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
+window.G = { smudge, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
 })();
 
 }
