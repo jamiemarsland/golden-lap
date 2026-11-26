@@ -970,3 +970,9 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
   - the car's real limit (all the grip, late braking, full trust in the banking): about 60.6 to 61.2 s
   - a very good but not perfect Pro lap (97% of the grip): about 61.6 s
 - So yes: Beginner tops out at 90% of the grip, brakes early and half-trusts the banking, which leaves Pro about three to four seconds. But a Pro driver only as good as the computer's is four and a half seconds slower than a tidy Beginner. Nothing changed in the handling.
+
+### v65: a cleaner phone wheel page (James: "is it possible to open the steering wheel on the phone in a clean browser?")
+- Answer given: Android yes, iPhone only partly. A web page cannot hide Safari's bars on an iPhone; the only bar-free route there is "Add to Home Screen", which a QR code cannot open.
+- Android: the first tap (the one that starts the motion sensor) now also asks for full screen, so the address bar and buttons go.
+- iPhone and everything else: the page no longer scrolls, bounces or zooms, runs under the notch with safe margins, and tells the browser to tint its bars the page's dark grey so they blend in.
+- Checked at phone size in the preview (settings applied, nothing scrolls, no errors). Not tried on a real iPhone or Android phone.

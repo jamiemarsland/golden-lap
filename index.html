@@ -157,13 +157,20 @@ const postJ = (u, b) => fetch(u, { method: 'POST', headers: { 'content-type': 'a
   if (w) { phoneWheel(w); return; } }
 function phoneWheel(code) {
   const el = document.createElement('div');
-  el.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#15171a;color:#fff;font:16px/1.5 "Courier New",monospace;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;padding:18px;touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden';
+  el.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#15171a;color:#fff;font:16px/1.5 "Courier New",monospace;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none;overflow:hidden';
   const B = 'display:inline-block;padding:12px 26px;background:#f3e36b;color:#111;font-weight:700;letter-spacing:3px;font-size:18px';
   el.innerHTML = `<div style="color:#f3e36b;font-weight:700;letter-spacing:5px;font-size:20px">GOLDEN LAP</div><div id="pwst" style="letter-spacing:2px">CONNECTING...</div>
     <canvas id="pwc" width="200" height="200" style="width:150px;height:150px"></canvas><div id="pwgo" style="${B}">TAP TO START</div>
     <div id="pwtip" style="font-size:14px;color:#ccc;max-width:420px">Hold the phone sideways like a steering wheel, screen facing you. Turn it to steer. Touch the screen to brake.</div>
     <div id="pwinv" style="font-size:12px;color:#999;text-decoration:underline;display:none">Steering backwards? Tap here</div>`;
   document.body.appendChild(el); document.title = 'Golden Lap wheel';
+  /* As clean a screen as the phone allows: nothing scrolls, bounces or zooms, the page runs under the notch, and the browser's bars take the page's colour.
+     Android can go properly full screen on the first tap (below). An iPhone cannot hide Safari's bars from a web page. */
+  { const meta = (name, content) => { let m = document.querySelector(`meta[name="${name}"]`); if (!m) { m = document.createElement('meta'); m.name = name; document.head.appendChild(m); } m.content = content; };
+    meta('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover'); meta('theme-color', '#15171a');
+    for (const n of [document.documentElement, document.body]) n.style.cssText += ';background:#15171a;overflow:hidden;overscroll-behavior:none;height:100%;margin:0';
+    for (const ev of ['gesturestart', 'gesturechange', 'dblclick']) document.addEventListener(ev, e => e.preventDefault(), { passive: false }); }
+  const goFull = () => { try { const d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen; if (f && !document.fullscreenElement && !document.webkitFullscreenElement) { const r = f.call(d, { navigationUI: 'hide' }); if (r && r.catch) r.catch(() => {}); } } catch (err) {} };
   const q = id => el.querySelector('#' + id), st = t => { q('pwst').textContent = t; };
   let ch = null, base = null, inv = 1, brake = 0, ang = 0, lastSend = 0, flat = false, started = false;
   (async () => {
@@ -180,7 +187,7 @@ function phoneWheel(code) {
     if (Math.hypot(g.x, g.y) < 3) { flat = true; return; } flat = false;      // lying flat: no reading, hold the last angle
     const a = Math.atan2(g.x, g.y) * 57.2958; if (base == null) base = a; let d = a - base; d = ((d + 540) % 360) - 180; ang += (d - ang) * 0.5;
     const now = performance.now(); if (ch && ch.readyState === 'open' && now - lastSend > 30) { lastSend = now; ch.send(JSON.stringify({ s: +(ang * inv).toFixed(1), b: brake })); } }
-  q('pwgo').addEventListener('click', async e => { e.stopPropagation();
+  q('pwgo').addEventListener('click', async e => { e.stopPropagation(); goFull();      /* must be asked for inside the tap itself */
     try { if (window.DeviceMotionEvent && DeviceMotionEvent.requestPermission) { const p = await DeviceMotionEvent.requestPermission(); if (p !== 'granted') return st('MOTION ACCESS WAS REFUSED'); } } catch (err) { return st('MOTION SENSORS NOT AVAILABLE'); }
     if (!started) { addEventListener('devicemotion', onMotion); started = true; try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(() => {}); } catch (err) {} }
     base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block';
