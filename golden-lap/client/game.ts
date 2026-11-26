@@ -40,7 +40,9 @@ function phoneWheel(code) {
      Android can vibrate properly. An iPhone gives web pages no vibration. Flipping a hidden switch control used to make it tick (iOS 17.4 to 26.4); Apple closed that in iOS 26.5,
      so on a current iPhone this does nothing. The attempt is left in for older iPhones, where it is harmless. */
   const tick = () => { try { q('pwsw').click(); } catch (err) {} };
+  const native = (() => { try { return window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.haptic; } catch (err) { return null; } })();      /* inside the Golden Lap iPhone app, which can use the phone's real haptics */
   const haptic = h => { if (!started || !hapOn) return;
+    if (native) { try { native.postMessage(h); } catch (err) {} return; }
     if (navigator.vibrate) { navigator.vibrate(h === 'b' ? [70, 30, 110] : h === 'g' ? 16 : 24); return; }
     tick(); if (h === 'b') { setTimeout(tick, 70); setTimeout(tick, 140); } };
   (async () => {
@@ -60,7 +62,7 @@ function phoneWheel(code) {
   q('pwgo').addEventListener('click', async e => { e.stopPropagation(); goFull();      /* must be asked for inside the tap itself */
     try { if (window.DeviceMotionEvent && DeviceMotionEvent.requestPermission) { const p = await DeviceMotionEvent.requestPermission(); if (p !== 'granted') return st('MOTION ACCESS WAS REFUSED'); } } catch (err) { return st('MOTION SENSORS NOT AVAILABLE'); }
     if (!started) { addEventListener('devicemotion', onMotion); started = true; try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(() => {}); } catch (err) {} }
-    base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block'; if (navigator.vibrate) q('pwhap').style.display = 'block'; haptic('g');      /* the vibration line only shows where the phone can really vibrate: not on an iPhone */      /* one tick so you know it works */
+    base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block'; if (navigator.vibrate || native) q('pwhap').style.display = 'block'; haptic('g');      /* the vibration line only shows where the phone can really vibrate: not on an iPhone */      /* one tick so you know it works */
     if (ch && ch.readyState === 'open') st('CONNECTED'); });
   q('pwinv').addEventListener('click', e => { e.stopPropagation(); inv = -inv; q('pwinv').textContent = 'Steering direction switched. Tap to switch back'; });
   q('pwhap').addEventListener('click', e => { e.stopPropagation(); hapOn = !hapOn; q('pwhap').textContent = hapOn ? 'Vibration is on. Tap to turn off' : 'Vibration is off. Tap to turn on'; haptic('g'); });

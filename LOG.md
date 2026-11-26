@@ -993,3 +993,10 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Looked it up. The switch-control trick worked from iOS 17.4 to 26.4; the library that popularised it says Apple closed it in iOS 26.5, and WebKit has a bug titled "haptic feedback for switch should require user activation". Even where it survives, a tick that needs a finger on the screen cannot be fired by a kerb. So on a current iPhone there is no way for a web page to vibrate the phone.
 - The "Vibration is on" line now only appears on phones that can really vibrate (Android). The old trick is left in for older iPhones, where it does no harm.
 - Android haptics remain, still untested on a real Android phone.
+
+### An iPhone app for the wheel, to find out if haptics are worth it (James: "lets build it for me so i can see if its worth it")
+- Context: James asked whether an iPhone app would have to be on the App Store or could live on GitHub. Answer: the code can live on GitHub, but only people with a Mac and Xcode can install from there; for anyone else it is TestFlight or the App Store. For his own phone, GitHub plus Xcode is enough and free.
+- Built the smallest thing that answers the question, in `ios-wheel/`: an app that shows the game's own phone-wheel web page in a web view, and adds what Safari withholds. No browser bars at all, the tilt sensor allowed without a prompt, the screen locked upright so it cannot flip while steering, the screen kept awake, and real haptics: a crisp tap for a gear change, a heavy tap ten times a second on kerbs and grass, a double thump for a barrier.
+- The web page now checks whether it is inside the app and, if so, hands the gear/kerb/barrier signals to it (v69). Outside the app nothing changes.
+- You type the game's code into the app, because a QR code always opens Safari.
+- Honest state: this Mac has no Xcode, so the app has **not been built or run**. Only the Swift syntax is checked. Next step is James installing Xcode.

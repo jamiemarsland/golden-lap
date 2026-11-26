@@ -1,0 +1,32 @@
+# Golden Lap Wheel: the phone-as-steering-wheel page in a thin iPhone app, so it can use the phone's haptics.
+# Make the Xcode project with:  xcodegen generate
+name: GoldenLapWheel
+options:
+  bundleIdPrefix: com.jamiemarsland
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  GoldenLapWheel:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Golden Lap
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIStatusBarHidden: true
+        UIViewControllerBasedStatusBarAppearance: false
+        UIRequiresFullScreen: true
+        # portrait only, on purpose: the phone is turned like a wheel, and the screen must not flip round while steering
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSMotionUsageDescription: Golden Lap uses the tilt of your phone as the steering wheel.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jamiemarsland.goldenlapwheel
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: NO
