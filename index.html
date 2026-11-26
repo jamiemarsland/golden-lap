@@ -844,10 +844,11 @@ const passA = new THREE.ShaderMaterial({ depthTest: false, vertexShader: VS,
       vec4 c = 0.5 * (texture2D(tC, vUv + o) + texture2D(tC, vUv - o));
       gl_FragColor = vec4(mix(mix(w, c.rgb, c.a), texture2D(tP, vUv).rgb, ghost), 1.);   // ghost = last frame bleeding through
     }` });
+const smudge = { on: false, next: 8, force: false };
 const passB = new THREE.ShaderMaterial({ depthTest: false, vertexShader: VS,
-  uniforms: { t: { value: null }, res: { value: new THREE.Vector2(768, 432) }, time: { value: 0 }, fx: { value: 1 }, expo: { value: 1 }, soft: { value: 1 }, rain: { value: 0 }, tint: { value: new THREE.Vector3(1, 1, 1) } },
+  uniforms: { t: { value: null }, res: { value: new THREE.Vector2(768, 432) }, time: { value: 0 }, fx: { value: 1 }, expo: { value: 1 }, soft: { value: 1 }, rain: { value: 0 }, tint: { value: new THREE.Vector3(1, 1, 1) }, smA: { value: new THREE.Vector4(0.5, 0.5, 0.05, 0.05) }, smB: { value: new THREE.Vector3(1, 0, 0) } },
   fragmentShader: `
-    uniform sampler2D t; uniform vec2 res; uniform float time, fx, expo, soft, rain; uniform vec3 tint; varying vec2 vUv;
+    uniform sampler2D t; uniform vec2 res; uniform float time, fx, expo, soft, rain; uniform vec3 tint; uniform vec4 smA; uniform vec3 smB; varying vec2 vUv;
     float hash(float n){ return fract(sin(n) * 43758.5453); }
     float hash2(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     vec3 drops(vec2 uv, float t){            // water on the lens: each drop lands, sits, slides a little and dries
@@ -886,6 +887,14 @@ const passB = new THREE.ShaderMaterial({ depthTest: false, vertexShader: VS,
       for (int i = 0; i < 8; i++) { float a = float(i) * 0.785; vec2 o = vec2(cos(a), sin(a) * res.x / res.y) * px;
         glow += max(texture2D(t, ug + o * 6.).rgb - .6, 0.) + max(texture2D(t, ug + o * 16.).rgb - .6, 0.); }
       c += glow / 16. * vec3(1.2, 1.18, 0.95);
+      if (smB.z > 0.003) {                                             /* a smudge on the lens: that patch goes soft and milky, so it barely shows over dark road and glows against the sky */
+        vec2 sd = (vUv - smA.xy) * vec2(res.x / res.y, 1.);
+        float sa = dot(sd, smB.xy) / smA.z, sb = dot(sd, vec2(-smB.y, smB.x)) / smA.w;
+        float sm = smB.z * exp(-(sa * sa + sb * sb) * .5);
+        if (sm > 0.01) { vec3 bl = vec3(0.);
+          for (int i = 0; i < 12; i++) { float a = float(i) * 2.4, rr = 0.012 + 0.03 * fract(float(i) * 0.618); bl += texture2D(t, ug + vec2(cos(a) * res.y / res.x, sin(a)) * rr).rgb; }
+          c = mix(c, bl / 12. * 0.8 + 0.1, sm); }
+      }
       c = c * 1.1 * expo + 0.045;                                      // expo = the camera's auto-gain, slow to react
       c = mix(c, smoothstep(0., 1., c), 0.3);
       float l = dot(c, vec3(.299, .587, .114));
@@ -1879,6 +1888,14 @@ function frame(dtForced) {
   passA.uniforms.blur.value = 0.03 * sf + 0.3 * Math.pow(sf, 2.2);      // gentle at town speeds, heavy smear flat out
   { const f = (portrait ? 112 : CAM.fov) + 9 * sf * sf; if (Math.abs(camW.fov - f) > 0.05) { camW.fov = camC.fov = f; camW.updateProjectionMatrix(); camC.updateProjectionMatrix(); } }   // view widens with speed passA.uniforms.shake.value = 0.0012 * rough; passA.uniforms.time.value = T % 50;
   passB.uniforms.time.value = T;
+  { const S = smudge, u3 = passB.uniforms;       /* every so often something lands on the lens, sits for a moment, and the airflow drags it off the edge */
+    if (!S.on && (S.force || (mode === 'run' && T > S.next && v > 35 && car.tun < 0.1 && !ENV.rain))) { S.force = false; S.on = true; S.t0 = T;
+      S.x = 0.3 + 0.4 * Math.random(); S.y = 0.56 + 0.2 * Math.random(); const a = 0.35 + 0.4 * Math.random();
+      S.ux = (S.x < 0.5 ? -1 : 1) * Math.cos(a); S.uy = Math.sin(a); S.r = 0.045 + 0.02 * Math.random(); S.dur = clamp(0.9 * 70 / Math.max(v, 30), 0.6, 1.5); }
+    if (S.on) { const u = clamp((T - S.t0 - 0.45) / S.dur, 0, 1), e = u * u, asp = u3.res.value.x / u3.res.value.y;
+      u3.smA.value.set(S.x + S.ux * 0.85 * e / asp, S.y + S.uy * 0.85 * e, S.r * (1 + 3.5 * e), S.r * (1 - 0.45 * e));
+      u3.smB.value.set(S.ux, S.uy, clamp((T - S.t0) / 0.12, 0, 1) * (1 - u * u * u));
+      if (u >= 1) { S.on = false; S.next = T + 9 + 14 * Math.random(); u3.smB.value.z = 0; } } }
   passB.uniforms.soft.value = 0.15 + 0.85 * sf; passK.uniforms.amt.value = 0.35 + 0.55 * sf; passA.uniforms.ghost.value = 0.1 + 0.26 * sf;   // sharper when slow
 
   // render: world, cockpit, composite, tape
@@ -1942,7 +1959,7 @@ $('start').addEventListener('click', () => {
 });
 
 // handle for testing and for scripted B-roll
-window.G = { get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
+window.G = { smudge, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
 })();
 </script>
 </body>
