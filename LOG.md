@@ -957,3 +957,6 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 
 ### v62: the wheel is live on the grid (James, driving with the phone: "the steering doesnt work until the countdown has finished which is a bit weird")
 - The grid code zeroed the steering along with the throttle, for every kind of control. Now only the throttle is held: turn the phone (or your hands, or press a key) during the countdown and the wheel and front tyres turn. The car itself is still pinned to its grid slot. Checked with a key held on the grid: wheel at 0.46 lock, car moved 0 m and turned 0 degrees.
+
+### v63: phone panel centred (James, with a screenshot: "the qr code should be centered")
+- In the "Steer with your phone" panel the QR code sat left of the heading and text. The panel's contents are now stacked and centred as a column.
