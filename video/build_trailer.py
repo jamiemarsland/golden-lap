@@ -7,8 +7,8 @@ RAIN = bool(os.environ.get('RAIN'))   # RAIN=1: the weather turns mid-shot, just
 CUTS = [(0, 'swooprain', 4.6), (6.8, 'tunfast', 0.5),] if RAIN else [(0, 'swoop', 4.6), (6.2, 'tunfast', 0.15),]   # the tunnel cut starts once the car is into the long right, so the motion carries across the cut
 CUTS += [ (8.1, 'lapgolden', 19.8), (9.8, 'laprain', 9.6), (11.7, 'lapdusk', 60.6), (13.4, 'laphud', 73.4), (16.0, 'lapgolden', 79.0)]
 SOON = bool(os.environ.get('SOON'))   # SOON=1: 'COMING SOON' instead of the address, and a Brazilian voice over the end card
-VO = 'vo-crowd.wav'   # the voice (starts 0.9 s in) over a grandstand crowd, mixed in ffmpeg from vo/br/g1.mp3 + crowd.mp3
-OUT, END = 17.7, (25.2 if SOON else 23.0)
+VO = 'vo-crowd.wav'   # the voice (starts 0.9 s in) over a grandstand crowd, mixed in ffmpeg from vo/br/e1.mp3 + bed.mp3 (steady crowd) + crowd.mp3 1-4.2 s (roar after the last word)
+OUT, END = 17.7, (27.5 if SOON else 23.0)
 FULL = 'position:absolute;left:0;top:0;width:1920px;height:1080px'
 vids = []
 for i, (t0, clip, m0) in enumerate(CUTS):
@@ -60,7 +60,7 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
 {NL.join(vids)}
 {NL.join(els)}
       <audio id="away" class="clip" src="assets/away.wav" data-start="{OUT}" data-duration="5.3" data-track-index="5" data-volume="1"></audio>{f'''
-      <audio id="vo" class="clip" src="assets/{VO}" data-start="{OUT}" data-duration="7.5" data-track-index="6" data-volume="1.4"></audio>''' if SOON else ''}
+      <audio id="vo" class="clip" src="assets/{VO}" data-start="{OUT}" data-duration="9.8" data-track-index="6" data-volume="1.4"></audio>''' if SOON else ''}
     </div>
     <script>
       window.__timelines = window.__timelines || {{}};
