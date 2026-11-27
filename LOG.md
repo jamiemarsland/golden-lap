@@ -1016,3 +1016,11 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Decisions taken without James, as recommended in the paper: Beginner by default, and a code made on every visit.
 - Checked: all three states in the preview, START and the blank-click change, and on the live site that a real QR code appears on load. Not checked: a real phone connecting through the new screen.
 - The old screen is kept as `index-v69-before-new-start-screen.html`.
+
+### v71: today's lap is the default, with two boards (James: "i wonder if the leaderboard should start anew every day? ... or maybe an all time leaderboard, and a daily leaderboard? ... do the weather conditions change every day?")
+- Answer first: both already existed. Five conditions rotate by UTC day (golden hour, rain, fog, dusk, rain at dusk) and "Today's lap" had its own board, but it was off by default behind a small link, so nobody would find it.
+- Now pressing START drives today's lap. Under the title: "TODAY: RAIN AT DUSK · new conditions in 15 h 23 m", refreshed every minute.
+- The start screen shows two boards side by side: TODAY (starts empty each midnight UTC) and ALL TIME, DRY. The one you are about to drive on is bright, the other dimmed.
+- The dry lap is now "Practice in the dry" in the quiet row. It is the only thing that feeds the all-time board, so that record is always set in the same conditions.
+- A challenge link still opens in the dry, because a challenge lap carries no weather.
+- Checked live: today's board was empty ("Nobody yet today. Be first."), the all-time board showed James's five laps. Not checked: a lap posted to today's board from the new default.

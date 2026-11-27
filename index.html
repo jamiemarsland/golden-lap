@@ -94,11 +94,13 @@
   #pw-unused { position: fixed; inset: 0; z-index: 8; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); color: #fff; font: 15px/1.5 "Courier New", monospace; text-align: center; }
   #pw .in { display: flex; flex-direction: column; align-items: center; text-align: center; }
   #pw h2 { margin: 0 0 14px; color: #f3e36b; letter-spacing: 4px; font-size: 22px; } #pw p { margin: 8px 0; max-width: 420px; } #pwcode { color: #f3e36b; font-weight: 700; } #pwqr { background: #f4f1e6; }
-  #daybtn.on { color: #f3e36b; }
+
   #dayhint { display: none; color: #ddd; font-size: 14px; }
   #ctlhint { color: #ddd; font-size: 14px; }
   #keys { display: none; max-width: 640px; margin: 0 auto; font-size: 13px; line-height: 1.5; color: #ddd; }
-  #lb tr:nth-of-type(n+6) { display: none; }
+  #lb tr:nth-of-type(n+6), #lbAll tr:nth-of-type(n+6) { display: none; }
+  .boards { display: flex; justify-content: center; align-items: flex-start; gap: 10px 44px; flex-wrap: wrap; } .boards .lbt { margin: 14px 0 0; font-size: 15px; } .boards .lbt td { padding: 0 7px; } .boards .lbt caption { white-space: nowrap; } .boards .lbt.dim { opacity: .62; }
+  #todayline { color: #fff; font-size: 15px; letter-spacing: 1px; margin: 0 0 10px; } #todayline span { color: #bbb; }
 </style>
 </head>
 <body>
@@ -133,6 +135,7 @@
 </div></div>
 <div id="start"><div>
   <h1>GOLDEN LAP</h1>
+  <p id="todayline"></p>
   <p id="dare"></p>
   <div id="sscan" class="spane">
     <div class="scol">
@@ -154,7 +157,7 @@
   <p class="quiet" id="qscan">No phone to hand? <u id="usehands">Use your hands on camera</u> &nbsp;·&nbsp; <u id="usekeys">Use the keyboard</u></p>
   <p class="quiet" id="qalt"><u id="usephone">Use your phone instead</u></p>
   <p class="quiet" id="qready"><u id="dropphone">Disconnect the phone</u></p>
-  <p class="quiet"><u id="prev">Watch a lap first</u> &nbsp;·&nbsp; <u id="keysbtn">Help</u> &nbsp;·&nbsp; <u id="daybtn">Today</u></p>
+  <p class="quiet"><u id="prev">Watch a lap first</u> &nbsp;·&nbsp; <u id="keysbtn">Help</u> &nbsp;·&nbsp; <u id="daybtn">Practice in the dry</u></p>
   <p id="dayhint"></p>
   <div id="keys">
     <p><b>Hands:</b> on a Mac, turn Centre Stage off (green camera icon in the menu bar) so the camera can see your hands. <b>K</b> switches camera, <b>C</b> turns hand steering on or off.</p>
@@ -162,7 +165,7 @@
     <p><b>R</b> restart the lap &nbsp;·&nbsp; <b>L</b> leaderboard &nbsp;·&nbsp; <b>M</b> mute &nbsp;·&nbsp; <b>[</b> <b>]</b> steering calmer or sharper</p>
     <p><b>V</b> tape filter &nbsp;·&nbsp; <b>P</b> portrait &nbsp;·&nbsp; <b>T</b> autopilot &nbsp;·&nbsp; <b>H</b> hide HUD &nbsp;·&nbsp; <b>E</b> engine recorded or synth</p>
   </div>
-  <table class="lbt" id="lb"></table>
+  <div class="boards"><table class="lbt" id="lb"></table><table class="lbt" id="lbAll"></table></div>
 </div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1122,6 +1125,7 @@ function tickCheck(dt) {
   if (!hc.done && hc.t > (hc.step ? 6 : 5)) $('hch').textContent = HC_STEPS[hc.step][2];
 }
 // ---------- ghost: your best lap, recorded 20 times a second, drives the lap again as a faint car ----------
+let otherBoard = [];      // the board you are not driving on, shown beside yours on the start screen
 let daily = false, dayNo = Math.floor(Date.now() / 86400000);      // days since 1970, UTC: everyone in the world gets the same condition on the same day
 const todayKey = () => DAILY[dayNo % DAILY.length];
 const ghostKey = () => 'goldenlap.ghost7' + (daily ? '.d' + dayNo : '');      // tied to the circuit version, like the board; a wet lap gets its own ghost
@@ -1130,9 +1134,12 @@ function loadGhost() { try { ghost = JSON.parse(localStorage.getItem(ghostKey())
 loadGhost();
 function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost();
   const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); $('daybtn').className = on ? 'on' : '';
-  $('dayhint').textContent = on ? `Today's lap has its own board. New conditions in ${hh} h ${mm} m.` : ''; $('dayhint').style.display = on ? 'block' : 'none';
-  board = []; if (typeof refreshBoard === 'function') refreshBoard(); }
+  dayLabels(); board = []; otherBoard = []; if (typeof refreshBoard === 'function') refreshBoard(); }
+// Today's lap is the default: the day's weather, on a board that starts empty every midnight (UTC). The dry lap is "Practice" and feeds the all-time board.
+function dayLabels() { const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
+  $('todayline').innerHTML = daily ? `<b>TODAY: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new conditions in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
+  $('daybtn').textContent = daily ? 'Practice in the dry' : "Back to today's lap"; $('dayhint').style.display = 'none'; }
+setInterval(() => { if ($('start').style.display !== 'none') dayLabels(); }, 60000);
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
 // ---------- challenge links: one lap, carried in a link, for someone else to race ----------
 let rival = null;      // { n, t, c, s } once a challenge link has loaded; it then replaces your own ghost on track
@@ -1751,8 +1758,9 @@ async function refreshBoard() {
   try {
     const was = daily, r = await fetch('/api/board' + (daily ? '?daily=1' : ''), { cache: 'no-store' }); if (!r.ok) return;
     const d = await r.json(); if (!d || !Array.isArray(d.all) || was !== daily) return;
-    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); }      // the server's calendar is the one that counts
+    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); dayLabels(); }      // the server's calendar is the one that counts
     remote = true; total = d.total || d.all.length; board = d.all;
+    fetch('/api/board' + (was ? '' : '?daily=1'), { cache: 'no-store' }).then(q => q.ok ? q.json() : null).then(o => { if (o && Array.isArray(o.all) && was === daily) { otherBoard = o.all; drawTop(); } }).catch(() => {});
     if (mine && !mine.posted) board.push(mine);
     if (mode === 'done') drawBoard(); else drawTop();
   } catch (e) {}
@@ -1776,9 +1784,11 @@ function toGrid() {
 const tagOf = c => { const t = { phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[c]; return t ? ` <small>${t}</small>` : ''; };
 function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('modeB').className = easy ? 'on' : ''; $('modeP').className = easy ? '' : 'on'; }
 function drawTop() {
-  const rows = board.slice().sort((a, b) => a.t - b.t).slice(0, 10);
-  const html = '<caption>' + (daily ? 'TODAY: ' + ENV.name : 'LEADERBOARD') + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : '<tr><td>No times yet. Set the first one.</td></tr>');
-  $('lb').innerHTML = html; $('lb2').innerHTML = html;
+  const table = (list, cap, none) => { const rows = list.slice().sort((a, b) => a.t - b.t).slice(0, 10);
+    return '<caption>' + cap + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : `<tr><td>${none}</td></tr>`); };
+  const today = table(daily ? board : otherBoard, 'TODAY', 'Nobody yet today. Be first.'), all = table(daily ? otherBoard : board, 'ALL TIME, DRY', 'No times yet.');
+  $('lb').innerHTML = today; $('lbAll').innerHTML = all; $('lb').className = 'lbt' + (daily ? '' : ' dim'); $('lbAll').className = 'lbt' + (daily ? ' dim' : '');      /* the board you are about to drive on is the bright one */
+  $('lb2').innerHTML = daily ? today : all;
 }
 function drawBoard() {
   drawTop();
@@ -2006,10 +2016,11 @@ $('pwqr').addEventListener('click', () => { if (!phone.on) { phone.renew = 0; pa
     c.clearRect(0, 0, 200, 200); c.save(); c.translate(100, 100); c.rotate(-a * 0.61); c.strokeStyle = '#f3e36b'; c.lineWidth = 16; c.beginPath(); c.arc(0, 0, 82, 0, 7); c.stroke();
     c.lineWidth = 12; c.beginPath(); c.moveTo(-82, 0); c.lineTo(82, 0); c.moveTo(0, 0); c.lineTo(0, 82); c.stroke(); c.fillStyle = '#15171a'; c.beginPath(); c.arc(0, 0, 22, 0, 7); c.fill();
     c.fillStyle = live && phone.brk ? '#ff3a1c' : '#5a1410'; c.strokeStyle = '#a9a59a'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, 10, 0, 7); c.fill(); c.stroke(); c.restore(); })(); }
-$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); }); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase();
+$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); });
 $('keysbtn').addEventListener('click', e => { e.stopPropagation(); const k = $('keys'); k.style.display = k.style.display === 'block' ? 'none' : 'block'; });
 $('keys').addEventListener('click', e => e.stopPropagation());
 setCtl(useHands); startState(); pairPhone();
+setDaily(!/[?&]c=/.test(location.search));      /* today's lap unless you came in on a challenge link, which is raced in the dry */
 addEventListener('click', () => { if (mode === 'preview' && prevT > 0.4) endPreview(); if (mode === 'replay' && rT > 0.4) endReplay(); });
 $('hcskip').addEventListener('click', () => endCheck(true));
 $('hckeys').addEventListener('click', () => { stopHands(); setCtl(false); endCheck(false); toGrid(); });

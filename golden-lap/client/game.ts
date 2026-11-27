@@ -959,6 +959,7 @@ function tickCheck(dt) {
   if (!hc.done && hc.t > (hc.step ? 6 : 5)) $('hch').textContent = HC_STEPS[hc.step][2];
 }
 // ---------- ghost: your best lap, recorded 20 times a second, drives the lap again as a faint car ----------
+let otherBoard = [];      // the board you are not driving on, shown beside yours on the start screen
 let daily = false, dayNo = Math.floor(Date.now() / 86400000);      // days since 1970, UTC: everyone in the world gets the same condition on the same day
 const todayKey = () => DAILY[dayNo % DAILY.length];
 const ghostKey = () => 'goldenlap.ghost7' + (daily ? '.d' + dayNo : '');      // tied to the circuit version, like the board; a wet lap gets its own ghost
@@ -967,9 +968,12 @@ function loadGhost() { try { ghost = JSON.parse(localStorage.getItem(ghostKey())
 loadGhost();
 function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost();
   const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); $('daybtn').className = on ? 'on' : '';
-  $('dayhint').textContent = on ? `Today's lap has its own board. New conditions in ${hh} h ${mm} m.` : ''; $('dayhint').style.display = on ? 'block' : 'none';
-  board = []; if (typeof refreshBoard === 'function') refreshBoard(); }
+  dayLabels(); board = []; otherBoard = []; if (typeof refreshBoard === 'function') refreshBoard(); }
+// Today's lap is the default: the day's weather, on a board that starts empty every midnight (UTC). The dry lap is "Practice" and feeds the all-time board.
+function dayLabels() { const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
+  $('todayline').innerHTML = daily ? `<b>TODAY: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new conditions in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
+  $('daybtn').textContent = daily ? 'Practice in the dry' : "Back to today's lap"; $('dayhint').style.display = 'none'; }
+setInterval(() => { if ($('start').style.display !== 'none') dayLabels(); }, 60000);
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
 // ---------- challenge links: one lap, carried in a link, for someone else to race ----------
 let rival = null;      // { n, t, c, s } once a challenge link has loaded; it then replaces your own ghost on track
@@ -1588,8 +1592,9 @@ async function refreshBoard() {
   try {
     const was = daily, r = await fetch('/api/board' + (daily ? '?daily=1' : ''), { cache: 'no-store' }); if (!r.ok) return;
     const d = await r.json(); if (!d || !Array.isArray(d.all) || was !== daily) return;
-    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); }      // the server's calendar is the one that counts
+    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); dayLabels(); }      // the server's calendar is the one that counts
     remote = true; total = d.total || d.all.length; board = d.all;
+    fetch('/api/board' + (was ? '' : '?daily=1'), { cache: 'no-store' }).then(q => q.ok ? q.json() : null).then(o => { if (o && Array.isArray(o.all) && was === daily) { otherBoard = o.all; drawTop(); } }).catch(() => {});
     if (mine && !mine.posted) board.push(mine);
     if (mode === 'done') drawBoard(); else drawTop();
   } catch (e) {}
@@ -1613,9 +1618,11 @@ function toGrid() {
 const tagOf = c => { const t = { phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[c]; return t ? ` <small>${t}</small>` : ''; };
 function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('modeB').className = easy ? 'on' : ''; $('modeP').className = easy ? '' : 'on'; }
 function drawTop() {
-  const rows = board.slice().sort((a, b) => a.t - b.t).slice(0, 10);
-  const html = '<caption>' + (daily ? 'TODAY: ' + ENV.name : 'LEADERBOARD') + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : '<tr><td>No times yet. Set the first one.</td></tr>');
-  $('lb').innerHTML = html; $('lb2').innerHTML = html;
+  const table = (list, cap, none) => { const rows = list.slice().sort((a, b) => a.t - b.t).slice(0, 10);
+    return '<caption>' + cap + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : `<tr><td>${none}</td></tr>`); };
+  const today = table(daily ? board : otherBoard, 'TODAY', 'Nobody yet today. Be first.'), all = table(daily ? otherBoard : board, 'ALL TIME, DRY', 'No times yet.');
+  $('lb').innerHTML = today; $('lbAll').innerHTML = all; $('lb').className = 'lbt' + (daily ? '' : ' dim'); $('lbAll').className = 'lbt' + (daily ? ' dim' : '');      /* the board you are about to drive on is the bright one */
+  $('lb2').innerHTML = daily ? today : all;
 }
 function drawBoard() {
   drawTop();
@@ -1843,10 +1850,11 @@ $('pwqr').addEventListener('click', () => { if (!phone.on) { phone.renew = 0; pa
     c.clearRect(0, 0, 200, 200); c.save(); c.translate(100, 100); c.rotate(-a * 0.61); c.strokeStyle = '#f3e36b'; c.lineWidth = 16; c.beginPath(); c.arc(0, 0, 82, 0, 7); c.stroke();
     c.lineWidth = 12; c.beginPath(); c.moveTo(-82, 0); c.lineTo(82, 0); c.moveTo(0, 0); c.lineTo(0, 82); c.stroke(); c.fillStyle = '#15171a'; c.beginPath(); c.arc(0, 0, 22, 0, 7); c.fill();
     c.fillStyle = live && phone.brk ? '#ff3a1c' : '#5a1410'; c.strokeStyle = '#a9a59a'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, 10, 0, 7); c.fill(); c.stroke(); c.restore(); })(); }
-$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); }); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase();
+$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); });
 $('keysbtn').addEventListener('click', e => { e.stopPropagation(); const k = $('keys'); k.style.display = k.style.display === 'block' ? 'none' : 'block'; });
 $('keys').addEventListener('click', e => e.stopPropagation());
 setCtl(useHands); startState(); pairPhone();
+setDaily(!/[?&]c=/.test(location.search));      /* today's lap unless you came in on a challenge link, which is raced in the dry */
 addEventListener('click', () => { if (mode === 'preview' && prevT > 0.4) endPreview(); if (mode === 'replay' && rT > 0.4) endReplay(); });
 $('hcskip').addEventListener('click', () => endCheck(true));
 $('hckeys').addEventListener('click', () => { stopHands(); setCtl(false); endCheck(false); toGrid(); });
