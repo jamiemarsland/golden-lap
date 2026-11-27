@@ -107,6 +107,10 @@ const DAILY = ['golden', 'rain', 'fog', 'dusk', 'raindusk'];
 let ENV = CONDS.dry, envKey = 'dry', mRoad = null;
 // Rain, done the way the Golden Hour Ride does it: streaks in the air, a shine on the road, drops on the lens.
 const rainU = { uTime: { value: 0 }, uRain: { value: 0 }, uVel: { value: new THREE.Vector3() }, uCol: { value: new THREE.Vector3(0.86, 0.9, 0.96) }, uSky: { value: new THREE.Color(SKY) } };
+// Real reflections in the rain: the world is drawn a second time from a camera mirrored under the road, and puddles show that picture.
+const reflU = { uRefl: { value: null }, uRM: { value: new THREE.Matrix4() }, uReflOn: { value: 0 } };
+const camM = new THREE.PerspectiveCamera(60, 16 / 9, 0.3, 2500), reflPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+let rtR = null, roadMeshes = null;
 const rainMesh = (() => {
   const n = 14000, a = new Float32Array(n * 6), e = new Float32Array(n * 2);
   for (let i = 0; i < n; i++) { const x = Math.random() * 30, y = Math.random() * 30, z = Math.random() * 30; a.set([x, y, z, x, y, z], i * 6); e[i * 2 + 1] = 1; }
@@ -294,9 +298,9 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
     g.putImageData(im, 0, 0); });
   mRoad = M({ map: roadT });
   mRoad.onBeforeCompile = sh => {      // wet tarmac: darker, mirroring the sky where you look along it, with rings where the drops land
-    sh.uniforms.uRain = rainU.uRain; sh.uniforms.uTime = rainU.uTime; sh.uniforms.uSky = rainU.uSky; sh.uniforms.uNrm = { value: grainT };
+    sh.uniforms.uRain = rainU.uRain; sh.uniforms.uTime = rainU.uTime; sh.uniforms.uSky = rainU.uSky; sh.uniforms.uNrm = { value: grainT }; sh.uniforms.uRefl = reflU.uRefl; sh.uniforms.uRM = reflU.uRM; sh.uniforms.uReflOn = reflU.uReflOn;
     sh.vertexShader = 'varying vec3 vWp;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vWp = (modelMatrix * vec4(transformed, 1.)).xyz;');
-    sh.fragmentShader = `uniform float uRain, uTime; uniform vec3 uSky; uniform sampler2D uNrm; varying vec3 vWp;
+    sh.fragmentShader = `uniform float uRain, uTime, uReflOn; uniform vec3 uSky; uniform sampler2D uNrm, uRefl; uniform mat4 uRM; varying vec3 vWp;
       vec2 rip(vec2 p, float t){
         vec2 i = floor(p), f = fract(p) - 0.5;
         float h1 = fract(sin(dot(i, vec2(127.1, 311.7))) * 43758.5453), h2 = fract(h1 * 57.31 + 0.37);
@@ -329,6 +333,13 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         float soft = mix(0.09, 0.012, pool);                                                /* damp tarmac blurs the mirror; a pool keeps it sharp */
         vec3 skyC = uSky * mix(1.45, 0.9, clamp(R.y * 1.5, 0., 1.));                       /* brightest just above the horizon */
         vec3 env = mix(uSky * vec3(0.58, 0.62, 0.6), skyC, smoothstep(treeTop - soft, treeTop + soft, R.y));      /* in the rain the far treeline is a misty grey band, only a little darker than the sky */
+        if (uReflOn > 0.5) {      /* the real mirrored world: sharp in a puddle, smeared on damp tarmac, wobbled by the grain and the rain rings */
+          vec4 rc = uRM * vec4(vWp, 1.); vec2 ruv = rc.xy / rc.w * 0.5 + 0.5 + N.xz * 0.05;
+          vec3 sharp = texture2D(uRefl, ruv).rgb;
+          vec3 smear = (texture2D(uRefl, ruv + vec2(0.01, 0.025)).rgb + texture2D(uRefl, ruv - vec2(0.01, 0.025)).rgb + texture2D(uRefl, ruv + vec2(-0.014, 0.05)).rgb + texture2D(uRefl, ruv + vec2(0.014, -0.012)).rgb) * 0.25;
+          float inView = step(0., rc.w) * (1. - smoothstep(0.46, 0.5, abs(ruv.x - 0.5))) * (1. - smoothstep(0.46, 0.5, abs(ruv.y - 0.5)));
+          env = mix(env, mix(smear, sharp, pool), inView);
+        }
         float F = 0.03 + 0.97 * pow(1. - clamp(dot(N, V), 0., 1.), 5.);
         float spec = clamp(F * mix(0.36, 1., pool) + 0.05 * (1. - pool), 0., 1.);      /* damp tarmac gives back a third of the sky; a puddle gives back all of it */      /* a soft sheen even looking straight down: water on tarmac is never fully dark */
         vec3 base = gl_FragColor.rgb * mix(0.5, 0.34, pool) * (1. - 0.3 * smoothstep(0.5, 0.56, pn) * (1. - smoothstep(0.56, 0.6, pn)) * stretch);
@@ -870,6 +881,7 @@ function resize() {
   rtM = new THREE.WebGLRenderTarget(rw, RT_LINES, Object.assign({ depthBuffer: false }, o));
   rtP = new THREE.WebGLRenderTarget(rw, RT_LINES, Object.assign({ depthBuffer: false }, o));
   passB.uniforms.res.value.set(rw, RT_LINES);
+  if (rtR) rtR.dispose(); rtR = new THREE.WebGLRenderTarget(Math.round(rw / 2), Math.round(RT_LINES / 2), o); reflU.uRefl.value = rtR.texture;      /* half size is plenty: the tape softens it anyway */
 }
 addEventListener('resize', resize); resize();
 
@@ -1037,6 +1049,7 @@ for (const [x, z, w] of [[-0.8, -1.3, 0.3], [0.8, -1.3, 0.3], [-0.8, 1.55, 0.44]
 function progress() { const i = car.idx; let p = i + ((car.x - P[i].x) * TAN[i].x + (car.z - P[i].z) * TAN[i].z) / DS;
   if (!lap.half && p > N * 0.8) p -= N; if (lap.half && p < N * 0.2) p += N; return p; }
 const sample = p => [+lap.t.toFixed(3), +car.x.toFixed(2), +car.z.toFixed(2), +car.h.toFixed(3), +car.yS.toFixed(2), +p.toFixed(2), +car.lat.toFixed(1)];
+let gside = 0, gsaid = -99;
 const gv = new V3(); let ghostHints = 0; try { ghostHints = +localStorage.getItem('goldenlap.gh') || 0; } catch (e) {}
 function tickGhost(dt) {
   const live = (mode === 'run' || mode === 'grid') && lap.t != null;
@@ -1062,6 +1075,9 @@ function tickGhost(dt) {
   const p = progress();
   while (gq < S.length - 2 && S[gq + 1][5] <= p) gq++;
   const c = S[gq], e = S[gq + 1], tg = c[0] + (e[0] - c[0]) * clamp((p - c[5]) / Math.max(1e-3, e[5] - c[5]), 0, 1), gap = t - tg;
+  if (t > 4) {      /* the moment you get ahead of the ghost, say so */
+    if (gap > 0.15) gside = 1;
+    else if (gap < -0.15 && gside !== -1) { gside = -1; if (T - gsaid > 8) { gsaid = T; say(G0 === rival && rival ? 'AHEAD OF ' + (rival.n || 'THEIR LAP') : 'AHEAD OF YOUR BEST'); $('flash').className = 'green'; } } }
   const el = $('gap'); el.style.display = Math.abs(gap) < 10 ? 'block' : 'none'; el.style.color = gap <= 0 ? '#8fe08a' : '#ff8c6e';
   el.innerHTML = (gap <= 0 ? '-' : '+') + Math.abs(gap).toFixed(2) + ' <small>VS ' + (rival ? rival.n : 'YOUR BEST') + '</small>';      // a quiet line under the lap time, and nothing at all once the gap is past ten seconds
 }
@@ -1648,7 +1664,7 @@ async function postLap(m) {
 refreshBoard();
 function toGrid() {
   if (checking) endCheck(false);
-  rec = []; recT = 0; gp = 0; gq = 0;
+  rec = []; recT = 0; gp = 0; gq = 0; gside = 0;
   if (remote && mine && !mine.posted) board = board.filter(b => b !== mine);     // a time you did not post does not stay on the board
   curSec = null; capT = 0; $('cap').style.display = 'none'; $('best').textContent = '';
   easyUsed = false; easyPace = 0.96; easyCeil = 1; easyTidy = true;
@@ -1850,6 +1866,18 @@ function frame(dtForced) {
   if (hand.on && (hand.shed || 0) < 2 && selfie.n++ % (hand.shed ? 6 : 2) === 0) renderSelfie();
   const tv = mode === 'replay';
   if (tv) { aimTV(dt); rearG.visible = true; passA.uniforms.blur.value = 0.012; passA.uniforms.vp.value.set(0.5, 0.5); passA.uniforms.shake.value = 0; passA.uniforms.ghost.value = 0.12; passB.uniforms.soft.value = 0.3; passK.uniforms.amt.value = 0.4; }
+  reflU.uReflOn.value = 0;
+  if (!tv && rtR && rainU.uRain.value > 0.3) {
+    if (!roadMeshes) { roadMeshes = []; W.traverse(o => { if (o.material === mRoad) roadMeshes.push(o); }); }
+    const y0 = car.yS; camW.updateMatrixWorld(); camW.getWorldPosition(_v); const d = new V3(); camW.getWorldDirection(d); const up = new V3(0, 1, 0).applyQuaternion(camW.getWorldQuaternion(new THREE.Quaternion()));
+    camM.position.set(_v.x, 2 * y0 - _v.y, _v.z); camM.up.set(up.x, -up.y, up.z); camM.lookAt(_v.x + d.x * 10, 2 * y0 - (_v.y + d.y * 10), _v.z + d.z * 10);
+    if (camM.fov !== camW.fov || camM.aspect !== camW.aspect) { camM.fov = camW.fov; camM.aspect = camW.aspect; camM.updateProjectionMatrix(); }
+    camM.updateMatrixWorld(); reflU.uRM.value.multiplyMatrices(camM.projectionMatrix, camM.matrixWorldInverse);
+    reflPlane.constant = -(y0 - 0.04); renderer.clippingPlanes = [reflPlane];      /* nothing below the road is drawn, and the road itself is hidden, so the mirror camera can see up through it */
+    roadMeshes.forEach(m => m.visible = false); const rv = rainMesh.visible; rainMesh.visible = false;
+    renderer.setRenderTarget(rtR); renderer.render(W, camM);
+    roadMeshes.forEach(m => m.visible = true); rainMesh.visible = rv; renderer.clippingPlanes = []; reflU.uReflOn.value = 1;
+  }
   renderer.setRenderTarget(rtW); renderer.render(W, tv ? camRW : camW);
   renderer.setRenderTarget(rtC); renderer.render(C, tv ? camRC : camC);
   if (tv) rearG.visible = false;

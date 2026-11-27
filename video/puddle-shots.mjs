@@ -24,4 +24,7 @@ await p.evaluate(() => G.toGrid()); await run(4300);
 let n = 0;
 for (const i of found) { for (const fx of [1, 0]) { await p.evaluate(([i, fx]) => { G.placeOnTrack(i, 3); G.passB.uniforms.fx.value = fx; }, [i, fx]); await run(600);
   await p.screenshot({ path: OUT + 'spot' + (++n) + (fx ? '-tape' : '-raw') + '.png' }); } }
+p.on('console', m => { if (m.type() === 'error') console.log('page error:', m.text().slice(0, 200)); });
+const fps = await p.evaluate(async () => { const t0 = performance.now(); let n = 0; await new Promise(r => { (function f() { n++; G.frame(); if (performance.now() - t0 < 2000) requestAnimationFrame(f); else r(); })(); }); return Math.round(n / ((performance.now() - t0) / 1000)); });
+console.log('frames per second in the rain, headless:', fps);
 await b.close();
