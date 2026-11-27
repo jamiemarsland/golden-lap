@@ -31,6 +31,10 @@ if SOON:   # English subtitles for the Portuguese line, timed to his words (voic
         els.append(f'      <div id="sb{i}" class="clip sub" data-start="{a}" data-duration="{round(b - a, 2)}" data-track-index="7"><span id="sb{i}-in">{w}</span></div>')
         tl.append(f'tl.fromTo("#sb{i}-in", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.08 }}, {a});')
     tl.append(f'tl.fromTo("#sb-em", {{ opacity: 0, scale: 0.8 }}, {{ opacity: 1, scale: 1, duration: 0.12, ease: "back.out(3)" }}, {round(V + 6.16, 2)});')
+# a small, quiet 'this is the real game' tag over the opening (James, 27 Nov)
+els.append('      <div id="real" class="clip" data-start="0.4" data-duration="3.6" data-track-index="8"><span id="real-in"><i></i>REAL GAMEPLAY</span></div>')
+tl.append('tl.fromTo("#real-in", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0.4);')
+tl.append('tl.to("#real-in", { opacity: 0, duration: 0.5, ease: "power1.in" }, 3.45);')
 cols = ['#5e2414', '#e2562b', '#f0b53a', '#f3e6c8', '#2f9b96']   # the helmet's colours, plus mustard and brown
 bands = ''.join(f'<i id="s{k}" style="top:{k * 16}px;background:{c}"></i>' for k, c in enumerate(cols))
 els.insert(0, f'      <div id="card" class="clip" data-start="{OUT}" data-duration="{round(END - OUT, 2)}" data-track-index="1"></div>')
@@ -61,6 +65,9 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
       .line {{ position: absolute; left: 160px; top: 566px; width: 1600px; text-align: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 60px; color: #f3e6c8; z-index: 4; }}
       .sub {{ position: absolute; left: 160px; top: 1008px; width: 1600px; text-align: center; font-family: Inter, sans-serif; font-weight: 500; font-style: italic; font-size: 30px; color: #e8dcc0; z-index: 5; }}
       .sub span {{ display: inline-block; }} .sub b {{ display: inline-block; color: #f0b53a; font-weight: 800; text-transform: uppercase; }}
+      #real {{ position: absolute; left: 0; top: 54px; width: 1920px; text-align: center; z-index: 6; }}
+      #real span {{ display: inline-block; padding: 7px 18px 7px 14px; background: rgba(20,14,10,.75); border-radius: 4px; font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: .32em; color: #f3e6c8; }}
+      #real i {{ display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #e2562b; margin: 0 12px 2px 0; vertical-align: middle; }}
       .url {{ position: absolute; left: 160px; top: {896 if SOON else 916}px; width: 1600px; text-align: center; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 50px; letter-spacing: .14em; color: #f0b53a; z-index: 4; }}
     </style>
   </head>

@@ -1083,3 +1083,4 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
   - New takes with the last word shouted ("Você... CONSEGUE?!"); picked the one where "consegue" is loudest against the rest (+4.4 dB) and lifted that word another 4 dB. Card is 27.5 s long.
   - Opening now the rain version (weather turns on the climb at Spa): RAIN=1 SOON=1 python3 build_trailer.py.
 - James: "add english subtitles - and make it a little bit louder". Italic subtitles at the foot of the end card, timed to his words: "One lap..." / "Just one." / "Perfect." / "Can you DO IT?", with DO IT? popping in yellow on the shouted "consegue". Voice and crowd up about 2 dB.
+- James: "add a subtle 'real gameplay' or smth near the start". A small REAL GAMEPLAY tag, with a red recording dot, top centre over the first 4 seconds of the Spa swoop, fading in and out. It's in the builder, so every trailer version gets it.
