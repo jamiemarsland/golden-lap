@@ -310,7 +310,7 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         float life = fract(t * (0.55 + h2 * 0.5) + h1 * 5.); vec2 d = f - (vec2(h1, h2) - 0.5) * 0.3; float r = length(d), R = 0.06 + life * 0.38;
         return exp(-pow((r - R) * 9., 2.)) * (1. - life) * step(0.35, h2);
       }
-      float vh(vec2 i){ return fract(sin(dot(i, vec2(269.5, 183.3))) * 43758.5453); }
+      float vh(vec2 i){ vec3 p3 = fract(vec3(i.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }      /* no sine: gives the same answer on every graphics card */
       float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f); return mix(mix(vh(i), vh(i + vec2(1., 0.)), f.x), mix(vh(i + vec2(0., 1.)), vh(i + vec2(1., 1.)), f.x), f.y); }
     ` + sh.fragmentShader.replace('#include <tonemapping_fragment>', `if (uRain > 0.01) {
         /* Wet tarmac, built the way the cycling game's is: a finely grained surface under a film of water. The grain and the rain rings
@@ -318,20 +318,20 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
            Where water stands, the grain is drowned and the surface is a clean mirror. */
         vec3 V = cameraPosition - vWp; float dist = length(V); V /= dist;
         vec2 rp = (rip(vWp.xz * 1.6, uTime) + rip(vWp.xz * 1.1 + 13.7, uTime * 0.9 + 3.)) * smoothstep(38., 5., dist);      /* rings twice the size of before, so they survive the tape filter */
-        float stretch = smoothstep(0.42, 0.6, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold more water */
-        float pn = vn(vWp.xz * 0.13 + 11.) * 0.72 + vn(vWp.xz * 0.5) * 0.28;
-        float pool = smoothstep(0.5, 0.57, pn) * stretch * smoothstep(0.55, 1., uRain);
+        float stretch = smoothstep(0.38, 0.56, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold more water */
+        float pn = vn(vWp.xz * 0.42 + 11.) * 0.7 + vn(vWp.xz * 1.4 + 5.) * 0.3;      /* puddles a metre or two across */
+        float pool = smoothstep(0.56, 0.6, pn) * stretch * smoothstep(0.55, 1., uRain);
         vec2 g1 = texture2D(uNrm, vWp.xz * 0.62).xy * 2. - 1., g2 = texture2D(uNrm, vWp.zx * 0.17 + 0.37).xy * 2. - 1.;
         float grain = smoothstep(90., 9., dist) * (1. - pool * 0.94);                      /* far away the grain averages out; under standing water it is gone */
         vec3 N = normalize(vec3((g1.x * 0.85 + g2.x * 0.4) * grain + rp.x * 0.55, 1., (g1.y * 0.85 + g2.y * 0.4) * grain + rp.y * 0.55));
         vec3 R = reflect(-V, N);
-        float ang = atan(R.z, R.x), treeTop = 0.03 + 0.1 * vn(vec2(ang * 7., 2.3)) + 0.03 * vn(vec2(ang * 31., 9.1));
+        float ang = atan(R.z, R.x), treeTop = 0.004 + 0.022 * vn(vec2(ang * 7., 2.3)) + 0.012 * vn(vec2(ang * 31., 9.1));      /* the trees are far off, so in a puddle ahead they are only a thin dark fringe under a big bright sky */
         float soft = mix(0.09, 0.012, pool);                                                /* damp tarmac blurs the mirror; a pool keeps it sharp */
-        vec3 skyC = uSky * mix(1.3, 0.85, clamp(R.y * 1.5, 0., 1.));                       /* brightest just above the horizon */
-        vec3 env = mix(mix(vec3(0.07, 0.11, 0.08), uSky, 0.25), skyC, smoothstep(treeTop - soft, treeTop + soft, R.y));
+        vec3 skyC = uSky * mix(1.45, 0.9, clamp(R.y * 1.5, 0., 1.));                       /* brightest just above the horizon */
+        vec3 env = mix(uSky * vec3(0.58, 0.62, 0.6), skyC, smoothstep(treeTop - soft, treeTop + soft, R.y));      /* in the rain the far treeline is a misty grey band, only a little darker than the sky */
         float F = 0.03 + 0.97 * pow(1. - clamp(dot(N, V), 0., 1.), 5.);
-        float spec = clamp(F * mix(0.62, 1., pool) + 0.1 * (1. - pool), 0., 1.);      /* a soft sheen even looking straight down: water on tarmac is never fully dark */
-        vec3 base = gl_FragColor.rgb * mix(0.5, 0.34, pool) * (1. - 0.25 * smoothstep(0.42, 0.5, pn) * (1. - smoothstep(0.5, 0.57, pn)) * stretch);
+        float spec = clamp(F * mix(0.36, 1., pool) + 0.05 * (1. - pool), 0., 1.);      /* damp tarmac gives back a third of the sky; a puddle gives back all of it */      /* a soft sheen even looking straight down: water on tarmac is never fully dark */
+        vec3 base = gl_FragColor.rgb * mix(0.5, 0.34, pool) * (1. - 0.3 * smoothstep(0.5, 0.56, pn) * (1. - smoothstep(0.56, 0.6, pn)) * stretch);
         float rim = clamp(length(rp) * 1.2 + (bigRing(vWp.xz * 0.8, uTime) + bigRing(vWp.xz * 0.6 + 7.3, uTime * 0.8 + 2.)) * smoothstep(26., 4., dist), 0., 1.);                                          /* the ring itself catches the sky: a bright circle where each drop landed */
         gl_FragColor.rgb = mix(gl_FragColor.rgb, base * (1. - spec) + env * spec + uSky * rim * 0.45, uRain);
       }
