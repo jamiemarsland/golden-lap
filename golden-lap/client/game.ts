@@ -106,7 +106,7 @@ const CONDS = {
 const DAILY = ['golden', 'rain', 'fog', 'dusk', 'raindusk'];
 let ENV = CONDS.dry, envKey = 'dry', mRoad = null;
 // Rain, done the way the Golden Hour Ride does it: streaks in the air, a shine on the road, drops on the lens.
-const rainU = { uTime: { value: 0 }, uRain: { value: 0 }, uVel: { value: new THREE.Vector3() }, uCol: { value: new THREE.Vector3(0.86, 0.9, 0.96) }, uSky: { value: new THREE.Color(SKY) } };
+const rainU = { uT0: { value: new THREE.Vector4() }, uT1: { value: new THREE.Vector4() }, uTime: { value: 0 }, uRain: { value: 0 }, uVel: { value: new THREE.Vector3() }, uCol: { value: new THREE.Vector3(0.86, 0.9, 0.96) }, uSky: { value: new THREE.Color(SKY) } };
 // Real reflections in the rain: the world is drawn a second time from a camera mirrored under the road, and puddles show that picture.
 const reflU = { uRefl: { value: null }, uRM: { value: new THREE.Matrix4() }, uReflOn: { value: 0 } };
 const camM = new THREE.PerspectiveCamera(60, 16 / 9, 0.3, 2500), reflPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
@@ -117,13 +117,14 @@ const rainMesh = (() => {
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(a, 3)); g.setAttribute('aEnd', new THREE.BufferAttribute(e, 1));
   const m = new THREE.LineSegments(g, new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: rainU,
-    vertexShader: `uniform float uTime; uniform vec3 uVel; attribute float aEnd; varying float vA;
+    vertexShader: `uniform float uTime; uniform vec3 uVel; uniform vec4 uT0, uT1; attribute float aEnd; varying float vA;
       void main(){
         vec3 fall = vec3(1.5, -13., 0.8);
         vec3 p = mod(position + fall * uTime - cameraPosition, 30.) - 15. + cameraPosition;
         p += (fall - uVel) * 0.03 * aEnd;                                    // each streak is where the drop was a moment ago, as seen from a moving car
         vec4 mv = viewMatrix * vec4(p, 1.); gl_Position = projectionMatrix * mv;
         vA = smoothstep(15., 9., -mv.z) * (1. - aEnd * 0.6);
+        vec2 q = p.xz; if (dot(q - uT0.xy, uT0.zw) > 0. && dot(q - uT1.xy, uT1.zw) < 0.) vA = 0.;      // no rain inside the tunnel, but it keeps falling just beyond each mouth
       }`,
     fragmentShader: 'uniform vec3 uCol; uniform float uRain; varying float vA; void main(){ gl_FragColor = vec4(uCol, vA * 0.42 * uRain); }' }));
   m.frustumCulled = false; m.renderOrder = 3; m.visible = false; W.add(m); return m;
@@ -198,6 +199,7 @@ function nearIdx(x, z) { x *= SC; z *= SC; let best = 1e18, bi = 0; for (let i =
 const inR = (i, a, b) => i >= a && i <= b;
 const iCity0 = nearIdx(400, -110), iCity1 = nearIdx(480, 455), iTun0 = nearIdx(440, -80), iTun1 = nearIdx(797, 172), iHar0 = nearIdx(760, 430), iHar1 = nearIdx(485, 455);
 const city = P.map((_, i) => inR(i, iCity0, iCity1)), tun = P.map((_, i) => inR(i, iTun0, iTun1));
+rainU.uT0.value.set(P[iTun0].x, P[iTun0].z, TAN[iTun0].x, TAN[iTun0].z); rainU.uT1.value.set(P[(iTun1 + 1) % N].x, P[(iTun1 + 1) % N].z, TAN[(iTun1 + 1) % N].x, TAN[(iTun1 + 1) % N].z);      /* the tunnel's two mouths, each facing along the track */
 const iHp0 = -1, iHp1 = -2;      // no hairpin any more
 // ---------- banking: the last corner is tilted so the outside edge is higher, like a bowl ----------
 const iBk0 = nearIdx(160, 1431), iBk1 = nearIdx(0, 1275);
@@ -1738,7 +1740,7 @@ function frame(dtForced) {
     const inT = tun[loc.i] ? 1 : 0;
     car.tun += (inT - car.tun) * Math.min(1, dt * 7); car.expo += (1 + 0.9 * inT - car.expo) * Math.min(1, dt * 2.2);
     W.fog.density = ENV.fog * (1 - 0.9 * car.tun); passB.uniforms.rain.value = ENV.rain * (1 - car.tun);
-    rainU.uTime.value = T % 600; rainU.uRain.value = ENV.rain * (1 - car.tun); rainMesh.visible = rainU.uRain.value > 0.01;
+    rainU.uTime.value = T % 600; rainU.uRain.value = ENV.rain; rainMesh.visible = rainU.uRain.value > 0.01;      /* the road outside stays wet and rain keeps falling beyond the exit; the shaders keep the tunnel itself dry */
     rainU.uVel.value.set(-Math.sin(car.h) * car.vx, 0, -Math.cos(car.h) * car.vx);
     hemiC.intensity = 0.9 * (1 - 0.75 * car.tun) + car.tun * 0.6 * Math.pow(Math.max(0, Math.sin(loc.i * DS / 12 * 6.2832)), 4);   // tunnel lights sweep over the cockpit
     sunC.intensity = 0.55 * (1 - car.tun); passB.uniforms.expo.value = car.expo * ENV.expo; }

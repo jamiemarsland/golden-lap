@@ -1054,3 +1054,8 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 ### v78: half as many puddles (James: "still too many puddles")
 - Measured this time instead of eyeballing: across the road surface (outside the tunnel), puddles covered 14.2% in v77 and now cover 6.8%. Fewer stretches hold water at all, and in those only the deepest dips do. `puddles-v78.jpg` is the three wettest spots on the lap: a few puddles each; the rest of the lap is damp tarmac with blurred reflections.
 - `video/puddle-shots.mjs` now prints the coverage figure, so further tuning can be done by number.
+
+### v79: it keeps raining outside while you're in the tunnel (James: "much better" on the puddles; "when its raining and im in the tunnel it looks like its not raining until i actually leave the tunnel, which is a bit weird")
+- Cause: entering the tunnel turned the whole rain effect off, so through the exit the world outside looked dry until you left.
+- Now the rain stays on. The wet road, its reflections and the rain streaks carry on outside; the tunnel stays dry because the streak shader simply skips any drop that falls between the tunnel's two mouths (each mouth is a line across the track, facing along it). The tunnel road was always a separate, dry surface. Lens drops and the rain hiss still fade in the tunnel, as before.
+- Checked with frames approaching the exit: dry inside, wet tarmac beyond the mouth. The exit glare makes the falling rain itself hard to see in stills, and streaks are only drawn within about 15 m of the car, so they appear as you reach the mouth.
