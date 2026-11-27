@@ -201,9 +201,11 @@ function phoneWheel(code) {
   const B = 'display:inline-block;padding:12px 26px;background:#f3e36b;color:#111;font-weight:700;letter-spacing:3px;font-size:18px';
   el.innerHTML = `<div style="color:#f3e36b;font-weight:700;letter-spacing:5px;font-size:20px">GOLDEN LAP</div><div id="pwst" style="letter-spacing:2px">CONNECTING...</div>
     <canvas id="pwc" width="200" height="200" style="width:150px;height:150px"></canvas><div id="pwgo" style="${B}">TAP TO START</div>
+    <div id="pwag" style="${B};display:none;padding:22px 48px;font-size:26px;letter-spacing:5px;background:#e2562b;color:#f3e6c8">GO AGAIN</div>
     <div id="pwtip" style="font-size:14px;color:#ccc;max-width:420px">Hold the phone sideways like a steering wheel, screen facing you. Turn it to steer. Touch the screen to brake.</div>
     <div id="pwinv" style="font-size:12px;color:#999;text-decoration:underline;display:none">Steering backwards? Tap here</div>
     <div id="pwhap" style="font-size:12px;color:#999;text-decoration:underline;display:none">Vibration is on. Tap to turn off</div>
+    <div id="pwrs" style="font-size:12px;color:#999;text-decoration:underline;display:none">Restart the lap</div>
     <label id="pwsw" style="position:fixed;left:-200px;top:0;opacity:0;pointer-events:none"><input type="checkbox" switch></label>`;
   document.body.appendChild(el); document.title = 'Golden Lap wheel';
   /* As clean a screen as the phone allows: nothing scrolls, bounces or zooms, the page runs under the notch, and the browser's bars take the page's colour.
@@ -227,7 +229,7 @@ function phoneWheel(code) {
   (async () => {
     try { const j = await fetch('/api/pair?p=' + code, { cache: 'no-store' }).then(r => r.json()); if (!j.ok) return st('THAT CODE HAS EXPIRED: SCAN AGAIN');
       const pc = new RTCPeerConnection(RTC);
-      pc.ondatachannel = e => { ch = e.channel; ch.onmessage = ev => { try { const m = JSON.parse(ev.data); if (m.h) haptic(m.h); } catch (err) {} }; ch.onopen = () => st(started ? 'CONNECTED' : 'CONNECTED: TAP TO START'); ch.onclose = () => { ch = null; st('DISCONNECTED: SCAN AGAIN'); }; };
+      pc.ondatachannel = e => { ch = e.channel; ch.onmessage = ev => { try { const m = JSON.parse(ev.data); if (m.h) haptic(m.h); if (m.f != null) lapState(m.f); } catch (err) {} }; ch.onopen = () => st(started ? 'CONNECTED' : 'CONNECTED: TAP TO START'); ch.onclose = () => { ch = null; st('DISCONNECTED: SCAN AGAIN'); }; };
       await pc.setRemoteDescription({ type: 'offer', sdp: j.offer }); await pc.setLocalDescription(await pc.createAnswer()); await waitIce(pc);
       const a = await postJ('/api/pair-answer', { p: code, answer: pc.localDescription.sdp }); if (!a.ok) return st('COULD NOT CONNECT: SCAN AGAIN');
       setTimeout(() => { if (!ch || ch.readyState !== 'open') st('STILL CONNECTING... SAME WI-FI HELPS'); }, 8000);
@@ -245,7 +247,15 @@ function phoneWheel(code) {
     if (ch && ch.readyState === 'open') st('CONNECTED'); });
   q('pwinv').addEventListener('click', e => { e.stopPropagation(); inv = -inv; q('pwinv').textContent = 'Steering direction switched. Tap to switch back'; });
   q('pwhap').addEventListener('click', e => { e.stopPropagation(); hapOn = !hapOn; q('pwhap').textContent = hapOn ? 'Vibration is on. Tap to turn off' : 'Vibration is off. Tap to turn on'; haptic('g'); });
-  for (const id of ['pwgo', 'pwinv', 'pwhap']) for (const ev of ['touchstart', 'touchend']) q(id).addEventListener(ev, e => e.stopPropagation(), { passive: true });
+  /* The game says twice a second whether the lap is over (1), under way (2) or neither (0). Lap over: a big GO AGAIN, so you can play on a projector
+     without walking back to the computer. It posts your time under your saved name and puts you back on the grid. Mid-lap: a small restart link.
+     The link drops lost messages rather than resend them, so the request goes three times; the game acts on each number once. */
+  let fState = -1, againN = 0;
+  function lapState(f) { if (f === fState) return; fState = f; q('pwag').style.display = f === 1 ? 'inline-block' : 'none'; q('pwrs').style.display = f === 2 && started ? 'block' : 'none'; }
+  const again = e => { e.stopPropagation(); if (!ch || ch.readyState !== 'open') return; const msg = JSON.stringify({ a: ++againN + '-' + Math.random().toString(36).slice(2, 6) });
+    for (const t of [0, 80, 200]) setTimeout(() => { try { ch && ch.readyState === 'open' && ch.send(msg); } catch (err) {} }, t); haptic('g'); fState = -1; q('pwag').style.display = 'none'; };
+  q('pwag').addEventListener('click', again); q('pwrs').addEventListener('click', again);
+  for (const id of ['pwgo', 'pwinv', 'pwhap', 'pwag', 'pwrs']) for (const ev of ['touchstart', 'touchend']) q(id).addEventListener(ev, e => e.stopPropagation(), { passive: true });
   el.addEventListener('touchstart', e => { brake = 1; e.preventDefault(); }, { passive: false }); el.addEventListener('touchend', e => { if (!e.touches.length) brake = 0; }); el.addEventListener('touchcancel', () => { brake = 0; });
   const c = q('pwc').getContext('2d');
   (function draw() { requestAnimationFrame(draw); c.clearRect(0, 0, 200, 200); c.save(); c.translate(100, 100); c.rotate(-ang * 0.01745);
@@ -1147,7 +1157,7 @@ async function pairPhone() {
   $('pwcode').textContent = ''; msg('Making a code...'); $('pwqr').getContext('2d').clearRect(0, 0, 232, 232);
   try {
     const pc = phone.pc = new RTCPeerConnection(RTC), ch = phone.ch = pc.createDataChannel('wheel', { ordered: false, maxRetransmits: 0 });      // late steering is worse than lost steering
-    ch.onmessage = e => { try { const m = JSON.parse(e.data); let s = clamp(m.s / 35, -1, 1); s = Math.sign(s) * Math.pow(Math.max(0, Math.abs(s) - 0.04) / 0.96, 1.2); phone.target = s; phone.brk = m.b ? 1 : 0; phone.t = performance.now(); } catch (err) {} };
+    ch.onmessage = e => { try { const m = JSON.parse(e.data); if (m.a) { if (m.a !== phone.lastA) { phone.lastA = m.a; goAgain(); } return; } let s = clamp(m.s / 35, -1, 1); s = Math.sign(s) * Math.pow(Math.max(0, Math.abs(s) - 0.04) / 0.96, 1.2); phone.target = s; phone.brk = m.b ? 1 : 0; phone.t = performance.now(); } catch (err) {} };
     ch.onopen = () => { phone.on = true; phone.t = performance.now(); if (hand.on) stopHands(); msg(''); startState(); };
     ch.onclose = () => { if (phone.pc === pc) { closePhone(); setCtl(useHands); say('PHONE DISCONNECTED: KEYBOARD STEERING'); startState(); if (startShown()) pairPhone(); } };
     await pc.setLocalDescription(await pc.createOffer()); await waitIce(pc);
@@ -1863,6 +1873,10 @@ async function postLap(m) {
   refreshBoard();
 }
 refreshBoard();
+/* GO AGAIN on the phone, for playing on a projector or TV across the room: posts the lap just finished under your saved name (as Enter does), then back to the grid.
+   Mid-lap it is the same as R. */
+function goAgain() { if (!started || mode === 'preview' || mode === 'attract') return; if (mode === 'replay') endReplay();
+  if (mode === 'done' && remote && mine && !mine.posted) { mine.posted = true; postLap(mine); } toGrid(); }
 function toGrid() {
   if (checking) endCheck(false);
   rec = []; recT = 0; gp = 0; gq = 0; gside = 0;
@@ -1910,6 +1924,7 @@ function finish() {
   lap.last = lap.t; mode = 'done'; autopilot = true;
   $('pt').textContent = fmt(lap.last); $('panel').style.display = 'flex';
   $('pn').style.display = usedAuto ? 'none' : ''; $('pa').style.display = usedAuto ? '' : 'none';
+  $('pn').querySelector('small').textContent = phone.on ? 'Enter, or GO AGAIN on your phone, to post your time and go again' : 'Enter to post your time and go again';
   if (!usedAuto) { let n = ''; try { n = localStorage.getItem('goldenlap.name') || ''; } catch (e) {}
     mine = { n: n || 'YOU', t: +lap.last.toFixed(3), d: Date.now(), c: (phone.used ? 'phone' : hand.used ? 'hands' : 'keys') + (easyUsed ? '-simple' : ''), s: splits.length >= 2 ? [+splits[0].toFixed(3), +splits[1].toFixed(3)] : null }; mine.tr = []; mine.daily = daily; board.push(mine); saveBoard(); $('name').value = n; setTimeout(() => $('name').focus(), 50); }
   $('pc').style.display = usedAuto ? 'none' : ''; $('ghostmsg').textContent = ''; if (!usedAuto) lastRec = rec;
@@ -2023,6 +2038,8 @@ function frame(dtForced) {
   // car and camera
   car.axS += (car.ax - car.axS) * Math.min(1, dt * 8); car.ayS += (car.ay - car.ayS) * Math.min(1, dt * 8);
   car.bump *= Math.exp(-dt * 5);
+  if (phone.on && phone.ch && phone.ch.readyState === 'open' && performance.now() - (phone.fT || 0) > 400) { phone.fT = performance.now();      /* twice a second: is the lap over (the phone shows GO AGAIN) or under way (a small restart link)? */
+    try { phone.ch.send('{"f":' + (mode === 'done' || mode === 'replay' ? 1 : mode === 'run' || mode === 'grid' ? 2 : 0) + '}'); } catch (err) {} }
   if (phone.on && phone.ch && phone.ch.readyState === 'open' && mode === 'run') {      /* tell the phone what the car is feeling, so it can buzz in your hands */
     const H = phone.hap || (phone.hap = { g: car.gear, b: 0, k: 0 }), now = performance.now(); let m = '';
     if (car.bump > H.b + 0.12) m = 'b'; else if (car.gear !== H.g) m = 'g'; else if ((car.kerb || car.off) && v > 8 && now - H.k > 95) { m = 'k'; H.k = now; }

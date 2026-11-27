@@ -1096,3 +1096,12 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - The nose is a tapered cone, and the inner ends of the wishbones and pushrods were placed for a fatter nose, so they sat a few centimetres off it: the upper arms and pushrod hovered above it and the front lower arm hung below. Same on both sides; from the driver's seat it showed most on the right. Moved every inner mount just inside the nose surface. Before/after: video/raw/nose-cmp.png.
 - James: "can you update the trailer as well". Re-recorded all six laps the trailers use (with the fixed arms) and re-rendered all four: dry, rain, smudge and coming-soon.
 - James asked whether the nose should sit further right. It is centred; the camera sits 30 cm left of the centre line, beside the helmet, so the near steering wheel appears further right than the far nose. Left as it is.
+
+## v84 · GO AGAIN on the phone (27 Nov)
+James plays on a projector with the laptop across the room, so after a lap he had to walk over to press Enter. Now the phone wheel does it.
+- Twice a second the game tells the phone whether the lap is over, under way or neither.
+- Lap over: a big orange **GO AGAIN** on the phone. It posts the time under your saved name (as Enter does) and puts you back on the grid.
+- Mid-lap: a small "Restart the lap" link, the same as R.
+- The link between phone and computer drops lost messages rather than resend them, so the phone sends the request three times; the game acts on each one once.
+- The finish panel says "Enter, or GO AGAIN on your phone" when a phone is connected.
+- Tested with a game page and a phone page paired in headless Chrome.
