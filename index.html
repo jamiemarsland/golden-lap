@@ -784,9 +784,10 @@ for (const s of [-1, 1]) {
   const spin = new THREE.Mesh(tyreGeo, tyreMat); hub.add(spin);
   fw.push({ hub, spin, y0: 0.335 });
   const o = (x, y, z) => new V3(s * x, y, z);
-  rod(cock, o(0.22, 0.5, -1.1), o(0.62, 0.5, -1.38), 0.012, carbon); rod(cock, o(0.16, 0.47, -1.75), o(0.62, 0.5, -1.38), 0.012, carbon);
-  rod(cock, o(0.22, 0.22, -1.05), o(0.62, 0.2, -1.38), 0.014, carbon); rod(cock, o(0.15, 0.22, -1.8), o(0.62, 0.2, -1.38), 0.014, carbon);
-  rod(cock, o(0.6, 0.22, -1.38), o(0.18, 0.53, -1.36), 0.011, metal);
+  // inner ends sit just inside the tapered nose, so every arm visibly meets the bodywork (they used to float a few cm off it)
+  rod(cock, o(0.14, 0.48, -1.1), o(0.62, 0.5, -1.38), 0.012, carbon); rod(cock, o(0.11, 0.44, -1.75), o(0.62, 0.5, -1.38), 0.012, carbon);
+  rod(cock, o(0.22, 0.22, -1.05), o(0.62, 0.2, -1.38), 0.014, carbon); rod(cock, o(0.1, 0.28, -1.8), o(0.62, 0.2, -1.38), 0.014, carbon);
+  rod(cock, o(0.6, 0.22, -1.38), o(0.12, 0.49, -1.36), 0.011, metal);
   rod(cock, o(0.22, 0.4, -1.2), o(0.62, 0.4, -1.26), 0.008, metal);
   // mirror
   rod(cock, o(0.33, 0.56, -0.6), o(0.46, 0.66, -0.62), 0.008, carbon);

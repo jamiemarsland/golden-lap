@@ -1090,3 +1090,7 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - James: "we're gonna need a subtle way to show previous leaderboards".
 - The server already kept each day's laps apart but only served today's. /api/board?day=N now serves any of the last 60 days (read only; you can't post to a past day).
 - On the start screen the TODAY heading has faint ‹ › arrows. ‹ steps back a day: the heading becomes e.g. "THU 26TH · CLEAR" with that day's times, slightly dimmed; › steps forward and back to TODAY. Days before the daily boards began say "No laps that day."
+
+## Front suspension meets the nose (v83, 27 Nov)
+- James sent two close-ups: "looks like we got a little issue with the front nose cone and the right suspension?"
+- The nose is a tapered cone, and the inner ends of the wishbones and pushrods were placed for a fatter nose, so they sat a few centimetres off it: the upper arms and pushrod hovered above it and the front lower arm hung below. Same on both sides; from the driver's seat it showed most on the right. Moved every inner mount just inside the nose surface. Before/after: video/raw/nose-cmp.png.
