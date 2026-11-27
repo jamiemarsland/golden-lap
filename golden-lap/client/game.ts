@@ -853,7 +853,7 @@ function placeOnTrack(i, v) {
 }
 // Steering feel, 1 (calm) to 9 (sharp). Adjustable in the game with [ and ] and remembered per browser.
 // Simple mode: the player only steers. The car picks its own speed for every corner, a little under the limit.
-let easy = false, easyUsed = false, easyPace = 0.96, easyCeil = 1, easyTidy = true, steerOnly = false; /* steerOnly: a test aid, the autopilot steers while simple mode sets the speed */ try { easy = localStorage.getItem('goldenlap.easy') === '1'; } catch (e) {}
+let easy = false, easyUsed = false, easyPace = 0.96, easyCeil = 1, easyTidy = true, steerOnly = false; /* steerOnly: a test aid, the autopilot steers while simple mode sets the speed */ try { easy = localStorage.getItem('goldenlap.easy') !== '0'; } catch (e) {}      /* a first visit starts in Beginner */
 let feel = 4; try { feel = clamp(parseInt(localStorage.getItem('goldenlap.feel')) || 4, 1, 9); } catch (e) {}     // 4 is James's pick after driving it
 const maxSteer = v => Math.min(0.46, 0.02 + 3.4 * (20.6 + 0.0061 * v * v) / Math.max(v * v, 30));     // never more lock than the tyres can use at this speed
 const tyre = (a, D) => -D * Math.sin(PH.Cc * Math.atan(PH.B * a));
@@ -915,26 +915,27 @@ let gridRev = 0;
 // ---------- the computer's end of the phone wheel ----------
 const phone = { on: false, steer: 0, target: 0, brk: 0, t: 0, used: false, pc: null, poll: 0 };
 const phoneLive = () => phone.on && performance.now() - phone.t < 800;      // no message for most of a second: treat the wheel as let go
-function closePhone() { phone.poll++; if (phone.pc) { try { phone.pc.close(); } catch (e) {} } phone.pc = null; phone.on = false; $('phonebtn').textContent = 'Phone wheel'; $('phonebtn').className = ''; }
+function closePhone() { phone.poll++; if (phone.pc) { try { phone.pc.close(); } catch (e) {} } phone.pc = null; phone.on = false; }
 async function pairPhone() {
   closePhone(); const my = phone.poll, msg = t => { $('pwmsg').textContent = t; };
-  $('pw').style.display = 'flex'; $('pwcode').textContent = ''; msg('Making a code...'); $('pwqr').getContext('2d').clearRect(0, 0, 232, 232);
+  $('pwcode').textContent = ''; msg('Making a code...'); $('pwqr').getContext('2d').clearRect(0, 0, 232, 232);
   try {
     const pc = phone.pc = new RTCPeerConnection(RTC), ch = phone.ch = pc.createDataChannel('wheel', { ordered: false, maxRetransmits: 0 });      // late steering is worse than lost steering
     ch.onmessage = e => { try { const m = JSON.parse(e.data); let s = clamp(m.s / 35, -1, 1); s = Math.sign(s) * Math.pow(Math.max(0, Math.abs(s) - 0.04) / 0.96, 1.2); phone.target = s; phone.brk = m.b ? 1 : 0; phone.t = performance.now(); } catch (err) {} };
-    ch.onopen = () => { phone.on = true; phone.t = performance.now(); if (hand.on) stopHands(); $('phonebtn').textContent = 'Phone: CONNECTED'; $('phonebtn').className = 'on'; $('ctlhint').textContent = 'Turn the phone to steer. Touch its screen to brake.'; msg('Connected. Press START when you are ready.'); setTimeout(() => { if (phone.poll === my) $('pw').style.display = 'none'; }, 1400); };
-    ch.onclose = () => { if (phone.pc === pc) { closePhone(); setCtl(useHands); say('PHONE DISCONNECTED: KEYBOARD STEERING'); } };
+    ch.onopen = () => { phone.on = true; phone.t = performance.now(); if (hand.on) stopHands(); msg(''); startState(); };
+    ch.onclose = () => { if (phone.pc === pc) { closePhone(); setCtl(useHands); say('PHONE DISCONNECTED: KEYBOARD STEERING'); startState(); if (startShown()) pairPhone(); } };
     await pc.setLocalDescription(await pc.createOffer()); await waitIce(pc);
     const j = await postJ('/api/pair', { offer: pc.localDescription.sdp }); if (!j.ok) throw new Error(j.error || 'refused'); if (phone.poll !== my) return;
     const url = location.origin + '/?w=' + j.code, qr = qrcode(0, 'M'); qr.addData(url); qr.make();
     const n = qr.getModuleCount(), g = $('pwqr').getContext('2d'), cell = Math.floor(216 / n), off = Math.floor((232 - cell * n) / 2); g.fillStyle = '#f4f1e6'; g.fillRect(0, 0, 232, 232); g.fillStyle = '#111';
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (qr.isDark(y, x)) g.fillRect(off + x * cell, off + y * cell, cell, cell);
-    $('pwcode').textContent = url.replace(/^https?:\/\//, ''); msg('Scan this with your phone camera. Both on the same Wi-Fi works best.');
+    $('pwcode').textContent = url.replace(/^https?:\/\//, ''); msg('Both on the same Wi-Fi works best.');
     for (let k = 0; k < 240 && phone.poll === my && pc.signalingState !== 'stable'; k++) { await new Promise(r => setTimeout(r, 1000));
       const a = await fetch('/api/pair?p=' + j.code, { cache: 'no-store' }).then(r => r.json()).catch(() => null);
       if (a && a.answer && phone.poll === my && pc.signalingState !== 'stable') { await pc.setRemoteDescription({ type: 'answer', sdp: a.answer }); msg('Phone found. Connecting...'); } }
-    if (phone.poll === my && pc.signalingState !== 'stable') msg('No phone answered. Close this and try again.');
-  } catch (e) { msg('Could not set up the phone wheel here: ' + (e && e.message ? e.message : e)); }
+    if (phone.poll === my && pc.signalingState !== 'stable') { if (startShown() && (phone.renew = (phone.renew || 0) + 1) < 8) return pairPhone();      /* codes last four minutes: make a fresh one while the start screen is still up */
+      msg('This code has expired. Click it for a new one.'); }
+  } catch (e) { msg('The phone wheel is not available here. Use your hands or the keyboard below.'); }
 }
 // ---------- hand check: before a first lap with camera steering, prove each gesture works ----------
 let checking = false; const hc = { step: 0, t: 0, hold: 0, done: 0 };
@@ -966,7 +967,7 @@ function loadGhost() { try { ghost = JSON.parse(localStorage.getItem(ghostKey())
 loadGhost();
 function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost();
   const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name; $('daybtn').className = on ? 'on' : '';
+  $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); $('daybtn').className = on ? 'on' : '';
   $('dayhint').textContent = on ? `Today's lap has its own board. New conditions in ${hh} h ${mm} m.` : ''; $('dayhint').style.display = on ? 'block' : 'none';
   board = []; if (typeof refreshBoard === 'function') refreshBoard(); }
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
@@ -1587,7 +1588,7 @@ async function refreshBoard() {
   try {
     const was = daily, r = await fetch('/api/board' + (daily ? '?daily=1' : ''), { cache: 'no-store' }); if (!r.ok) return;
     const d = await r.json(); if (!d || !Array.isArray(d.all) || was !== daily) return;
-    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name; }      // the server's calendar is the one that counts
+    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); }      // the server's calendar is the one that counts
     remote = true; total = d.total || d.all.length; board = d.all;
     if (mine && !mine.posted) board.push(mine);
     if (mode === 'done') drawBoard(); else drawTop();
@@ -1610,7 +1611,7 @@ function toGrid() {
   $('panel').style.display = 'none'; $('lights').style.display = 'block';
 }
 const tagOf = c => { const t = { phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[c]; return t ? ` <small>${t}</small>` : ''; };
-function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('easybtn').textContent = 'Mode: ' + (easy ? 'BEGINNER' : 'PRO'); $('easybtn').className = ''; }
+function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('modeB').className = easy ? 'on' : ''; $('modeP').className = easy ? '' : 'on'; }
 function drawTop() {
   const rows = board.slice().sort((a, b) => a.t - b.t).slice(0, 10);
   const html = '<caption>' + (daily ? 'TODAY: ' + ENV.name : 'LEADERBOARD') + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : '<tr><td>No times yet. Set the first one.</td></tr>');
@@ -1824,17 +1825,28 @@ function loop() { frame(); requestAnimationFrame(loop); }
 loop();
 
 $('prev').addEventListener('click', e => { e.stopPropagation(); startPreview(); });
-$('easybtn').addEventListener('click', e => { e.stopPropagation(); setEasy(!easy); }); setEasy(easy);
+$('modeB').addEventListener('click', e => { e.stopPropagation(); setEasy(true); }); $('modeP').addEventListener('click', e => { e.stopPropagation(); setEasy(false); }); setEasy(easy);
 let useHands = true; try { useHands = localStorage.getItem('goldenlap.ctl') !== 'keys'; } catch (e) {}
 function setCtl(h) { useHands = h; try { localStorage.setItem('goldenlap.ctl', h ? 'hands' : 'keys'); } catch (e) {}
-  $('handbtn').textContent = 'Steering: ' + (h ? 'HANDS' : 'KEYBOARD'); $('handbtn').className = h ? 'on' : '';
   $('ctlhint').innerHTML = h ? 'Hold your hands up like a steering wheel. Tilt to steer, clench your fists to brake.' : '<b>Arrows</b> or <b>WASD</b> to drive, <b>Space</b> to brake.'; }
-$('phonebtn').addEventListener('click', e => { e.stopPropagation(); if (phone.on) { closePhone(); setCtl(useHands); } else pairPhone(); });
-$('pw').addEventListener('click', e => e.stopPropagation()); $('pwclose').addEventListener('click', e => { e.stopPropagation(); $('pw').style.display = 'none'; if (!phone.on) closePhone(); });
-$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); }); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name;
+// The start screen: a phone is the main way to play, so the code is on screen from the start. altCtl means the player asked for hands or keyboard instead.
+let altCtl = false;
+const startShown = () => $('start').style.display !== 'none';
+function startState() { const el = $('start'); el.classList.remove('s-scan', 's-ready', 's-alt'); el.classList.add(phone.on ? 's-ready' : altCtl ? 's-alt' : 's-scan'); }
+$('usehands').addEventListener('click', () => { altCtl = true; setCtl(true); startState(); });
+$('usekeys').addEventListener('click', () => { altCtl = true; setCtl(false); startState(); });
+$('usephone').addEventListener('click', () => { altCtl = false; startState(); if (!phone.pc) { phone.renew = 0; pairPhone(); } });
+$('dropphone').addEventListener('click', () => { closePhone(); altCtl = false; startState(); phone.renew = 0; pairPhone(); });
+$('pwqr').addEventListener('click', () => { if (!phone.on) { phone.renew = 0; pairPhone(); } });
+{ let a = 0; const c = $('swheel').getContext('2d');      // on the ready screen a wheel follows the phone, so you can see it works before the lights
+  (function turn() { requestAnimationFrame(turn); if (!phone.on || !startShown()) return; const live = phoneLive(); a += ((live ? phone.target : 0) - a) * 0.25;
+    c.clearRect(0, 0, 200, 200); c.save(); c.translate(100, 100); c.rotate(-a * 0.61); c.strokeStyle = '#f3e36b'; c.lineWidth = 16; c.beginPath(); c.arc(0, 0, 82, 0, 7); c.stroke();
+    c.lineWidth = 12; c.beginPath(); c.moveTo(-82, 0); c.lineTo(82, 0); c.moveTo(0, 0); c.lineTo(0, 82); c.stroke(); c.fillStyle = '#15171a'; c.beginPath(); c.arc(0, 0, 22, 0, 7); c.fill();
+    c.fillStyle = live && phone.brk ? '#ff3a1c' : '#5a1410'; c.strokeStyle = '#a9a59a'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, 10, 0, 7); c.fill(); c.stroke(); c.restore(); })(); }
+$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); }); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase();
 $('keysbtn').addEventListener('click', e => { e.stopPropagation(); const k = $('keys'); k.style.display = k.style.display === 'block' ? 'none' : 'block'; });
 $('keys').addEventListener('click', e => e.stopPropagation());
-$('handbtn').addEventListener('click', e => { e.stopPropagation(); setCtl(!useHands); }); setCtl(useHands);
+setCtl(useHands); startState(); pairPhone();
 addEventListener('click', () => { if (mode === 'preview' && prevT > 0.4) endPreview(); if (mode === 'replay' && rT > 0.4) endReplay(); });
 $('hcskip').addEventListener('click', () => endCheck(true));
 $('hckeys').addEventListener('click', () => { stopHands(); setCtl(false); endCheck(false); toGrid(); });
@@ -1843,8 +1855,9 @@ $('rpbtn').addEventListener('click', e => { e.stopPropagation(); startReplay(); 
 $('chbtn').addEventListener('click', e => { e.stopPropagation(); sendChallenge(); });
 $('chlink').addEventListener('keydown', e => e.stopPropagation());
 let starting = false;
-$('start').addEventListener('click', () => {
-  if (starting) return;
+addEventListener('keydown', e => { if (e.code === 'Enter' && startShown() && !$('start').classList.contains('s-scan') && document.activeElement === document.body) $('gobtn').click(); });
+$('start').addEventListener('click', ev => {
+  if (starting || !ev.target.closest('#gobtn')) return;      /* only the START button starts a lap now, not a click anywhere */
   initAudio().catch(e => console.warn('no audio', e));
   const go = () => { starting = false; $('start').style.display = 'none'; $('handmsg').textContent = ''; started = true; toGrid(); };
   if (!useHands || hand.on || phone.on) { go(); return; }
@@ -1853,7 +1866,7 @@ $('start').addEventListener('click', () => {
 });
 
 // handle for testing and for scripted B-roll
-window.G = { smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
+window.G = { startState, smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
 })();
 
 }

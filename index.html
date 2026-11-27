@@ -56,8 +56,6 @@
   .lbt { border-collapse: collapse; margin: 14px auto 0; font: 700 18px/1.35 "Courier New", monospace; color: #fff; font-variant-numeric: tabular-nums; text-align: left; }
   .lbt td { padding: 0 10px; } .lbt td:last-child { text-align: right; color: #f3e36b; } .lbt caption { color: #f3e36b; letter-spacing: 4px; padding-bottom: 4px; }
   #lbo { position: fixed; right: 3vw; top: 22vh; background: rgba(0,0,0,.6); padding: 12px 8px; display: none; }
-  #prev { display: inline-block; padding: 6px 14px; border: 1px solid #f3e36b; color: #f3e36b; font-weight: 700; cursor: pointer; }
-  #prev:hover { background: #f3e36b; color: #111; }
   #cap { position: fixed; left: 50%; bottom: 12vh; transform: translateX(-50%); text-align: center; color: #fff; font: 700 30px/1.3 "Courier New", monospace; display: none; pointer-events: none;
     text-shadow: 3px 0 0 rgba(255,0,80,.4), -3px 0 0 rgba(0,200,255,.35), 0 3px 6px #000; }
   #cap small { display: block; font-size: 18px; color: #f3e36b; } #cap i b { font-size: 17px; font-style: normal; } #cap i { display: block; font: 400 14px "Courier New", monospace; color: #ddd; margin-top: 6px; }
@@ -77,16 +75,28 @@
   #start p { margin: 8px 0; }
   #gobtn { display: inline-block; margin: 6px 0 10px; padding: 10px 46px; background: #f3e36b; color: #111; font: 700 26px "Courier New", monospace; letter-spacing: 6px; }
   #gobtn:hover { background: #fff; }
+  /* The start screen has three states, set as a class on #start: s-scan (waiting for a phone), s-ready (phone connected), s-alt (hands or keyboard chosen). */
+  #start { cursor: default; } #start > div { max-width: 760px; width: 100%; padding: 0 20px; box-sizing: border-box; }
+  #start .spane, #sgo, #qscan, #qalt, #qready { display: none; }
+  #start.s-scan #sscan, #start.s-ready #sready { display: flex; align-items: center; justify-content: center; gap: 44px; flex-wrap: wrap; text-align: left; margin: 6px 0 4px; }
+  #start.s-alt #salt, #start.s-ready #sgo, #start.s-alt #sgo, #start.s-scan #qscan, #start.s-alt #qalt, #start.s-ready #qready { display: block; }
+  #start h2 { font: 700 26px/1.25 "Courier New", monospace; margin: 0 0 14px; color: #fff; }
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: st; font-size: 16px; } .steps li { counter-increment: st; margin: 9px 0; padding-left: 38px; position: relative; }
+  .steps li::before { content: counter(st); position: absolute; left: 0; top: -1px; width: 26px; height: 26px; border-radius: 50%; background: #f3e36b; color: #111; font-weight: 700; text-align: center; line-height: 26px; }
+  .sqr { text-align: center; } #pwqr { background: #f4f1e6; display: block; margin: 0 auto; cursor: pointer; } #start .sqr p { margin: 6px 0 0; max-width: 260px; font-size: 13px; color: #ddd; } #start #pwcode { color: #f3e36b; font-weight: 700; font-size: 14px; }
+  .sok { font-weight: 700; font-size: 22px; } .sok i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #5fd08a; margin-right: 12px; } .ssub { color: #ddd; } #swheel { width: 150px; height: 150px; }
+  .modes span { display: inline-block; vertical-align: top; width: 210px; margin: 0 4px; padding: 9px 0 10px; border: 1px solid #f3e36b; color: #f3e36b; cursor: pointer; } .modes span b { display: block; letter-spacing: 3px; font-size: 17px; } .modes small { font-size: 13px; }
+  .modes span.on { background: #f3e36b; color: #111; } #start .modes span.on b { color: #111; }
+  .quiet { color: #aaa; font-size: 13px; } .quiet u { color: #ddd; cursor: pointer; } .quiet u:hover { color: #f3e36b; } #gobtn { cursor: pointer; }
   #start .opts span { margin: 0 5px; }
   #phonebtn, #pwclose { display: inline-block; padding: 6px 14px; border: 1px solid #f3e36b; color: #f3e36b; font-weight: 700; cursor: pointer; } #phonebtn.on { background: #f3e36b; color: #111; }
   #start .opts { line-height: 2.6; }
-  #pw { position: fixed; inset: 0; z-index: 8; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); color: #fff; font: 15px/1.5 "Courier New", monospace; text-align: center; }
+  #pw-unused { position: fixed; inset: 0; z-index: 8; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); color: #fff; font: 15px/1.5 "Courier New", monospace; text-align: center; }
   #pw .in { display: flex; flex-direction: column; align-items: center; text-align: center; }
   #pw h2 { margin: 0 0 14px; color: #f3e36b; letter-spacing: 4px; font-size: 22px; } #pw p { margin: 8px 0; max-width: 420px; } #pwcode { color: #f3e36b; font-weight: 700; } #pwqr { background: #f4f1e6; }
-  #daybtn { display: inline-block; padding: 6px 14px; border: 1px solid #f3e36b; color: #f3e36b; font-weight: 700; cursor: pointer; } #daybtn.on { background: #f3e36b; color: #111; }
+  #daybtn.on { color: #f3e36b; }
   #dayhint { display: none; color: #ddd; font-size: 14px; }
   #ctlhint { color: #ddd; font-size: 14px; }
-  #keysbtn { color: #bbb; font-size: 13px; text-decoration: underline; cursor: pointer; }
   #keys { display: none; max-width: 640px; margin: 0 auto; font-size: 13px; line-height: 1.5; color: #ddd; }
   #lb tr:nth-of-type(n+6) { display: none; }
 </style>
@@ -104,7 +114,6 @@
 <div id="frame"></div>
 <div id="cap"></div>
 <div id="lights"></div>
-<div id="pw"><div class="in"><h2>STEER WITH YOUR PHONE</h2><canvas id="pwqr" width="232" height="232"></canvas><p id="pwcode"></p><p id="pwmsg"></p><p><span id="pwclose">Close</span></p></div></div>
 <div id="tv"><div id="tvbadge">REPLAY</div><div id="tvbar"><b id="tvname"></b><span id="tvinfo"></span><i id="tvtime"></i></div><div id="tvhint">Click or press Enter to go back</div></div>
 <div id="hc"><div class="in">
   <h2>HAND CHECK</h2>
@@ -124,14 +133,29 @@
 </div></div>
 <div id="start"><div>
   <h1>GOLDEN LAP</h1>
-  <p id="tagline">One lap. One time.</p>
   <p id="dare"></p>
-  <p><span id="gobtn">START</span></p>
-  <p class="opts"><span id="handbtn">Steering: HANDS</span><span id="easybtn">Mode: PRO</span><span id="prev">Preview lap</span><span id="daybtn">Today</span><span id="phonebtn">Phone wheel</span></p>
-  <p id="dayhint"></p>
-  <p id="ctlhint"></p>
+  <div id="sscan" class="spane">
+    <div class="scol">
+      <h2>Your phone is<br>the steering wheel.</h2>
+      <ol class="steps"><li>Scan the code with your phone's camera</li><li>Hold the phone sideways</li><li>Press START</li></ol>
+    </div>
+    <div class="sqr"><canvas id="pwqr" width="232" height="232" title="Click for a new code"></canvas><p id="pwcode"></p><p id="pwmsg"></p></div>
+  </div>
+  <div id="sready" class="spane">
+    <div class="scol"><p class="sok"><i></i>Phone connected</p><p class="ssub">Tilt it. The wheel should follow.</p></div>
+    <canvas id="swheel" width="200" height="200"></canvas>
+  </div>
+  <div id="salt" class="spane"><p id="ctlhint"></p></div>
+  <div id="sgo">
+    <p class="modes"><span id="modeB"><b>BEGINNER</b><small>You steer. That's it.</small></span><span id="modeP"><b>PRO</b><small>You brake too. Faster.</small></span></p>
+    <p><span id="gobtn">START</span></p>
+  </div>
   <p id="handmsg"></p>
-  <p><span id="keysbtn">Help and keys</span></p>
+  <p class="quiet" id="qscan">No phone to hand? <u id="usehands">Use your hands on camera</u> &nbsp;·&nbsp; <u id="usekeys">Use the keyboard</u></p>
+  <p class="quiet" id="qalt"><u id="usephone">Use your phone instead</u></p>
+  <p class="quiet" id="qready"><u id="dropphone">Disconnect the phone</u></p>
+  <p class="quiet"><u id="prev">Watch a lap first</u> &nbsp;·&nbsp; <u id="keysbtn">Help</u> &nbsp;·&nbsp; <u id="daybtn">Today</u></p>
+  <p id="dayhint"></p>
   <div id="keys">
     <p><b>Hands:</b> on a Mac, turn Centre Stage off (green camera icon in the menu bar) so the camera can see your hands. <b>K</b> switches camera, <b>C</b> turns hand steering on or off.</p>
     <p><b>Beginner</b> or <b>Pro</b> (<b>X</b>): in Beginner you only steer and the car handles speed and braking. In Pro the pedals are yours, and a very good lap is a few seconds quicker than Beginner can go.</p>
@@ -992,7 +1016,7 @@ function placeOnTrack(i, v) {
 }
 // Steering feel, 1 (calm) to 9 (sharp). Adjustable in the game with [ and ] and remembered per browser.
 // Simple mode: the player only steers. The car picks its own speed for every corner, a little under the limit.
-let easy = false, easyUsed = false, easyPace = 0.96, easyCeil = 1, easyTidy = true, steerOnly = false; /* steerOnly: a test aid, the autopilot steers while simple mode sets the speed */ try { easy = localStorage.getItem('goldenlap.easy') === '1'; } catch (e) {}
+let easy = false, easyUsed = false, easyPace = 0.96, easyCeil = 1, easyTidy = true, steerOnly = false; /* steerOnly: a test aid, the autopilot steers while simple mode sets the speed */ try { easy = localStorage.getItem('goldenlap.easy') !== '0'; } catch (e) {}      /* a first visit starts in Beginner */
 let feel = 4; try { feel = clamp(parseInt(localStorage.getItem('goldenlap.feel')) || 4, 1, 9); } catch (e) {}     // 4 is James's pick after driving it
 const maxSteer = v => Math.min(0.46, 0.02 + 3.4 * (20.6 + 0.0061 * v * v) / Math.max(v * v, 30));     // never more lock than the tyres can use at this speed
 const tyre = (a, D) => -D * Math.sin(PH.Cc * Math.atan(PH.B * a));
@@ -1054,26 +1078,27 @@ let gridRev = 0;
 // ---------- the computer's end of the phone wheel ----------
 const phone = { on: false, steer: 0, target: 0, brk: 0, t: 0, used: false, pc: null, poll: 0 };
 const phoneLive = () => phone.on && performance.now() - phone.t < 800;      // no message for most of a second: treat the wheel as let go
-function closePhone() { phone.poll++; if (phone.pc) { try { phone.pc.close(); } catch (e) {} } phone.pc = null; phone.on = false; $('phonebtn').textContent = 'Phone wheel'; $('phonebtn').className = ''; }
+function closePhone() { phone.poll++; if (phone.pc) { try { phone.pc.close(); } catch (e) {} } phone.pc = null; phone.on = false; }
 async function pairPhone() {
   closePhone(); const my = phone.poll, msg = t => { $('pwmsg').textContent = t; };
-  $('pw').style.display = 'flex'; $('pwcode').textContent = ''; msg('Making a code...'); $('pwqr').getContext('2d').clearRect(0, 0, 232, 232);
+  $('pwcode').textContent = ''; msg('Making a code...'); $('pwqr').getContext('2d').clearRect(0, 0, 232, 232);
   try {
     const pc = phone.pc = new RTCPeerConnection(RTC), ch = phone.ch = pc.createDataChannel('wheel', { ordered: false, maxRetransmits: 0 });      // late steering is worse than lost steering
     ch.onmessage = e => { try { const m = JSON.parse(e.data); let s = clamp(m.s / 35, -1, 1); s = Math.sign(s) * Math.pow(Math.max(0, Math.abs(s) - 0.04) / 0.96, 1.2); phone.target = s; phone.brk = m.b ? 1 : 0; phone.t = performance.now(); } catch (err) {} };
-    ch.onopen = () => { phone.on = true; phone.t = performance.now(); if (hand.on) stopHands(); $('phonebtn').textContent = 'Phone: CONNECTED'; $('phonebtn').className = 'on'; $('ctlhint').textContent = 'Turn the phone to steer. Touch its screen to brake.'; msg('Connected. Press START when you are ready.'); setTimeout(() => { if (phone.poll === my) $('pw').style.display = 'none'; }, 1400); };
-    ch.onclose = () => { if (phone.pc === pc) { closePhone(); setCtl(useHands); say('PHONE DISCONNECTED: KEYBOARD STEERING'); } };
+    ch.onopen = () => { phone.on = true; phone.t = performance.now(); if (hand.on) stopHands(); msg(''); startState(); };
+    ch.onclose = () => { if (phone.pc === pc) { closePhone(); setCtl(useHands); say('PHONE DISCONNECTED: KEYBOARD STEERING'); startState(); if (startShown()) pairPhone(); } };
     await pc.setLocalDescription(await pc.createOffer()); await waitIce(pc);
     const j = await postJ('/api/pair', { offer: pc.localDescription.sdp }); if (!j.ok) throw new Error(j.error || 'refused'); if (phone.poll !== my) return;
     const url = location.origin + '/?w=' + j.code, qr = qrcode(0, 'M'); qr.addData(url); qr.make();
     const n = qr.getModuleCount(), g = $('pwqr').getContext('2d'), cell = Math.floor(216 / n), off = Math.floor((232 - cell * n) / 2); g.fillStyle = '#f4f1e6'; g.fillRect(0, 0, 232, 232); g.fillStyle = '#111';
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (qr.isDark(y, x)) g.fillRect(off + x * cell, off + y * cell, cell, cell);
-    $('pwcode').textContent = url.replace(/^https?:\/\//, ''); msg('Scan this with your phone camera. Both on the same Wi-Fi works best.');
+    $('pwcode').textContent = url.replace(/^https?:\/\//, ''); msg('Both on the same Wi-Fi works best.');
     for (let k = 0; k < 240 && phone.poll === my && pc.signalingState !== 'stable'; k++) { await new Promise(r => setTimeout(r, 1000));
       const a = await fetch('/api/pair?p=' + j.code, { cache: 'no-store' }).then(r => r.json()).catch(() => null);
       if (a && a.answer && phone.poll === my && pc.signalingState !== 'stable') { await pc.setRemoteDescription({ type: 'answer', sdp: a.answer }); msg('Phone found. Connecting...'); } }
-    if (phone.poll === my && pc.signalingState !== 'stable') msg('No phone answered. Close this and try again.');
-  } catch (e) { msg('Could not set up the phone wheel here: ' + (e && e.message ? e.message : e)); }
+    if (phone.poll === my && pc.signalingState !== 'stable') { if (startShown() && (phone.renew = (phone.renew || 0) + 1) < 8) return pairPhone();      /* codes last four minutes: make a fresh one while the start screen is still up */
+      msg('This code has expired. Click it for a new one.'); }
+  } catch (e) { msg('The phone wheel is not available here. Use your hands or the keyboard below.'); }
 }
 // ---------- hand check: before a first lap with camera steering, prove each gesture works ----------
 let checking = false; const hc = { step: 0, t: 0, hold: 0, done: 0 };
@@ -1105,7 +1130,7 @@ function loadGhost() { try { ghost = JSON.parse(localStorage.getItem(ghostKey())
 loadGhost();
 function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost();
   const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name; $('daybtn').className = on ? 'on' : '';
+  $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); $('daybtn').className = on ? 'on' : '';
   $('dayhint').textContent = on ? `Today's lap has its own board. New conditions in ${hh} h ${mm} m.` : ''; $('dayhint').style.display = on ? 'block' : 'none';
   board = []; if (typeof refreshBoard === 'function') refreshBoard(); }
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
@@ -1726,7 +1751,7 @@ async function refreshBoard() {
   try {
     const was = daily, r = await fetch('/api/board' + (daily ? '?daily=1' : ''), { cache: 'no-store' }); if (!r.ok) return;
     const d = await r.json(); if (!d || !Array.isArray(d.all) || was !== daily) return;
-    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name; }      // the server's calendar is the one that counts
+    if (Number.isFinite(d.day) && d.day !== dayNo) { dayNo = d.day; if (daily) return setDaily(true); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase(); }      // the server's calendar is the one that counts
     remote = true; total = d.total || d.all.length; board = d.all;
     if (mine && !mine.posted) board.push(mine);
     if (mode === 'done') drawBoard(); else drawTop();
@@ -1749,7 +1774,7 @@ function toGrid() {
   $('panel').style.display = 'none'; $('lights').style.display = 'block';
 }
 const tagOf = c => { const t = { phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[c]; return t ? ` <small>${t}</small>` : ''; };
-function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('easybtn').textContent = 'Mode: ' + (easy ? 'BEGINNER' : 'PRO'); $('easybtn').className = ''; }
+function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('modeB').className = easy ? 'on' : ''; $('modeP').className = easy ? '' : 'on'; }
 function drawTop() {
   const rows = board.slice().sort((a, b) => a.t - b.t).slice(0, 10);
   const html = '<caption>' + (daily ? 'TODAY: ' + ENV.name : 'LEADERBOARD') + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : '<tr><td>No times yet. Set the first one.</td></tr>');
@@ -1963,17 +1988,28 @@ function loop() { frame(); requestAnimationFrame(loop); }
 loop();
 
 $('prev').addEventListener('click', e => { e.stopPropagation(); startPreview(); });
-$('easybtn').addEventListener('click', e => { e.stopPropagation(); setEasy(!easy); }); setEasy(easy);
+$('modeB').addEventListener('click', e => { e.stopPropagation(); setEasy(true); }); $('modeP').addEventListener('click', e => { e.stopPropagation(); setEasy(false); }); setEasy(easy);
 let useHands = true; try { useHands = localStorage.getItem('goldenlap.ctl') !== 'keys'; } catch (e) {}
 function setCtl(h) { useHands = h; try { localStorage.setItem('goldenlap.ctl', h ? 'hands' : 'keys'); } catch (e) {}
-  $('handbtn').textContent = 'Steering: ' + (h ? 'HANDS' : 'KEYBOARD'); $('handbtn').className = h ? 'on' : '';
   $('ctlhint').innerHTML = h ? 'Hold your hands up like a steering wheel. Tilt to steer, clench your fists to brake.' : '<b>Arrows</b> or <b>WASD</b> to drive, <b>Space</b> to brake.'; }
-$('phonebtn').addEventListener('click', e => { e.stopPropagation(); if (phone.on) { closePhone(); setCtl(useHands); } else pairPhone(); });
-$('pw').addEventListener('click', e => e.stopPropagation()); $('pwclose').addEventListener('click', e => { e.stopPropagation(); $('pw').style.display = 'none'; if (!phone.on) closePhone(); });
-$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); }); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name;
+// The start screen: a phone is the main way to play, so the code is on screen from the start. altCtl means the player asked for hands or keyboard instead.
+let altCtl = false;
+const startShown = () => $('start').style.display !== 'none';
+function startState() { const el = $('start'); el.classList.remove('s-scan', 's-ready', 's-alt'); el.classList.add(phone.on ? 's-ready' : altCtl ? 's-alt' : 's-scan'); }
+$('usehands').addEventListener('click', () => { altCtl = true; setCtl(true); startState(); });
+$('usekeys').addEventListener('click', () => { altCtl = true; setCtl(false); startState(); });
+$('usephone').addEventListener('click', () => { altCtl = false; startState(); if (!phone.pc) { phone.renew = 0; pairPhone(); } });
+$('dropphone').addEventListener('click', () => { closePhone(); altCtl = false; startState(); phone.renew = 0; pairPhone(); });
+$('pwqr').addEventListener('click', () => { if (!phone.on) { phone.renew = 0; pairPhone(); } });
+{ let a = 0; const c = $('swheel').getContext('2d');      // on the ready screen a wheel follows the phone, so you can see it works before the lights
+  (function turn() { requestAnimationFrame(turn); if (!phone.on || !startShown()) return; const live = phoneLive(); a += ((live ? phone.target : 0) - a) * 0.25;
+    c.clearRect(0, 0, 200, 200); c.save(); c.translate(100, 100); c.rotate(-a * 0.61); c.strokeStyle = '#f3e36b'; c.lineWidth = 16; c.beginPath(); c.arc(0, 0, 82, 0, 7); c.stroke();
+    c.lineWidth = 12; c.beginPath(); c.moveTo(-82, 0); c.lineTo(82, 0); c.moveTo(0, 0); c.lineTo(0, 82); c.stroke(); c.fillStyle = '#15171a'; c.beginPath(); c.arc(0, 0, 22, 0, 7); c.fill();
+    c.fillStyle = live && phone.brk ? '#ff3a1c' : '#5a1410'; c.strokeStyle = '#a9a59a'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, 10, 0, 7); c.fill(); c.stroke(); c.restore(); })(); }
+$('daybtn').addEventListener('click', e => { e.stopPropagation(); setDaily(!daily); }); $('daybtn').textContent = 'Today: ' + CONDS[todayKey()].name.toLowerCase();
 $('keysbtn').addEventListener('click', e => { e.stopPropagation(); const k = $('keys'); k.style.display = k.style.display === 'block' ? 'none' : 'block'; });
 $('keys').addEventListener('click', e => e.stopPropagation());
-$('handbtn').addEventListener('click', e => { e.stopPropagation(); setCtl(!useHands); }); setCtl(useHands);
+setCtl(useHands); startState(); pairPhone();
 addEventListener('click', () => { if (mode === 'preview' && prevT > 0.4) endPreview(); if (mode === 'replay' && rT > 0.4) endReplay(); });
 $('hcskip').addEventListener('click', () => endCheck(true));
 $('hckeys').addEventListener('click', () => { stopHands(); setCtl(false); endCheck(false); toGrid(); });
@@ -1982,8 +2018,9 @@ $('rpbtn').addEventListener('click', e => { e.stopPropagation(); startReplay(); 
 $('chbtn').addEventListener('click', e => { e.stopPropagation(); sendChallenge(); });
 $('chlink').addEventListener('keydown', e => e.stopPropagation());
 let starting = false;
-$('start').addEventListener('click', () => {
-  if (starting) return;
+addEventListener('keydown', e => { if (e.code === 'Enter' && startShown() && !$('start').classList.contains('s-scan') && document.activeElement === document.body) $('gobtn').click(); });
+$('start').addEventListener('click', ev => {
+  if (starting || !ev.target.closest('#gobtn')) return;      /* only the START button starts a lap now, not a click anywhere */
   initAudio().catch(e => console.warn('no audio', e));
   const go = () => { starting = false; $('start').style.display = 'none'; $('handmsg').textContent = ''; started = true; toGrid(); };
   if (!useHands || hand.on || phone.on) { go(); return; }
@@ -1992,7 +2029,7 @@ $('start').addEventListener('click', () => {
 });
 
 // handle for testing and for scripted B-roll
-window.G = { smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
+window.G = { startState, smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
 })();
 </script>
 </body>

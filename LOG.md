@@ -1006,3 +1006,13 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - `start-screen.html`: today's screen has five equal buttons with the phone last, and START launches a keyboard or camera lap. Proposal: the start screen becomes the scan screen (code shown on load, three numbered steps), then a "ready" screen with a live wheel and a Beginner/Pro switch, START on the phone, a sideways phone layout with the brake hint, and a "needs a bigger screen" message when opened on a phone. Phone lap goes from four actions to two.
 - Flagged in the paper: the film and trailer say "steered with your bare hands", which no longer matches if the game leads with the phone.
 - Also earlier today: mocked up three brake hints for the phone wheel (lamp in hub, thumb pads, red edge), upright and sideways. Recommendation: lamp plus thumb pads that fade after the first brake. Nothing built yet.
+
+### v70: the start screen is now the scan screen (steps 1 and 2 of the paper; James: "Yes, build them")
+- On load the screen shows "Your phone is the steering wheel", three numbered steps and the QR code, made automatically. No START button until there is something to start. Codes last four minutes and renew themselves while the screen is up; click the code for a new one.
+- When a phone connects the screen switches to "Phone connected": a wheel that turns as you tilt the phone (and its hub lamp lights when you touch the screen), a Beginner / Pro switch with a line under each, and START.
+- Hands and keyboard are one quiet line, "No phone to hand?", leading to the same mode switch and START. "Preview lap" is now "Watch a lap first"; weather is a small link; the five-button row is gone.
+- Only the START button (or Enter) starts a lap now. Before, a click anywhere on the screen did.
+- A first visit starts in Beginner; the choice is remembered. (Browsers that already chose Pro stay in Pro.)
+- Decisions taken without James, as recommended in the paper: Beginner by default, and a code made on every visit.
+- Checked: all three states in the preview, START and the blank-click change, and on the live site that a real QR code appears on load. Not checked: a real phone connecting through the new screen.
+- The old screen is kept as `index-v69-before-new-start-screen.html`.
