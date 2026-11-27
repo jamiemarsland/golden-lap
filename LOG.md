@@ -1094,3 +1094,5 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 ## Front suspension meets the nose (v83, 27 Nov)
 - James sent two close-ups: "looks like we got a little issue with the front nose cone and the right suspension?"
 - The nose is a tapered cone, and the inner ends of the wishbones and pushrods were placed for a fatter nose, so they sat a few centimetres off it: the upper arms and pushrod hovered above it and the front lower arm hung below. Same on both sides; from the driver's seat it showed most on the right. Moved every inner mount just inside the nose surface. Before/after: video/raw/nose-cmp.png.
+- James: "can you update the trailer as well". Re-recorded all six laps the trailers use (with the fixed arms) and re-rendered all four: dry, rain, smudge and coming-soon.
+- James asked whether the nose should sit further right. It is centred; the camera sits 30 cm left of the centre line, beside the helmet, so the near steering wheel appears further right than the far nose. Left as it is.
