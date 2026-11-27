@@ -1105,3 +1105,10 @@ James plays on a projector with the laptop across the room, so after a lap he ha
 - The link between phone and computer drops lost messages rather than resend them, so the phone sends the request three times; the game acts on each one once.
 - The finish panel says "Enter, or GO AGAIN on your phone" when a phone is connected.
 - Tested with a game page and a phone page paired in headless Chrome.
+
+## v85 · Start from the phone; forecast and board after the lap (27 Nov)
+Playing on the projector, James still had to walk to the laptop for the first START.
+- The phone's TAP TO START now also presses START on the computer. Step 3 on the start screen reads "Tap START on your phone".
+- If the phone is already going when you come back to the start screen, it shows a big START.
+- Browsers can hold sound back until someone clicks the page. If that happens after a phone start, the screen says CLICK OR PRESS ANY KEY FOR SOUND.
+- The finish panel now shows the week's forecast and today's line ("TODAY'S LAP: RAIN · new weather in…") at the top, and the board has a caption ("TODAY'S BOARD · RAIN" or "ALL TIME · DRY").

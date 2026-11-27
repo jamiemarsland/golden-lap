@@ -101,14 +101,16 @@
   #keys { display: none; max-width: 640px; margin: 0 auto; font-size: 13px; line-height: 1.5; color: #ddd; }
   #lb tr:nth-of-type(n+6), #lbAll tr:nth-of-type(n+6) { display: none; }
   .boards { display: flex; justify-content: center; align-items: flex-start; gap: 10px 44px; flex-wrap: wrap; } .boards .lbt { margin: 14px 0 0; font-size: 15px; } .boards .lbt td { padding: 0 7px; } .boards .lbt caption { white-space: nowrap; } .boards .lbt.dim { opacity: .62; }
-  #wx { display: flex; justify-content: center; margin: 4px 0 8px; }
-  #wx .fc { width: 88px; padding: 6px 0 7px; border-left: 1px solid rgba(255,255,255,.16); line-height: 1.2; }
-  #wx .fc:first-child { border-left: 0; } #wx .fc i { display: block; font-style: normal; font-size: 12px; color: #bbb; }
-  #wx .fc svg { width: 34px; height: 34px; display: block; margin: 5px auto 4px; } #wx .fc b { color: #fff; font-size: 12px; font-weight: 400; }
-  #wx .fc.now { width: 104px; border: 1px solid #f3e36b; border-radius: 4px; background: rgba(243,227,107,.1); } #wx .fc.now + .fc { border-left: 0; }
-  #wx .fc.now i, #start #wx .fc.now b { color: #f3e36b; font-weight: 700; } #wx .fc.now svg { width: 42px; height: 42px; margin: 3px auto 2px; }
-  #wx .fc.off { border-color: rgba(255,255,255,.3); background: none; opacity: .6; }
-  @media (max-width: 700px) { #wx .fc { width: 62px; } #wx .fc.now { width: 76px; } #wx .fc b { font-size: 10px; } #wx .fc:nth-child(n+6) { display: none; } }
+  #wx , #pwx { display: flex; justify-content: center; margin: 4px 0 8px; }
+  #wx .fc , #pwx .fc { width: 88px; padding: 6px 0 7px; border-left: 1px solid rgba(255,255,255,.16); line-height: 1.2; }
+  #wx .fc:first-child , #pwx .fc:first-child { border-left: 0; } #wx .fc i , #pwx .fc i { display: block; font-style: normal; font-size: 12px; color: #bbb; }
+  #wx .fc svg , #pwx .fc svg { width: 34px; height: 34px; display: block; margin: 5px auto 4px; } #wx .fc b , #pwx .fc b { color: #fff; font-size: 12px; font-weight: 400; }
+  #wx .fc.now , #pwx .fc.now { width: 104px; border: 1px solid #f3e36b; border-radius: 4px; background: rgba(243,227,107,.1); } #wx .fc.now + .fc , #pwx .fc.now + .fc { border-left: 0; }
+  #wx .fc.now i, #pwx .fc.now i, #start #wx .fc.now b, #pwx .fc.now b, #pwx .fc.now b { color: #f3e36b; font-weight: 700; } #wx .fc.now svg , #pwx .fc.now svg { width: 42px; height: 42px; margin: 3px auto 2px; }
+  #wx .fc.off , #pwx .fc.off { border-color: rgba(255,255,255,.3); background: none; opacity: .6; }
+  @media (max-width: 700px) { #wx .fc , #pwx .fc { width: 62px; } #wx .fc.now , #pwx .fc.now { width: 76px; } #wx .fc b , #pwx .fc b { font-size: 10px; } #wx .fc:nth-child(n+6) , #pwx .fc:nth-child(n+6) { display: none; } }
+  #pwx { margin: 0 0 4px; text-align: center; } #ptoday { margin: 0 0 18px; text-align: center; font-size: 14px; letter-spacing: 2px; color: #bbb; } #ptoday b { color: #f3e36b; }
+  #pbcap { margin: 14px 0 0; font-size: 13px; letter-spacing: 3px; color: #f3e36b; font-weight: 700; }
   .lbt .dg { font-style: normal; display: inline-block; width: 26px; color: #f3e36b; opacity: .45; cursor: pointer; letter-spacing: 0; } .lbt .dg:hover { opacity: 1; } .lbt .dg.off { visibility: hidden; }
   #lb.past td:last-child { color: #d8cfa0; } #lb.past { opacity: .85; }
   #todayline { color: #fff; font-size: 15px; letter-spacing: 1px; margin: 0 0 10px; } #todayline span { color: #bbb; }
@@ -138,9 +140,10 @@
 <div id="flash"></div>
 <pre id="dbg"></pre>
 <div id="panel"><div class="in">
+  <div id="pwx"></div><p id="ptoday"></p>
   <h2>GOLDEN LAP</h2>
   <div class="t" id="pt"></div><div id="ps"></div><div id="pr"></div>
-  <table id="pb"></table>
+  <p id="pbcap"></p><table id="pb"></table>
   <div id="pn">Name <input id="name" maxlength="12" autocomplete="off"> <small>Enter to post your time and go again</small></div>
   <div id="pc"><span id="rpbtn">Watch replay</span> <span id="savebtn">Save picture</span> <span id="chbtn">Challenge a friend</span><input id="chlink" readonly><br><small id="ghostmsg"></small></div>
   <div id="pa"><small>Autopilot was used, so this lap is not on the board. Press R to go again.</small></div>
@@ -153,7 +156,7 @@
   <div id="sscan" class="spane">
     <div class="scol">
       <h2>Your phone is<br>the steering wheel.</h2>
-      <ol class="steps"><li>Scan the code with your phone's camera</li><li>Hold the phone sideways</li><li>Press START</li></ol>
+      <ol class="steps"><li>Scan the code with your phone's camera</li><li>Hold the phone sideways</li><li>Tap START on your phone</li></ol>
     </div>
     <div class="sqr"><canvas id="pwqr" width="232" height="232" title="Click for a new code"></canvas><p id="pwcode"></p><p id="pwmsg"></p></div>
   </div>
@@ -242,6 +245,7 @@ function phoneWheel(code) {
     const now = performance.now(); if (ch && ch.readyState === 'open' && now - lastSend > 30) { lastSend = now; ch.send(JSON.stringify({ s: +(ang * inv).toFixed(1), b: brake })); } }
   q('pwgo').addEventListener('click', async e => { e.stopPropagation(); goFull();      /* must be asked for inside the tap itself */
     try { if (window.DeviceMotionEvent && DeviceMotionEvent.requestPermission) { const p = await DeviceMotionEvent.requestPermission(); if (p !== 'granted') return st('MOTION ACCESS WAS REFUSED'); } } catch (err) { return st('MOTION SENSORS NOT AVAILABLE'); }
+    if (!started && fState === 0) again();      /* the first TAP TO START also presses START on the computer */
     if (!started) { addEventListener('devicemotion', onMotion); started = true; try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(() => {}); } catch (err) {} }
     base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block'; if (navigator.vibrate || native) q('pwhap').style.display = 'block'; haptic('g');      /* the vibration line only shows where the phone can really vibrate: not on an iPhone */      /* one tick so you know it works */
     if (ch && ch.readyState === 'open') st('CONNECTED'); });
@@ -251,8 +255,9 @@ function phoneWheel(code) {
      without walking back to the computer. It posts your time under your saved name and puts you back on the grid. Mid-lap: a small restart link.
      The link drops lost messages rather than resend them, so the request goes three times; the game acts on each number once. */
   let fState = -1, againN = 0;
-  function lapState(f) { if (f === fState) return; fState = f; q('pwag').style.display = f === 1 ? 'inline-block' : 'none'; q('pwrs').style.display = f === 2 && started ? 'block' : 'none'; }
-  const again = e => { e.stopPropagation(); if (!ch || ch.readyState !== 'open') return; const msg = JSON.stringify({ a: ++againN + '-' + Math.random().toString(36).slice(2, 6) });
+  function lapState(f) { if (f === fState) return; fState = f; q('pwag').textContent = f === 0 ? 'START' : 'GO AGAIN';      /* 0 is the start screen: once the wheel is going, a big START */
+    q('pwag').style.display = f === 1 || (f === 0 && started) ? 'inline-block' : 'none'; q('pwrs').style.display = f === 2 && started ? 'block' : 'none'; }
+  const again = e => { if (e) e.stopPropagation(); if (!ch || ch.readyState !== 'open') return; const msg = JSON.stringify({ a: ++againN + '-' + Math.random().toString(36).slice(2, 6) });
     for (const t of [0, 80, 200]) setTimeout(() => { try { ch && ch.readyState === 'open' && ch.send(msg); } catch (err) {} }, t); haptic('g'); fState = -1; q('pwag').style.display = 'none'; };
   q('pwag').addEventListener('click', again); q('pwrs').addEventListener('click', again);
   for (const id of ['pwgo', 'pwinv', 'pwhap', 'pwag', 'pwrs']) for (const ev of ['touchstart', 'touchend']) q(id).addEventListener(ev, e => e.stopPropagation(), { passive: true });
@@ -1875,7 +1880,10 @@ async function postLap(m) {
 refreshBoard();
 /* GO AGAIN on the phone, for playing on a projector or TV across the room: posts the lap just finished under your saved name (as Enter does), then back to the grid.
    Mid-lap it is the same as R. */
-function goAgain() { if (!started || mode === 'preview' || mode === 'attract') return; if (mode === 'replay') endReplay();
+function goAgain() {
+  if (startShown()) { if (phone.on && !starting) { $('gobtn').click();      /* START from the phone. With no click on this computer the browser may hold the sound back: ask for one */
+    setTimeout(() => { if (snd.ac && snd.ac.state === 'suspended') { say('CLICK OR PRESS ANY KEY FOR SOUND'); const wake = () => { snd.ac.resume(); removeEventListener('pointerdown', wake); removeEventListener('keydown', wake); }; addEventListener('pointerdown', wake); addEventListener('keydown', wake); } }, 600); } return; }
+  if (!started || mode === 'preview' || mode === 'attract') return; if (mode === 'replay') endReplay();
   if (mode === 'done' && remote && mine && !mine.posted) { mine.posted = true; postLap(mine); } toGrid(); }
 function toGrid() {
   if (checking) endCheck(false);
@@ -1924,6 +1932,9 @@ function finish() {
   lap.last = lap.t; mode = 'done'; autopilot = true;
   $('pt').textContent = fmt(lap.last); $('panel').style.display = 'flex';
   $('pn').style.display = usedAuto ? 'none' : ''; $('pa').style.display = usedAuto ? '' : 'none';
+  dayLabels(); $('pwx').innerHTML = $('wx').innerHTML; $('ptoday').innerHTML = $('todayline').innerHTML;      /* the week's weather and the board, so you can see what's next without going back to the start screen */
+  $('pbcap').textContent = daily ? `TODAY'S BOARD · ${WXN[todayKey()].toUpperCase()}` : 'ALL TIME · DRY';
+  $('pa').querySelector('small').textContent = 'Autopilot was used, so this lap is not on the board. ' + (phone.on ? 'Tap GO AGAIN on your phone, or press R.' : 'Press R to go again.');
   $('pn').querySelector('small').textContent = phone.on ? 'Enter, or GO AGAIN on your phone, to post your time and go again' : 'Enter to post your time and go again';
   if (!usedAuto) { let n = ''; try { n = localStorage.getItem('goldenlap.name') || ''; } catch (e) {}
     mine = { n: n || 'YOU', t: +lap.last.toFixed(3), d: Date.now(), c: (phone.used ? 'phone' : hand.used ? 'hands' : 'keys') + (easyUsed ? '-simple' : ''), s: splits.length >= 2 ? [+splits[0].toFixed(3), +splits[1].toFixed(3)] : null }; mine.tr = []; mine.daily = daily; board.push(mine); saveBoard(); $('name').value = n; setTimeout(() => $('name').focus(), 50); }
@@ -2039,7 +2050,7 @@ function frame(dtForced) {
   car.axS += (car.ax - car.axS) * Math.min(1, dt * 8); car.ayS += (car.ay - car.ayS) * Math.min(1, dt * 8);
   car.bump *= Math.exp(-dt * 5);
   if (phone.on && phone.ch && phone.ch.readyState === 'open' && performance.now() - (phone.fT || 0) > 400) { phone.fT = performance.now();      /* twice a second: is the lap over (the phone shows GO AGAIN) or under way (a small restart link)? */
-    try { phone.ch.send('{"f":' + (mode === 'done' || mode === 'replay' ? 1 : mode === 'run' || mode === 'grid' ? 2 : 0) + '}'); } catch (err) {} }
+    try { phone.ch.send('{"f":' + (startShown() ? 0 : mode === 'done' || mode === 'replay' ? 1 : mode === 'run' || mode === 'grid' ? 2 : 3) + '}'); } catch (err) {} }
   if (phone.on && phone.ch && phone.ch.readyState === 'open' && mode === 'run') {      /* tell the phone what the car is feeling, so it can buzz in your hands */
     const H = phone.hap || (phone.hap = { g: car.gear, b: 0, k: 0 }), now = performance.now(); let m = '';
     if (car.bump > H.b + 0.12) m = 'b'; else if (car.gear !== H.g) m = 'g'; else if ((car.kerb || car.off) && v > 8 && now - H.k > 95) { m = 'k'; H.k = now; }

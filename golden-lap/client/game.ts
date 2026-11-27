@@ -63,6 +63,7 @@ function phoneWheel(code) {
     const now = performance.now(); if (ch && ch.readyState === 'open' && now - lastSend > 30) { lastSend = now; ch.send(JSON.stringify({ s: +(ang * inv).toFixed(1), b: brake })); } }
   q('pwgo').addEventListener('click', async e => { e.stopPropagation(); goFull();      /* must be asked for inside the tap itself */
     try { if (window.DeviceMotionEvent && DeviceMotionEvent.requestPermission) { const p = await DeviceMotionEvent.requestPermission(); if (p !== 'granted') return st('MOTION ACCESS WAS REFUSED'); } } catch (err) { return st('MOTION SENSORS NOT AVAILABLE'); }
+    if (!started && fState === 0) again();      /* the first TAP TO START also presses START on the computer */
     if (!started) { addEventListener('devicemotion', onMotion); started = true; try { navigator.wakeLock && navigator.wakeLock.request('screen').catch(() => {}); } catch (err) {} }
     base = null; ang = 0; q('pwgo').textContent = 'RE-CENTRE'; q('pwgo').style.cssText = 'display:inline-block;padding:6px 16px;border:1px solid #f3e36b;color:#f3e36b;font-weight:700;font-size:13px;letter-spacing:2px'; q('pwinv').style.display = 'block'; if (navigator.vibrate || native) q('pwhap').style.display = 'block'; haptic('g');      /* the vibration line only shows where the phone can really vibrate: not on an iPhone */      /* one tick so you know it works */
     if (ch && ch.readyState === 'open') st('CONNECTED'); });
@@ -72,8 +73,9 @@ function phoneWheel(code) {
      without walking back to the computer. It posts your time under your saved name and puts you back on the grid. Mid-lap: a small restart link.
      The link drops lost messages rather than resend them, so the request goes three times; the game acts on each number once. */
   let fState = -1, againN = 0;
-  function lapState(f) { if (f === fState) return; fState = f; q('pwag').style.display = f === 1 ? 'inline-block' : 'none'; q('pwrs').style.display = f === 2 && started ? 'block' : 'none'; }
-  const again = e => { e.stopPropagation(); if (!ch || ch.readyState !== 'open') return; const msg = JSON.stringify({ a: ++againN + '-' + Math.random().toString(36).slice(2, 6) });
+  function lapState(f) { if (f === fState) return; fState = f; q('pwag').textContent = f === 0 ? 'START' : 'GO AGAIN';      /* 0 is the start screen: once the wheel is going, a big START */
+    q('pwag').style.display = f === 1 || (f === 0 && started) ? 'inline-block' : 'none'; q('pwrs').style.display = f === 2 && started ? 'block' : 'none'; }
+  const again = e => { if (e) e.stopPropagation(); if (!ch || ch.readyState !== 'open') return; const msg = JSON.stringify({ a: ++againN + '-' + Math.random().toString(36).slice(2, 6) });
     for (const t of [0, 80, 200]) setTimeout(() => { try { ch && ch.readyState === 'open' && ch.send(msg); } catch (err) {} }, t); haptic('g'); fState = -1; q('pwag').style.display = 'none'; };
   q('pwag').addEventListener('click', again); q('pwrs').addEventListener('click', again);
   for (const id of ['pwgo', 'pwinv', 'pwhap', 'pwag', 'pwrs']) for (const ev of ['touchstart', 'touchend']) q(id).addEventListener(ev, e => e.stopPropagation(), { passive: true });
@@ -1696,7 +1698,10 @@ async function postLap(m) {
 refreshBoard();
 /* GO AGAIN on the phone, for playing on a projector or TV across the room: posts the lap just finished under your saved name (as Enter does), then back to the grid.
    Mid-lap it is the same as R. */
-function goAgain() { if (!started || mode === 'preview' || mode === 'attract') return; if (mode === 'replay') endReplay();
+function goAgain() {
+  if (startShown()) { if (phone.on && !starting) { $('gobtn').click();      /* START from the phone. With no click on this computer the browser may hold the sound back: ask for one */
+    setTimeout(() => { if (snd.ac && snd.ac.state === 'suspended') { say('CLICK OR PRESS ANY KEY FOR SOUND'); const wake = () => { snd.ac.resume(); removeEventListener('pointerdown', wake); removeEventListener('keydown', wake); }; addEventListener('pointerdown', wake); addEventListener('keydown', wake); } }, 600); } return; }
+  if (!started || mode === 'preview' || mode === 'attract') return; if (mode === 'replay') endReplay();
   if (mode === 'done' && remote && mine && !mine.posted) { mine.posted = true; postLap(mine); } toGrid(); }
 function toGrid() {
   if (checking) endCheck(false);
@@ -1745,6 +1750,9 @@ function finish() {
   lap.last = lap.t; mode = 'done'; autopilot = true;
   $('pt').textContent = fmt(lap.last); $('panel').style.display = 'flex';
   $('pn').style.display = usedAuto ? 'none' : ''; $('pa').style.display = usedAuto ? '' : 'none';
+  dayLabels(); $('pwx').innerHTML = $('wx').innerHTML; $('ptoday').innerHTML = $('todayline').innerHTML;      /* the week's weather and the board, so you can see what's next without going back to the start screen */
+  $('pbcap').textContent = daily ? `TODAY'S BOARD · ${WXN[todayKey()].toUpperCase()}` : 'ALL TIME · DRY';
+  $('pa').querySelector('small').textContent = 'Autopilot was used, so this lap is not on the board. ' + (phone.on ? 'Tap GO AGAIN on your phone, or press R.' : 'Press R to go again.');
   $('pn').querySelector('small').textContent = phone.on ? 'Enter, or GO AGAIN on your phone, to post your time and go again' : 'Enter to post your time and go again';
   if (!usedAuto) { let n = ''; try { n = localStorage.getItem('goldenlap.name') || ''; } catch (e) {}
     mine = { n: n || 'YOU', t: +lap.last.toFixed(3), d: Date.now(), c: (phone.used ? 'phone' : hand.used ? 'hands' : 'keys') + (easyUsed ? '-simple' : ''), s: splits.length >= 2 ? [+splits[0].toFixed(3), +splits[1].toFixed(3)] : null }; mine.tr = []; mine.daily = daily; board.push(mine); saveBoard(); $('name').value = n; setTimeout(() => $('name').focus(), 50); }
@@ -1860,7 +1868,7 @@ function frame(dtForced) {
   car.axS += (car.ax - car.axS) * Math.min(1, dt * 8); car.ayS += (car.ay - car.ayS) * Math.min(1, dt * 8);
   car.bump *= Math.exp(-dt * 5);
   if (phone.on && phone.ch && phone.ch.readyState === 'open' && performance.now() - (phone.fT || 0) > 400) { phone.fT = performance.now();      /* twice a second: is the lap over (the phone shows GO AGAIN) or under way (a small restart link)? */
-    try { phone.ch.send('{"f":' + (mode === 'done' || mode === 'replay' ? 1 : mode === 'run' || mode === 'grid' ? 2 : 0) + '}'); } catch (err) {} }
+    try { phone.ch.send('{"f":' + (startShown() ? 0 : mode === 'done' || mode === 'replay' ? 1 : mode === 'run' || mode === 'grid' ? 2 : 3) + '}'); } catch (err) {} }
   if (phone.on && phone.ch && phone.ch.readyState === 'open' && mode === 'run') {      /* tell the phone what the car is feeling, so it can buzz in your hands */
     const H = phone.hap || (phone.hap = { g: car.gear, b: 0, k: 0 }), now = performance.now(); let m = '';
     if (car.bump > H.b + 0.12) m = 'b'; else if (car.gear !== H.g) m = 'g'; else if ((car.kerb || car.off) && v > 8 && now - H.k > 95) { m = 'k'; H.k = now; }
