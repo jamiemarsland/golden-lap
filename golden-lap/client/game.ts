@@ -322,9 +322,9 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
            Where water stands, the grain is drowned and the surface is a clean mirror. */
         vec3 V = cameraPosition - vWp; float dist = length(V); V /= dist;
         vec2 rp = (rip(vWp.xz * 1.6, uTime) + rip(vWp.xz * 1.1 + 13.7, uTime * 0.9 + 3.)) * smoothstep(38., 5., dist);      /* rings twice the size of before, so they survive the tape filter */
-        float stretch = smoothstep(0.38, 0.56, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold more water */
+        float stretch = smoothstep(0.46, 0.6, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold more water */
         float pn = vn(vWp.xz * 0.42 + 11.) * 0.7 + vn(vWp.xz * 1.4 + 5.) * 0.3;      /* puddles a metre or two across */
-        float pool = smoothstep(0.56, 0.6, pn) * stretch * smoothstep(0.55, 1., uRain);
+        float pool = smoothstep(0.62, 0.645, pn) * stretch * smoothstep(0.55, 1., uRain);      /* fewer puddles, with crisper edges */
         vec2 g1 = texture2D(uNrm, vWp.xz * 0.62).xy * 2. - 1., g2 = texture2D(uNrm, vWp.zx * 0.17 + 0.37).xy * 2. - 1.;
         float grain = smoothstep(90., 9., dist) * (1. - pool * 0.94);                      /* far away the grain averages out; under standing water it is gone */
         vec3 N = normalize(vec3((g1.x * 0.85 + g2.x * 0.4) * grain + rp.x * 0.55, 1., (g1.y * 0.85 + g2.y * 0.4) * grain + rp.y * 0.55));
@@ -334,7 +334,7 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         vec3 skyC = uSky * mix(1.45, 0.9, clamp(R.y * 1.5, 0., 1.));                       /* brightest just above the horizon */
         vec3 env = mix(uSky * vec3(0.58, 0.62, 0.6), skyC, smoothstep(treeTop - soft, treeTop + soft, R.y));      /* in the rain the far treeline is a misty grey band, only a little darker than the sky */
         if (uReflOn > 0.5) {      /* the real mirrored world: sharp in a puddle, smeared on damp tarmac, wobbled by the grain and the rain rings */
-          vec4 rc = uRM * vec4(vWp, 1.); vec2 ruv = rc.xy / rc.w * 0.5 + 0.5 + N.xz * 0.05;
+          vec4 rc = uRM * vec4(vWp, 1.); vec2 ruv = rc.xy / rc.w * 0.5 + 0.5 + N.xz * mix(0.05, 0.012, pool);      /* a puddle is still water: only the rain rings disturb it */
           vec3 sharp = texture2D(uRefl, ruv).rgb;
           vec3 smear = (texture2D(uRefl, ruv + vec2(0.01, 0.025)).rgb + texture2D(uRefl, ruv - vec2(0.01, 0.025)).rgb + texture2D(uRefl, ruv + vec2(-0.014, 0.05)).rgb + texture2D(uRefl, ruv + vec2(0.014, -0.012)).rgb) * 0.25;
           float inView = step(0., rc.w) * (1. - smoothstep(0.46, 0.5, abs(ruv.x - 0.5))) * (1. - smoothstep(0.46, 0.5, abs(ruv.y - 0.5)));
@@ -342,7 +342,7 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         }
         float F = 0.03 + 0.97 * pow(1. - clamp(dot(N, V), 0., 1.), 5.);
         float spec = clamp(F * mix(0.36, 1., pool) + 0.05 * (1. - pool), 0., 1.);      /* damp tarmac gives back a third of the sky; a puddle gives back all of it */      /* a soft sheen even looking straight down: water on tarmac is never fully dark */
-        vec3 base = gl_FragColor.rgb * mix(0.5, 0.34, pool) * (1. - 0.3 * smoothstep(0.5, 0.56, pn) * (1. - smoothstep(0.56, 0.6, pn)) * stretch);
+        vec3 base = gl_FragColor.rgb * mix(0.5, 0.34, pool) * (1. - 0.3 * smoothstep(0.57, 0.62, pn) * (1. - smoothstep(0.62, 0.645, pn)) * stretch);
         float rim = clamp(length(rp) * 1.2 + (bigRing(vWp.xz * 0.8, uTime) + bigRing(vWp.xz * 0.6 + 7.3, uTime * 0.8 + 2.)) * smoothstep(26., 4., dist), 0., 1.);                                          /* the ring itself catches the sky: a bright circle where each drop landed */
         gl_FragColor.rgb = mix(gl_FragColor.rgb, base * (1. - spec) + env * spec + uSky * rim * 0.45, uRain);
       }
@@ -881,7 +881,7 @@ function resize() {
   rtM = new THREE.WebGLRenderTarget(rw, RT_LINES, Object.assign({ depthBuffer: false }, o));
   rtP = new THREE.WebGLRenderTarget(rw, RT_LINES, Object.assign({ depthBuffer: false }, o));
   passB.uniforms.res.value.set(rw, RT_LINES);
-  if (rtR) rtR.dispose(); rtR = new THREE.WebGLRenderTarget(Math.round(rw / 2), Math.round(RT_LINES / 2), o); reflU.uRefl.value = rtR.texture;      /* half size is plenty: the tape softens it anyway */
+  if (rtR) rtR.dispose(); rtR = new THREE.WebGLRenderTarget(rw, RT_LINES, o); reflU.uRefl.value = rtR.texture;      /* full size, so the puddles are as sharp as the tape allows */
 }
 addEventListener('resize', resize); resize();
 

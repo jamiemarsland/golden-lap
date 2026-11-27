@@ -14,7 +14,7 @@ const found = await p.evaluate(() => { document.getElementById('start').style.di
     const a = vh(ix, iy), b = vh(ix + 1, iy), c = vh(ix, iy + 1), d = vh(ix + 1, iy + 1); return (a + (b - a) * fx) + ((c + (d - c) * fx) - (a + (b - a) * fx)) * fy; };
   const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   const score = []; for (let i = 0; i < G.N; i++) { if (G.tun[i]) { score.push(0); continue; } let sc = 0;
-    for (let k = 4; k <= 14; k++) { const q = G.P[(i + k) % G.N]; const st = sm(0.38, 0.56, vn(q.x * 0.011 + 3.7, q.z * 0.011 + 3.7)); const pn = vn(q.x * 0.42 + 11, q.z * 0.42 + 11) * 0.7 + vn(q.x * 1.4 + 5, q.z * 1.4 + 5) * 0.3; sc += st * sm(0.56, 0.6, pn); }
+    for (let k = 4; k <= 14; k++) { const q = G.P[(i + k) % G.N]; const st = sm(0.46, 0.6, vn(q.x * 0.011 + 3.7, q.z * 0.011 + 3.7)); const pn = vn(q.x * 0.42 + 11, q.z * 0.42 + 11) * 0.7 + vn(q.x * 1.4 + 5, q.z * 1.4 + 5) * 0.3; sc += st * sm(0.62, 0.645, pn); }
     score.push(sc); }
   const best = []; for (let n = 0; n < 3; n++) { let bi = -1, bv = 0; score.forEach((v, i) => { if (v > bv && best.every(b => Math.abs(b - i) > 60)) { bv = v; bi = i; } }); if (bi >= 0) best.push(bi); }
   return best; });
