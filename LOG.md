@@ -1024,3 +1024,9 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - The dry lap is now "Practice in the dry" in the quiet row. It is the only thing that feeds the all-time board, so that record is always set in the same conditions.
 - A challenge link still opens in the dry, because a challenge lap carries no weather.
 - Checked live: today's board was empty ("Nobody yet today. Be first."), the all-time board showed James's five laps. Not checked: a lap posted to today's board from the new default.
+
+### v72: three small clarity fixes (James)
+- "rain at dusk is a little confusing - in my brain im thinking its going to start raining later": the condition is now called RAINY DUSK and the line reads "TODAY'S LAP: RAINY DUSK", so it describes the lap rather than sounding like a forecast.
+- "some subtle user feedback when they first see the ghost car, so they know what it is": for the first three laps with a ghost, a small label rides above it for the opening nine seconds: "YOUR BEST LAP: BEAT IT" (or the challenger's name). Its position is bent the same way the tape filter bends the picture, so it stays over the car.
+- "telling folks to hold brake to reverse if they ever get stuck": after about two seconds going nowhere, the screen says "STUCK? HOLD THE PHONE SCREEN TO REVERSE" (or "CLENCH BOTH FISTS", or "HOLD SPACE", whichever you are using). Found while doing it: in Beginner the car ignored the brake entirely, so a Beginner nose-first in a barrier could not get out at all. Now, when nearly stopped, holding the brake reverses in Beginner too.
+- Checked in the preview with a made-up ghost: label appeared over the ghost at 1.5 s; car stopped against a barrier showed the hint; holding Space in Beginner backed it out at 4 m/s.

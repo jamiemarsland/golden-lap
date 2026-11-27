@@ -101,7 +101,7 @@ const CONDS = {
   rain:     { name: 'RAIN',         sky: 0xb7bdc5, haze: 0xb2bac3, fog: 0.0045, sun: 0xdfe6f0, tint: [0.9, 0.95, 1.03],  rain: 1, grip: 0.8,  pace: 0.86, road: 0x858b96, expo: 0.95 },
   fog:      { name: 'FOG',          sky: 0xdcdedd, haze: 0xd9dcda, fog: 0.012,  sun: 0xffffff, tint: [1, 1, 1],          rain: 0, grip: 0.96, pace: 0.97, road: 0xe2e2e2, expo: 1 },
   dusk:     { name: 'DUSK',         sky: 0x8a86ad, haze: 0xd39a7e, fog: 0.0028, sun: 0xff9a6a, tint: [0.86, 0.72, 0.84], rain: 0, grip: 1,    pace: 1,    road: 0xc6bccb, expo: 1 },
-  raindusk: { name: 'RAIN AT DUSK', sky: 0x5d6280, haze: 0x7f8196, fog: 0.0048, sun: 0xc9b0c0, tint: [0.74, 0.76, 0.9],  rain: 1, grip: 0.8,  pace: 0.86, road: 0x767a8a, expo: 0.95 },
+  raindusk: { name: 'RAINY DUSK',   sky: 0x5d6280, haze: 0x7f8196, fog: 0.0048, sun: 0xc9b0c0, tint: [0.74, 0.76, 0.9],  rain: 1, grip: 0.8,  pace: 0.86, road: 0x767a8a, expo: 0.95 },
 };
 const DAILY = ['golden', 'rain', 'fog', 'dusk', 'raindusk'];
 let ENV = CONDS.dry, envKey = 'dry', mRoad = null;
@@ -733,6 +733,7 @@ const passA = new THREE.ShaderMaterial({ depthTest: false, vertexShader: VS,
       gl_FragColor = vec4(mix(mix(w, c.rgb, c.a), texture2D(tP, vUv).rgb, ghost), 1.);   // ghost = last frame bleeding through
     }` });
 const smudge = { on: false, next: 8, force: false };
+let stuckT = 0, stuckSaid = -99;
 const passB = new THREE.ShaderMaterial({ depthTest: false, vertexShader: VS,
   uniforms: { t: { value: null }, res: { value: new THREE.Vector2(768, 432) }, time: { value: 0 }, fx: { value: 1 }, expo: { value: 1 }, soft: { value: 1 }, rain: { value: 0 }, tint: { value: new THREE.Vector3(1, 1, 1) }, smA: { value: new THREE.Vector4(0.5, 0.5, 0.05, 0.05) }, smB: { value: new THREE.Vector3(1, 0, 0) } },
   fragmentShader: `
@@ -971,7 +972,7 @@ function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost
   dayLabels(); board = []; otherBoard = []; if (typeof refreshBoard === 'function') refreshBoard(); }
 // Today's lap is the default: the day's weather, on a board that starts empty every midnight (UTC). The dry lap is "Practice" and feeds the all-time board.
 function dayLabels() { const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('todayline').innerHTML = daily ? `<b>TODAY: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new conditions in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
+  $('todayline').innerHTML = daily ? `<b>TODAY'S LAP: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new conditions in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
   $('daybtn').textContent = daily ? 'Practice in the dry' : "Back to today's lap"; $('dayhint').style.display = 'none'; }
 setInterval(() => { if ($('start').style.display !== 'none') dayLabels(); }, 60000);
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
@@ -1005,11 +1006,12 @@ for (const [x, z, w] of [[-0.8, -1.3, 0.3], [0.8, -1.3, 0.3], [-0.8, 1.55, 0.44]
 function progress() { const i = car.idx; let p = i + ((car.x - P[i].x) * TAN[i].x + (car.z - P[i].z) * TAN[i].z) / DS;
   if (!lap.half && p > N * 0.8) p -= N; if (lap.half && p < N * 0.2) p += N; return p; }
 const sample = p => [+lap.t.toFixed(3), +car.x.toFixed(2), +car.z.toFixed(2), +car.h.toFixed(3), +car.yS.toFixed(2), +p.toFixed(2), +car.lat.toFixed(1)];
+const gv = new V3(); let ghostHints = 0; try { ghostHints = +localStorage.getItem('goldenlap.gh') || 0; } catch (e) {}
 function tickGhost(dt) {
   const live = (mode === 'run' || mode === 'grid') && lap.t != null;
   if (live && !autopilot) { recT -= dt; if (recT <= 0) { recT += 0.05; rec.push(sample(progress())); } }
   const G0 = daily ? ghost : rival || ghost;      // a challenge was set in the dry, so it is not raced in the rain
-  if (!live || !G0 || autopilot) { ghostCar.visible = false; $('gap').style.display = 'none'; return; }
+  if (!live || !G0 || autopilot) { ghostCar.visible = false; $('gap').style.display = 'none'; $('gtag').style.display = 'none'; return; }
   const S = G0.s, t = lap.t;
   while (gp < S.length - 2 && S[gp + 1][0] <= t) gp++;
   const a = S[gp], b = S[gp + 1], u = clamp((t - a[0]) / Math.max(1e-3, b[0] - a[0]), 0, 1);
@@ -1018,6 +1020,13 @@ function tickGhost(dt) {
   const d = Math.hypot(ghostCar.position.x - car.x, ghostCar.position.z - car.z);
   ghostM.opacity = 0.85 * clamp((d - 5) / 8, 0, 1);      // never a close-up: it fades out as you draw level
   ghostCar.visible = t < G0.t && ghostM.opacity > 0.01;
+  { /* The first few laps with a ghost, a small label rides above it for the opening seconds, so you know what the yellow car is. */
+    const tag = $('gtag'); let show = ghostCar.visible && mode === 'run' && t > 0.6 && t < 9 && ghostHints < 3;
+    if (show) { gv.copy(ghostCar.position); gv.y += 1.9; gv.project(camW); show = gv.z < 1 && Math.abs(gv.x) < 0.95 && Math.abs(gv.y) < 0.95; }
+    if (show) { let qx = gv.x, qy = gv.y; for (let i = 0; i < 3; i++) { const f = 1.72 / (1 + 0.36 * (qx * qx + qy * qy)); qx = gv.x * f; qy = gv.y * f; }      // the tape filter bends the picture; bend the label's position the same way
+      if (!tag.shown) { tag.shown = true; tag.textContent = G0 === rival && rival ? (rival.n || 'THEIR') + "'S LAP: BEAT IT" : 'YOUR BEST LAP: BEAT IT'; }
+      tag.style.display = 'block'; tag.style.opacity = Math.min(1, ghostM.opacity * 1.3, (9 - t) / 1.5); tag.style.transform = `translate(${((qx * 0.5 + 0.5) * innerWidth).toFixed(1)}px, ${((-qy * 0.5 + 0.5) * innerHeight).toFixed(1)}px) translateY(-100%)`; }
+    else { tag.style.display = 'none'; if (tag.shown && t >= 9) { tag.shown = false; ghostHints++; try { localStorage.setItem('goldenlap.gh', ghostHints); } catch (e) {} } } }
   if (mode !== 'run') { $('gap').style.display = 'none'; return; }
   const p = progress();
   while (gq < S.length - 2 && S[gq + 1][5] <= p) gq++;
@@ -1104,6 +1113,7 @@ function readInput(dt) {
   if (phone.on && !autopilot) { analog = true; const live = phoneLive(); phone.steer += ((live ? phone.target : 0) - phone.steer) * Math.min(1, dt * 18); sIn = phone.steer * (1 - 0.4 * Math.min(1, v / 85)); heavy = true; bIn = live ? phone.brk : 0; tIn = live && !phone.brk ? 1 : 0; if (mode === 'run') phone.used = true; }
   else if (hand.on && !autopilot) { analog = true; sIn = hand.ok ? hand.steer * (1 - 0.4 * Math.min(1, v / 85)) : 0; heavy = true;      /* the same tilt turns the car less the faster you go, as a real wheel loads up */ tIn = hand.ok ? hand.thr : 0; bIn = hand.ok ? hand.brk : 0; if (mode === 'run') hand.used = true; }
   if (easy && (!autopilot || steerOnly) && mode === 'run') {
+    const ub = bIn;      /* what the player is asking of the brake, before Beginner takes the pedals */
     // Simple mode used to hold the car at 90% of the grip limit everywhere, which was safe and dull. Now: flat out on the straights,
     // and in the corners the car carries as much speed as you are showing you can steer. Keep it tidy and the pace climbs towards the
     // limit; run wide, leave the road or touch a barrier and it backs off quickly. The car learns to trust you.
@@ -1113,7 +1123,8 @@ function readInput(dt) {
     // easyPace runs from 0.88 to 1.0. Shown to the player as 88% to 100%, where 100% is the car's real limit, not the autopilot's.
     const j = (car.idx + 3) % N, u = clamp((easyPace - 0.88) / 0.12, 0, 1), p = (PROF[j] * 0.94 + (PROFX[j] - PROF[j] * 0.94) * u) * ENV.pace;
     const tv = PROFX[j] >= 87.5 ? 999 : p;      // 87.5+ means no corner is limiting: full throttle
-    tIn = v < tv ? 1 : 0; bIn = v > tv + 1.5 ? clamp((v - tv) / 6, 0, 1) : 0; easyUsed = true; }
+    tIn = v < tv ? 1 : 0; bIn = v > tv + 1.5 ? clamp((v - tv) / 6, 0, 1) : 0; easyUsed = true;
+    if (ub > 0.5 && car.vx < 4) { tIn = 0; bIn = ub; } }      /* nearly stopped and holding the brake: let it reverse, or a Beginner nose-first in a barrier is stuck for good */
   if (autopilot) {
     const Ld = 7 + 0.42 * v, j = (car.idx + Math.round(Ld / DS)) % N, dx = P[j].x - car.x, dz = P[j].z - car.z;
     const s = Math.sin(car.h), c = Math.cos(car.h), left = -dx * c + dz * s;
@@ -1756,6 +1767,9 @@ function frame(dtForced) {
     const H = phone.hap || (phone.hap = { g: car.gear, b: 0, k: 0 }), now = performance.now(); let m = '';
     if (car.bump > H.b + 0.12) m = 'b'; else if (car.gear !== H.g) m = 'g'; else if ((car.kerb || car.off) && v > 8 && now - H.k > 95) { m = 'k'; H.k = now; }
     H.b = car.bump; H.g = car.gear; if (m) { try { phone.ch.send('{"h":"' + m + '"}'); } catch (err) {} phone.hapN = (phone.hapN || 0) + 1; } }
+  if (mode === 'run' && !autopilot && lap.t > 2 && Math.abs(car.vx) < 1.5) { stuckT += dt;      /* going nowhere for a couple of seconds: say how to back out */
+    if (stuckT > 2.2 && T - stuckSaid > 4) { stuckSaid = T; say('STUCK?\n' + (phone.on ? 'HOLD THE PHONE SCREEN TO REVERSE' : hand.on ? 'CLENCH BOTH FISTS TO REVERSE' : 'HOLD SPACE TO REVERSE')); } }
+  else if (Math.abs(car.vx) > 3) stuckT = 0;
   const rough = sf + (car.kerb ? 1.6 * Math.min(1, v / 15) : 0) + (car.off ? 2.2 * Math.min(1, v / 15) : 0) + car.bump * 4;
   carObj.position.set(car.x, car.yS, car.z);
   carObj.rotation.set(Math.atan(car.slopeS) + car.axS * 0.0008 + ns(T, 31, 57, 83) * 0.0015 * rough, car.h, -car.ayS * 0.0012 + ns(T, 27, 49, 71) * 0.002 * rough - (car.bankS || 0));
