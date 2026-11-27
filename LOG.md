@@ -1050,3 +1050,7 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Cost: the world is drawn twice in the rain. The headless test showed the same frame rate wet and dry, but that test is probably not limited by the graphics card, so a slower laptop may drop frames in the rain. Hills: the mirror is the road height under the car, so reflections on stretches higher or lower than you are slightly misplaced.
 - Ghost: the moment you get ahead of it after the first four seconds, a green "AHEAD OF YOUR BEST" (or "AHEAD OF <name>" on a challenge) flashes up. If you drop behind and pass it again, it says so again, at most every eight seconds. Tested with a slow fake ghost: it fired at 6.2 s with the gap at -0.28.
 - Old version kept as `index-v75-before-real-reflections.html`.
+
+### v78: half as many puddles (James: "still too many puddles")
+- Measured this time instead of eyeballing: across the road surface (outside the tunnel), puddles covered 14.2% in v77 and now cover 6.8%. Fewer stretches hold water at all, and in those only the deepest dips do. `puddles-v78.jpg` is the three wettest spots on the lap: a few puddles each; the rest of the lap is damp tarmac with blurred reflections.
+- `video/puddle-shots.mjs` now prints the coverage figure, so further tuning can be done by number.

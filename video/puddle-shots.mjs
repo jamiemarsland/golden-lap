@@ -14,11 +14,14 @@ const found = await p.evaluate(() => { document.getElementById('start').style.di
     const a = vh(ix, iy), b = vh(ix + 1, iy), c = vh(ix, iy + 1), d = vh(ix + 1, iy + 1); return (a + (b - a) * fx) + ((c + (d - c) * fx) - (a + (b - a) * fx)) * fy; };
   const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   const score = []; for (let i = 0; i < G.N; i++) { if (G.tun[i]) { score.push(0); continue; } let sc = 0;
-    for (let k = 4; k <= 14; k++) { const q = G.P[(i + k) % G.N]; const st = sm(0.46, 0.6, vn(q.x * 0.011 + 3.7, q.z * 0.011 + 3.7)); const pn = vn(q.x * 0.42 + 11, q.z * 0.42 + 11) * 0.7 + vn(q.x * 1.4 + 5, q.z * 1.4 + 5) * 0.3; sc += st * sm(0.62, 0.645, pn); }
+    for (let k = 4; k <= 14; k++) { const q = G.P[(i + k) % G.N]; const st = sm(0.56, 0.66, vn(q.x * 0.011 + 3.7, q.z * 0.011 + 3.7)); const pn = vn(q.x * 0.42 + 11, q.z * 0.42 + 11) * 0.7 + vn(q.x * 1.4 + 5, q.z * 1.4 + 5) * 0.3; sc += st * sm(0.675, 0.7, pn); }
     score.push(sc); }
+  const Rv = i => { const a = G.P[(i + G.N - 1) % G.N], b = G.P[(i + 1) % G.N], dx = b.x - a.x, dz = b.z - a.z, l = Math.hypot(dx, dz) || 1; return { x: -dz / l, z: dx / l }; };
+  let wetPts = 0, allPts = 0; for (let i = 0; i < G.N; i++) { if (G.tun[i]) continue; const q = G.P[i]; for (let l = -5; l <= 5; l += 2) { const x = q.x + Rv(i).x * l, z = q.z + Rv(i).z * l; allPts++; const st = sm(0.56, 0.66, vn(x * 0.011 + 3.7, z * 0.011 + 3.7)); const pn = vn(x * 0.42 + 11, z * 0.42 + 11) * 0.7 + vn(x * 1.4 + 5, z * 1.4 + 5) * 0.3; wetPts += st * sm(0.675, 0.7, pn); } } window.__share = (100 * wetPts / allPts).toFixed(1) + '%'; let old = 0; for (let i = 0; i < G.N; i++) { if (G.tun[i]) continue; const q = G.P[i]; for (let l = -5; l <= 5; l += 2) { const x = q.x + Rv(i).x * l, z = q.z + Rv(i).z * l; const st = sm(0.46, 0.6, vn(x * 0.011 + 3.7, z * 0.011 + 3.7)); const pn = vn(x * 0.42 + 11, z * 0.42 + 11) * 0.7 + vn(x * 1.4 + 5, z * 1.4 + 5) * 0.3; old += st * sm(0.62, 0.645, pn); } } window.__share += ' (v77 was ' + (100 * old / allPts).toFixed(1) + '%)';
   const best = []; for (let n = 0; n < 3; n++) { let bi = -1, bv = 0; score.forEach((v, i) => { if (v > bv && best.every(b => Math.abs(b - i) > 60)) { bv = v; bi = i; } }); if (bi >= 0) best.push(bi); }
   return best; });
 console.log('spots with the most standing water just ahead:', found.join(', '));
+const share = await p.evaluate(() => window.__share); if (share != null) console.log('share of road with puddles:', share);
 const run = ms => p.evaluate(ms => new Promise(res => { const t0 = performance.now(); (function f() { G.frame(); if (performance.now() - t0 < ms) setTimeout(f, 12); else res(); })(); }), ms);
 await p.evaluate(() => G.toGrid()); await run(4300);
 let n = 0;
