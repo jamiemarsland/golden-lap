@@ -284,11 +284,19 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
     add(ribbon(wo, hw, wo, j => hw(j) + 0.95, 4, j => !tun[j]), bm); add(ribbon(wo, 0, wo, 0.95, 4, j => tun[j]), M({ map: armco, color: 0x4a4a4a }));
   }
   add(ribbon(j => -WO[j] - 16, 0, j => -WO[j], 0, 10, j => inR(j, iHar0 - 6, iHar1 + 6)), mPave);    // quay on the water side
+  // The grain of the road as tilts, not colour: a tileable height field of small stones, turned into a slope map. Only the wet road uses it.
+  const grainT = tex(256, 256, (g, w, h) => { const H = new Float32Array(w * h);
+    for (let k = 0; k < 5200; k++) { const cx = rnd(0, w), cy = rnd(0, h), r = rnd(1.1, 3.4), a = rnd(-1, 1) * r; const R2 = Math.ceil(r * 2);
+      for (let y = -R2; y <= R2; y++) for (let x = -R2; x <= R2; x++) { const d = (x * x + y * y) / (r * r); if (d < 4) H[(((cy + y) | 0) + h) % h * w + (((cx + x) | 0) + w) % w] += a * Math.exp(-d * 1.4); } }
+    const im = g.createImageData(w, h), D = im.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const dx = H[y * w + (x + 1) % w] - H[y * w + (x + w - 1) % w], dy = H[(y + 1) % h * w + x] - H[(y + h - 1) % h * w + x], i = (y * w + x) * 4;
+      D[i] = 128 + clamp(dx * 46, -127, 127); D[i + 1] = 128 + clamp(dy * 46, -127, 127); D[i + 2] = 255; D[i + 3] = 255; }
+    g.putImageData(im, 0, 0); });
   mRoad = M({ map: roadT });
   mRoad.onBeforeCompile = sh => {      // wet tarmac: darker, mirroring the sky where you look along it, with rings where the drops land
-    sh.uniforms.uRain = rainU.uRain; sh.uniforms.uTime = rainU.uTime; sh.uniforms.uSky = rainU.uSky;
+    sh.uniforms.uRain = rainU.uRain; sh.uniforms.uTime = rainU.uTime; sh.uniforms.uSky = rainU.uSky; sh.uniforms.uNrm = { value: grainT };
     sh.vertexShader = 'varying vec3 vWp;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vWp = (modelMatrix * vec4(transformed, 1.)).xyz;');
-    sh.fragmentShader = `uniform float uRain, uTime; uniform vec3 uSky; varying vec3 vWp;
+    sh.fragmentShader = `uniform float uRain, uTime; uniform vec3 uSky; uniform sampler2D uNrm; varying vec3 vWp;
       vec2 rip(vec2 p, float t){
         vec2 i = floor(p), f = fract(p) - 0.5;
         float h1 = fract(sin(dot(i, vec2(127.1, 311.7))) * 43758.5453), h2 = fract(h1 * 57.31 + 0.37);
@@ -296,28 +304,36 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         vec2 d = f - (vec2(h1, h2) - 0.5) * 0.24; float r = length(d) + 1e-4, R = life * 0.36;
         return d / r * sin((r - R) * 60.) * exp(-pow((r - R) * 14., 2.)) * (1. - life);
       }
+      float bigRing(vec2 p, float t){      /* fat rings, a hand-span wide, so they still show at the tape's 600 lines */
+        vec2 i = floor(p), f = fract(p) - 0.5;
+        float h1 = fract(sin(dot(i, vec2(41.3, 289.1))) * 43758.5453), h2 = fract(h1 * 31.7 + 0.11);
+        float life = fract(t * (0.55 + h2 * 0.5) + h1 * 5.); vec2 d = f - (vec2(h1, h2) - 0.5) * 0.3; float r = length(d), R = 0.06 + life * 0.38;
+        return exp(-pow((r - R) * 9., 2.)) * (1. - life) * step(0.35, h2);
+      }
       float vh(vec2 i){ return fract(sin(dot(i, vec2(269.5, 183.3))) * 43758.5453); }
       float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f); return mix(mix(vh(i), vh(i + vec2(1., 0.)), f.x), mix(vh(i + vec2(0., 1.)), vh(i + vec2(1., 1.)), f.x), f.y); }
     ` + sh.fragmentShader.replace('#include <tonemapping_fragment>', `if (uRain > 0.01) {
+        /* Wet tarmac, built the way the cycling game's is: a finely grained surface under a film of water. The grain and the rain rings
+           tilt the surface, and what you see is the sky bouncing off those tilts, so the wet look comes from reflection, not from paint.
+           Where water stands, the grain is drowned and the surface is a clean mirror. */
         vec3 V = cameraPosition - vWp; float dist = length(V); V /= dist;
-        vec2 rp = rip(vWp.xz * 3.2, uTime) + rip(vWp.xz * 2.1 + 13.7, uTime * 0.9 + 3.);
-        float ring = (rp.x + rp.y) * smoothstep(40., 6., dist);
-        float glance = pow(1. - clamp(V.y, 0., 1.), 14.);                       // looking along the road, it is a mirror; looking down at it, it is just dark
-        vec3 wet = gl_FragColor.rgb * 0.6;
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, mix(wet, uSky * 0.95, clamp(glance * 0.7 + ring * 0.3, 0., 0.8)), uRain);
-        /* Standing water, as on the wet lanes of the cycling game: in some stretches of the lap the rain collects in pools a few metres across.
-           A pool is a mirror: bright sky where you look down into it, the darker treeline where you look along it, and rings where the drops land. */
-        float stretch = smoothstep(0.5, 0.62, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold water */
+        vec2 rp = (rip(vWp.xz * 1.6, uTime) + rip(vWp.xz * 1.1 + 13.7, uTime * 0.9 + 3.)) * smoothstep(38., 5., dist);      /* rings twice the size of before, so they survive the tape filter */
+        float stretch = smoothstep(0.42, 0.6, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold more water */
         float pn = vn(vWp.xz * 0.13 + 11.) * 0.72 + vn(vWp.xz * 0.5) * 0.28;
-        float pool = smoothstep(0.53, 0.6, pn) * stretch * smoothstep(0.55, 1., uRain);
-        gl_FragColor.rgb *= 1. - 0.3 * smoothstep(0.44, 0.53, pn) * (1. - smoothstep(0.53, 0.6, pn)) * stretch * uRain;      /* a darker, soaked margin round each pool */
-        if (pool > 0.004) {
-          float e = clamp(V.y + ring * 0.06, 0., 1.);
-          float ang = atan(V.z, V.x), treeTop = 0.035 + 0.11 * vn(vec2(ang * 7., 2.3)) + 0.03 * vn(vec2(ang * 31., 9.1));      /* how high the trees stand in the direction the pool is mirroring */
-          vec3 seen = mix(mix(vec3(0.07, 0.11, 0.08), uSky, 0.22), uSky * 1.25, smoothstep(treeTop - 0.012, treeTop + 0.012, e));      /* below that line the pool shows dark trees, above it bright sky */
-          vec3 water = mix(gl_FragColor.rgb * 0.4, seen, 0.58 + 0.42 * pow(1. - e, 5.));
-          gl_FragColor.rgb = mix(gl_FragColor.rgb, water, pool * 0.93);
-        }
+        float pool = smoothstep(0.5, 0.57, pn) * stretch * smoothstep(0.55, 1., uRain);
+        vec2 g1 = texture2D(uNrm, vWp.xz * 0.62).xy * 2. - 1., g2 = texture2D(uNrm, vWp.zx * 0.17 + 0.37).xy * 2. - 1.;
+        float grain = smoothstep(90., 9., dist) * (1. - pool * 0.94);                      /* far away the grain averages out; under standing water it is gone */
+        vec3 N = normalize(vec3((g1.x * 0.85 + g2.x * 0.4) * grain + rp.x * 0.55, 1., (g1.y * 0.85 + g2.y * 0.4) * grain + rp.y * 0.55));
+        vec3 R = reflect(-V, N);
+        float ang = atan(R.z, R.x), treeTop = 0.03 + 0.1 * vn(vec2(ang * 7., 2.3)) + 0.03 * vn(vec2(ang * 31., 9.1));
+        float soft = mix(0.09, 0.012, pool);                                                /* damp tarmac blurs the mirror; a pool keeps it sharp */
+        vec3 skyC = uSky * mix(1.3, 0.85, clamp(R.y * 1.5, 0., 1.));                       /* brightest just above the horizon */
+        vec3 env = mix(mix(vec3(0.07, 0.11, 0.08), uSky, 0.25), skyC, smoothstep(treeTop - soft, treeTop + soft, R.y));
+        float F = 0.03 + 0.97 * pow(1. - clamp(dot(N, V), 0., 1.), 5.);
+        float spec = clamp(F * mix(0.62, 1., pool) + 0.1 * (1. - pool), 0., 1.);      /* a soft sheen even looking straight down: water on tarmac is never fully dark */
+        vec3 base = gl_FragColor.rgb * mix(0.5, 0.34, pool) * (1. - 0.25 * smoothstep(0.42, 0.5, pn) * (1. - smoothstep(0.5, 0.57, pn)) * stretch);
+        float rim = clamp(length(rp) * 1.2 + (bigRing(vWp.xz * 0.8, uTime) + bigRing(vWp.xz * 0.6 + 7.3, uTime * 0.8 + 2.)) * smoothstep(26., 4., dist), 0., 1.);                                          /* the ring itself catches the sky: a bright circle where each drop landed */
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, base * (1. - spec) + env * spec + uSky * rim * 0.45, uRain);
       }
       #include <tonemapping_fragment>`);
   }; add(ribbon(-ROAD_HALF, j => BH(j, -ROAD_HALF), ROAD_HALF, j => BH(j, ROAD_HALF), 40, j => !tun[j]), mRoad);

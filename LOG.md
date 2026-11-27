@@ -1037,3 +1037,9 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - A pool is a mirror: looking down into the near ones you see bright sky; looking along at the far ones you see a dark, jagged treeline; rain rings wobble the reflection. The treeline is invented from the viewing direction, not a true reflection of the scenery.
 - Picture only. Pools do not change grip.
 - Judged in still frames from the preview, with pools forced on everywhere to see them. Through the tape filter and the speed blur they read as glassy patches rather than crisp puddles. Not judged in motion.
+
+### v74: wet road rebuilt the cycling game's way (James, with a screenshot of the cycling game in rain: "those puddles arent very good tbh - did you check out the hyper realistic cycling game for details on how we did them there?")
+- I had looked at it, but copied the wrong idea (pools). What actually makes that road look wet: a finely grained tarmac surface whose tiny tilts, plus the rain rings, bounce the sky back at you. The wet look is reflection, not paint.
+- Ported that: a tileable "grain" slope map made in code, a reflection worked out per pixel (Fresnel: dark looking down, mirror-bright looking along), a soft sheen everywhere, and a mirror that stays blurred on damp tarmac and sharp where water stands. Standing water is now a calmer, smaller part of it.
+- The limit, found while testing: Golden Lap draws the world at 600 lines and then blurs it for the tape look. A real-size rain ring a few metres ahead is under half a pixel, so the crisp rings in the cycling game cannot show here. Added fatter rings near the car to try; in the narrow preview I could not see them. The road reads as dark, glossy wet tarmac reflecting the sky, which is the main gain.
+- Possible next step, not done: draw the road sharper than the rest in the rain. That trades away some of the tape look.
