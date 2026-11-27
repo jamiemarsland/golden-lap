@@ -14,6 +14,7 @@ await p.exposeFunction('saveChunk', (name, b64) => { fs.appendFileSync(OUT + nam
 await p.goto('http://localhost:8765/index.html');
 await p.waitForFunction(() => window.G);
 await p.screenshot({ path: OUT + 'start.png' });
+await p.click('#usekeys');      // the start screen shows START only once a controller is chosen
 await p.click('#gobtn');
 await p.waitForFunction(() => G.snd && G.snd.smp && G.snd.master, null, { timeout: 30000 });
 await p.evaluate(() => {

@@ -1059,3 +1059,8 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - Cause: entering the tunnel turned the whole rain effect off, so through the exit the world outside looked dry until you left.
 - Now the rain stays on. The wet road, its reflections and the rain streaks carry on outside; the tunnel stays dry because the streak shader simply skips any drop that falls between the tunnel's two mouths (each mouth is a line across the track, facing along it). The tunnel road was always a separate, dry surface. Lens drops and the rain hiss still fade in the tunnel, as before.
 - Checked with frames approaching the exit: dry inside, wet tarmac beyond the mouth. The exit glare makes the falling rain itself hard to see in stills, and streaks are only drawn within about 15 m of the car, so they appear as you reach the mouth.
+
+## Trailer re-shot in the new rain (27 Nov)
+- James: "update the trailer with new rain". Re-recorded the two rain shots (the swoop where the weather turns, and the wet lap) on the current game, so the trailer now shows the shiny wet road with real reflections and the puddles.
+- The recorder had stopped working after the new start screen hid START until you choose a controller; it now picks keyboard first.
+- Re-rendered all three: golden-lap-trailer.mp4, golden-lap-trailer-rain.mp4, golden-lap-trailer-smudge.mp4.
