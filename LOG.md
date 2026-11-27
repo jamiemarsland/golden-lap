@@ -1000,3 +1000,9 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - The web page now checks whether it is inside the app and, if so, hands the gear/kerb/barrier signals to it (v69). Outside the app nothing changes.
 - You type the game's code into the app, because a QR code always opens Safari.
 - Honest state: this Mac has no Xcode, so the app has **not been built or run**. Only the Swift syntax is checked. Next step is James installing Xcode.
+
+### Paper: a start screen that says "pick up your phone" (27 November)
+- James: "we need to tidy this up. i want 99% of folks to use their phone, cuz that will be the best experience on a laptop - could you write a paper, with mockups, of how we redesign this start screen to push things that way. It also needs to be super clear to understand, quickly."
+- `start-screen.html`: today's screen has five equal buttons with the phone last, and START launches a keyboard or camera lap. Proposal: the start screen becomes the scan screen (code shown on load, three numbered steps), then a "ready" screen with a live wheel and a Beginner/Pro switch, START on the phone, a sideways phone layout with the brake hint, and a "needs a bigger screen" message when opened on a phone. Phone lap goes from four actions to two.
+- Flagged in the paper: the film and trailer say "steered with your bare hands", which no longer matches if the game leads with the phone.
+- Also earlier today: mocked up three brake hints for the phone wheel (lamp in hub, thumb pads, red edge), upright and sideways. Recommendation: lamp plus thumb pads that fade after the first brake. Nothing built yet.

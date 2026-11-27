@@ -1,0 +1,209 @@
+<title>Golden Lap Start Screen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
+<style>
+  /* Layout: one reading column, same system as the Next Steps paper; each proposal is a short pitch followed by a "screen" drawn in the game's own colours. */
+  :root {
+    --bg: #eef0ea; --panel: #e2e5dc; --fg: #1b1e22; --muted: #5a6066; --rule: #c9cdc2;
+    --teal: #1d6f7a; --red: #b5391a; --gold: #f3e36b; --gold-ink: #17181a;
+    --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif; --body: Barlow, "Helvetica Neue", Arial, sans-serif; --mono: "Courier New", Courier, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #15171a; --panel: #1f2226; --fg: #e8e6dc; --muted: #a2a59c; --rule: #34383d; --teal: #74bcc6; --red: #ee7a57; color-scheme: dark } }
+  :root[data-theme="dark"] { --bg: #15171a; --panel: #1f2226; --fg: #e8e6dc; --muted: #a2a59c; --rule: #34383d; --teal: #74bcc6; --red: #ee7a57; color-scheme: dark }
+  body { background: var(--bg); color: var(--fg); font: 17px/1.55 var(--body); padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.05; }
+  h1 { font-size: clamp(40px, 8vw, 64px); letter-spacing: .01em; text-transform: uppercase; }
+  h1 span { background: var(--gold); color: var(--gold-ink); padding: 0 .18em; }
+  h2 { font-size: 30px; text-transform: uppercase; letter-spacing: .03em; margin-top: 30px; padding-top: 18px; border-top: 2px solid var(--fg); }
+  h3 { font-size: 25px; }
+  p { margin: 0; max-width: 66ch; }
+  .lede { font-size: 20px; line-height: 1.45; }
+  .kicker { font: 700 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .facts div { background: var(--panel); padding: 12px 14px; }
+  .facts b { display: block; font: 700 24px var(--mono); font-variant-numeric: tabular-nums; }
+  .facts span { font-size: 14px; color: var(--muted); }
+  .idea { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .idea ul, .plain { margin: 0; padding-left: 20px; max-width: 66ch; }
+  .idea li, .plain li { margin: 3px 0; }
+  .tag { font: 700 12px var(--mono); letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+  figure { margin: 4px 0 0; }
+  figure svg { display: block; width: 100%; height: auto; background: #0e0f11; }
+  figure.phone svg { max-width: 520px; background: none; }
+  figcaption { font-size: 14px; color: var(--muted); padding-top: 6px; }
+  .tw { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 700 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .note { background: var(--panel); padding: 14px 16px; border-left: 4px solid var(--teal); }
+  .warn { background: var(--panel); padding: 14px 16px; border-left: 4px solid var(--red); }
+  svg text { font-family: "Courier New", Courier, monospace; }
+</style>
+
+<main>
+  <div class="kicker">Golden Lap · proposal · 27 November 2026</div>
+  <h1>A start screen that says <span>pick up your phone</span></h1>
+  <p class="lede">Today the start screen offers five buttons of equal weight, and the phone is the last of them. To get nearly everyone driving with their phone, the start screen should stop being a menu and become one instruction: scan this, and your phone is the steering wheel.</p>
+
+  <div class="facts">
+    <div><b>5</b><span>equal-weight buttons under START today</span></div>
+    <div><b>5th</b><span>where "Phone wheel" sits among them</span></div>
+    <div><b>4 → 2</b><span>actions to start a phone lap, today and proposed</span></div>
+    <div><b>1</b><span>thing the new screen asks you to do</span></div>
+  </div>
+  <p class="note">Every screen below is a drawing, not the game. Nothing here is built. The four actions today are: click Phone wheel, scan, tap start on the phone, then go back to the laptop and click START.</p>
+
+  <h2>What's wrong with today's screen</h2>
+  <figure><svg viewBox="0 0 480 270" role="img" aria-label="Drawing of today's start screen: a title, a START button, and five equal buttons in a row with Phone wheel last">
+    <defs>
+      <pattern id="qrp" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#f4f1e6"/><rect x="0" y="0" width="4" height="4" fill="#111"/><rect x="8" y="0" width="4" height="8" fill="#111"/><rect x="4" y="4" width="4" height="4" fill="#111"/><rect x="0" y="8" width="8" height="4" fill="#111"/></pattern>
+      <symbol id="qr" viewBox="0 0 96 96"><rect width="96" height="96" fill="#f4f1e6"/><rect x="6" y="6" width="84" height="84" fill="url(#qrp)"/>
+        <g fill="#f4f1e6"><rect x="4" y="4" width="30" height="30"/><rect x="62" y="4" width="30" height="30"/><rect x="4" y="62" width="30" height="30"/></g>
+        <g fill="none" stroke="#111" stroke-width="5"><rect x="9" y="9" width="20" height="20"/><rect x="67" y="9" width="20" height="20"/><rect x="9" y="67" width="20" height="20"/></g>
+        <g fill="#111"><rect x="15" y="15" width="8" height="8"/><rect x="73" y="15" width="8" height="8"/><rect x="15" y="73" width="8" height="8"/></g></symbol>
+      <symbol id="scene" viewBox="0 0 480 270"><rect width="480" height="270" fill="#3b3d40"/><path d="M0 0H170L120 120L0 150Z" fill="#1d2a1c"/><path d="M480 0H330L370 110L480 140Z" fill="#1d2a1c"/><path d="M0 150L200 120H280L480 150V270H0Z" fill="#2c2d31"/><path d="M200 120H280L420 270H60Z" fill="#232427"/><rect width="480" height="270" fill="#0e0f11" opacity=".55"/></symbol>
+      <symbol id="wheel" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#f3e36b" stroke-width="9"/><path d="M10 50H90M50 50V90" stroke="#f3e36b" stroke-width="7"/><circle cx="50" cy="50" r="12" fill="#15171a"/><circle cx="50" cy="50" r="6" fill="#5a1410" stroke="#a9a59a" stroke-width="1.6"/></symbol>
+    </defs>
+    <use href="#scene" width="480" height="270"/>
+    <text x="240" y="70" text-anchor="middle" font-size="30" fill="#f3e36b" letter-spacing="8">GOLDEN LAP</text>
+    <text x="240" y="96" text-anchor="middle" font-size="11" fill="#e8e6dc">One lap. One time.</text>
+    <rect x="195" y="110" width="90" height="26" fill="#f3e36b"/><text x="240" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#111" letter-spacing="3">START</text>
+    <g fill="none" stroke="#f3e36b" stroke-width="1"><rect x="34" y="152" width="100" height="26"/><rect x="140" y="152" width="62" height="26"/><rect x="208" y="152" width="70" height="26"/><rect x="284" y="152" width="96" height="26"/><rect x="386" y="152" width="62" height="26"/></g>
+    <g font-size="8.5" fill="#f3e36b" text-anchor="middle" font-weight="700"><text x="84" y="168">Steering: KEYBOARD</text><text x="171" y="168">Mode: PRO</text><text x="243" y="168">Preview lap</text><text x="332" y="168">Today: RAIN AT DUSK</text><text x="417" y="168">Phone wheel</text></g>
+    <text x="240" y="196" text-anchor="middle" font-size="9" fill="#c9c7bd">Arrows or WASD to drive, Space to brake.</text>
+    <g stroke="#ee7a57" stroke-width="1.4" fill="none"><rect x="382" y="148" width="70" height="34"/><path d="M417 182V214"/></g>
+    <text x="417" y="228" text-anchor="middle" font-size="10" fill="#ee7a57">the best way to play</text><text x="417" y="241" text-anchor="middle" font-size="10" fill="#ee7a57">is the last option</text>
+    <g stroke="#ee7a57" stroke-width="1.4" fill="none"><path d="M195 123H120V214"/></g>
+    <text x="120" y="228" text-anchor="middle" font-size="10" fill="#ee7a57">START works at once,</text><text x="120" y="241" text-anchor="middle" font-size="10" fill="#ee7a57">so most people use keys</text>
+  </svg><figcaption>Today. The eye lands on START, which launches a keyboard or camera lap. Nothing tells a newcomer that a phone is an option, let alone the best one.</figcaption></figure>
+  <ul class="plain">
+    <li><b>The big button skips the phone.</b> START is the loudest thing on screen and it works immediately, so the easy path is the worst experience.</li>
+    <li><b>Five choices before one lap.</b> Steering, mode, preview, weather and phone all look the same. A newcomer can't tell which matter.</li>
+    <li><b>The labels are ours, not theirs.</b> "Steering: KEYBOARD" and "Today: RAIN AT DUSK" describe settings. They don't say what to do.</li>
+    <li><b>The phone needs a detour.</b> You click a button to open a panel, scan, tap on the phone, then come back to the laptop to press START.</li>
+  </ul>
+
+  <h2>The proposal</h2>
+
+  <section class="idea">
+    <div class="tag">Change 1 · the big one</div>
+    <h3>The start screen is the scan screen</h3>
+    <p>The code is on screen the moment the page loads, with no button to press first. The headline says what it is in plain words, and three short steps say what to do. There is no START button yet, because there is nothing to start until a wheel is connected.</p>
+    <figure><svg viewBox="0 0 480 270" role="img" aria-label="Mockup: new start screen. Left, the title, the line Your phone is the steering wheel, and three steps. Right, a large QR code. A quiet line at the bottom offers camera or keyboard instead.">
+      <use href="#scene" width="480" height="270"/>
+      <text x="36" y="52" font-size="22" fill="#f3e36b" letter-spacing="6">GOLDEN LAP</text>
+      <text x="36" y="86" font-size="15" font-weight="700" fill="#ffffff">Your phone is</text>
+      <text x="36" y="105" font-size="15" font-weight="700" fill="#ffffff">the steering wheel.</text>
+      <g font-size="11" fill="#e8e6dc"><text x="58" y="138">Scan the code with your camera</text><text x="58" y="162">Hold the phone sideways</text><text x="58" y="186">Press START on the phone</text></g>
+      <g fill="#f3e36b"><circle cx="43" cy="134" r="8"/><circle cx="43" cy="158" r="8"/><circle cx="43" cy="182" r="8"/></g>
+      <g font-size="10" font-weight="700" fill="#111" text-anchor="middle"><text x="43" y="137.5">1</text><text x="43" y="161.5">2</text><text x="43" y="185.5">3</text></g>
+      <rect x="306" y="46" width="138" height="138" fill="#f4f1e6"/><use href="#qr" x="312" y="52" width="126" height="126"/>
+      <text x="375" y="200" text-anchor="middle" font-size="9" fill="#c9c7bd">or type golden-lap.space.fast/w</text>
+      <text x="375" y="213" text-anchor="middle" font-size="11" font-weight="700" fill="#f3e36b" letter-spacing="3">MXGG6</text>
+      <line x1="36" y1="232" x2="444" y2="232" stroke="#55585c" stroke-width="1"/>
+      <text x="36" y="252" font-size="9.5" fill="#9a9c98">No phone to hand?  <tspan fill="#c9c7bd" text-decoration="underline">Use your hands on camera</tspan>  &#183;  <tspan fill="#c9c7bd" text-decoration="underline">Use the keyboard</tspan></text>
+      <text x="444" y="30" text-anchor="end" font-size="9.5" fill="#9a9c98">Today: rain at dusk</text>
+    </svg><figcaption>Proposed, before a phone connects. One instruction, one thing to scan. The other ways to play are a single quiet line at the bottom.</figcaption></figure>
+    <ul>
+      <li>The steps are numbered because they are a sequence, and the third happens on the phone.</li>
+      <li>The short code stays under the picture for anyone whose camera won't scan.</li>
+      <li>Today's weather becomes a small label. It's information, not a choice.</li>
+    </ul>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Change 2</div>
+    <h3>When the phone connects, the screen changes to "ready"</h3>
+    <p>The code disappears and a wheel takes its place, turning live as you tilt the phone. That is the proof it works, before any lap starts. This is also where the one real choice lives: Beginner or Pro, each explained in a few words.</p>
+    <figure><svg viewBox="0 0 480 270" role="img" aria-label="Mockup: connected state. A steering wheel tilted to show it follows the phone, the words Phone connected, a Beginner or Pro switch with a line under each, and a prompt to press START on the phone.">
+      <use href="#scene" width="480" height="270"/>
+      <text x="36" y="52" font-size="22" fill="#f3e36b" letter-spacing="6">GOLDEN LAP</text>
+      <circle cx="42" cy="82" r="5" fill="#5fd08a"/><text x="54" y="86" font-size="12" font-weight="700" fill="#ffffff">Phone connected</text>
+      <text x="36" y="108" font-size="10.5" fill="#c9c7bd">Tilt it. The wheel should follow.</text>
+      <g transform="rotate(-18 385 118)"><use href="#wheel" x="330" y="63" width="110" height="110"/></g>
+      <rect x="36" y="130" width="130" height="46" fill="#f3e36b"/><rect x="172" y="130" width="130" height="46" fill="none" stroke="#f3e36b" stroke-width="1"/>
+      <text x="101" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#111" letter-spacing="2">BEGINNER</text><text x="101" y="166" text-anchor="middle" font-size="8.5" fill="#111">You steer. That's it.</text>
+      <text x="237" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#f3e36b" letter-spacing="2">PRO</text><text x="237" y="166" text-anchor="middle" font-size="8.5" fill="#f3e36b">You brake too. Faster.</text>
+      <text x="36" y="206" font-size="13" font-weight="700" fill="#ffffff">Press START on your phone</text>
+      <text x="36" y="222" font-size="9.5" fill="#9a9c98">or press Space here</text>
+      <line x1="36" y1="232" x2="444" y2="232" stroke="#55585c" stroke-width="1"/>
+      <text x="36" y="252" font-size="9.5" fill="#9a9c98"><tspan fill="#c9c7bd" text-decoration="underline">Watch a lap first</tspan>  &#183;  <tspan fill="#c9c7bd" text-decoration="underline">Leaderboard</tspan>  &#183;  <tspan fill="#c9c7bd" text-decoration="underline">Help</tspan></text>
+      <text x="444" y="30" text-anchor="end" font-size="9.5" fill="#9a9c98">Today: rain at dusk</text>
+    </svg><figcaption>Proposed, once a phone is connected. The wheel on screen mirrors the phone, so you know it works before the lights.</figcaption></figure>
+    <ul>
+      <li>Starting from the phone means your hands never leave the wheel.</li>
+      <li>"Preview lap" becomes "Watch a lap first" and moves to the quiet row with the leaderboard and help.</li>
+    </ul>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Change 3</div>
+    <h3>The phone shows one big button, laid out sideways</h3>
+    <p>After scanning, the phone asks you to turn it sideways, then shows START and nothing else. In Pro it also shows the brake hint from the earlier mockups: the lamp in the hub and faint thumb pads that fade after your first brake.</p>
+    <figure class="phone"><svg viewBox="0 0 400 190" role="img" aria-label="Mockup: the phone held sideways. A wheel in the centre with a lamp in the hub, a large START button below it, and faint brake pads under each thumb.">
+      <rect x="4" y="4" width="392" height="182" rx="24" fill="#15171a" stroke="#3a3d42" stroke-width="3"/>
+      <text x="28" y="34" font-size="12" fill="#f3e36b" letter-spacing="3">GOLDEN LAP</text>
+      <text x="372" y="34" text-anchor="end" font-size="11" fill="#ffffff">CONNECTED &#183; PRO</text>
+      <rect x="20" y="50" width="78" height="96" rx="14" fill="#22110f" stroke="#7a2a22" stroke-width="1.5" stroke-dasharray="5 4"/><text x="59" y="102" text-anchor="middle" font-size="11" fill="#c9423a" letter-spacing="2">BRAKE</text>
+      <rect x="302" y="50" width="78" height="96" rx="14" fill="#22110f" stroke="#7a2a22" stroke-width="1.5" stroke-dasharray="5 4"/><text x="341" y="102" text-anchor="middle" font-size="11" fill="#c9423a" letter-spacing="2">BRAKE</text>
+      <use href="#wheel" x="155" y="42" width="90" height="90"/>
+      <rect x="150" y="142" width="100" height="30" fill="#f3e36b"/><text x="200" y="162" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="4">START</text>
+    </svg><figcaption>Proposed phone screen in Pro. In Beginner the brake pads and lamp caption don't appear, because the car brakes for you.</figcaption></figure>
+  </section>
+
+  <section class="idea">
+    <div class="tag">Change 4</div>
+    <h3>If someone opens the link on a phone, say so kindly</h3>
+    <p>Plenty of people will tap the link from YouTube or Slack on their phone. Today they get a start screen that makes little sense there. They should get one clear message, and a way to send themselves the link.</p>
+    <figure class="phone"><svg viewBox="0 0 400 190" role="img" aria-label="Mockup: the game opened on a phone. It says Golden Lap needs a bigger screen, open it on a laptop and this phone becomes the wheel, with a Copy link button.">
+      <rect x="4" y="4" width="392" height="182" rx="24" fill="#15171a" stroke="#3a3d42" stroke-width="3"/>
+      <text x="200" y="46" text-anchor="middle" font-size="14" fill="#f3e36b" letter-spacing="4">GOLDEN LAP</text>
+      <text x="200" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">This needs a bigger screen.</text>
+      <text x="200" y="100" text-anchor="middle" font-size="11" fill="#c9c7bd">Open golden-lap.space.fast on a laptop.</text>
+      <text x="200" y="116" text-anchor="middle" font-size="11" fill="#c9c7bd">This phone becomes the steering wheel.</text>
+      <rect x="140" y="134" width="120" height="30" fill="#f3e36b"/><text x="200" y="154" text-anchor="middle" font-size="12" font-weight="700" fill="#111" letter-spacing="2">COPY LINK</text>
+    </svg><figcaption>Proposed, when the game itself is opened on a phone.</figcaption></figure>
+  </section>
+
+  <h2>Where everything goes</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Today</th><th>Proposed home</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>START</td><td>On the phone, once connected. Space on the laptop also works.</td><td>Nothing to start until there's a wheel.</td></tr>
+      <tr><td>Phone wheel</td><td>The whole screen. The code shows on load.</td><td>It's the main way to play.</td></tr>
+      <tr><td>Steering: hands / keyboard</td><td>One quiet line: "No phone to hand?"</td><td>Still there for anyone who needs it.</td></tr>
+      <tr><td>Mode: Beginner / Pro</td><td>A two-way switch on the ready screen, with a line under each.</td><td>The one choice that changes the drive.</td></tr>
+      <tr><td>Preview lap</td><td>"Watch a lap first", in the quiet row.</td><td>Useful, but not a first step.</td></tr>
+      <tr><td>Today: weather</td><td>A small label, not a button.</td><td>It's information.</td></tr>
+      <tr><td>Help and keys</td><td>"Help", in the quiet row.</td><td>Keys matter less when the phone leads.</td></tr>
+      <tr><td>Leaderboard</td><td>Below, as now, and linked from the quiet row.</td><td>It's the reason to come back.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Things to decide first</h2>
+  <p class="warn"><b>The pitch changes.</b> The film and the trailer both say "steered with your bare hands", and the trailer's end card says "One lap. Steered with your bare hands." If nearly everyone drives with a phone, the headline on the game says something different from the videos. Either the videos gain a line about the phone, or hands stay as a visible second choice rather than a footnote.</p>
+  <ul class="plain">
+    <li><b>Which mode is selected by default?</b> I'd make it Beginner for a first visit and remember the choice after that. You haven't decided this yet.</li>
+    <li><b>Can the phone start the lap?</b> The mockups assume yes. It needs the phone to send a "go" to the game, which the link can already carry.</li>
+    <li><b>Is a code made on every visit?</b> Showing the code on load means every visitor creates one, scanned or not. Codes are small and expire, but it is more traffic to the pairing service than today.</li>
+    <li><b>What if the phone can't connect?</b> Some office and guest networks block the direct link between phone and laptop. After a few seconds the screen should say so and offer hands or keyboard, rather than sit on "connecting".</li>
+  </ul>
+
+  <h2>How we'd know it worked</h2>
+  <p>Every lap on the leaderboard is already tagged as phone, hands or keys. So the share of laps driven by phone is a number we can read today, and read again after the change. "99%" is your target; I'd treat anything above nine in ten as the screen doing its job, since some people will never have a phone to hand.</p>
+
+  <h2>Suggested order</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Step</th><th>What</th><th>Size</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Scan screen on load, quiet line for hands and keyboard, weather as a label</td><td>Medium</td></tr>
+      <tr><td>2</td><td>Ready screen with the live wheel and the Beginner / Pro switch</td><td>Medium</td></tr>
+      <tr><td>3</td><td>START on the phone, sideways phone layout, brake hint in Pro</td><td>Medium</td></tr>
+      <tr><td>4</td><td>The "needs a bigger screen" message on phones</td><td>Small</td></tr>
+      <tr><td>5</td><td>A "can't connect" message with the fallbacks</td><td>Small</td></tr>
+    </tbody>
+  </table></div>
+  <p>Sizes are my rough guesses. Steps 1 and 2 are what change the numbers; 3 to 5 make it feel finished.</p>
+</main>
