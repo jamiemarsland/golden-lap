@@ -464,6 +464,8 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         vec2 d = f - (vec2(h1, h2) - 0.5) * 0.24; float r = length(d) + 1e-4, R = life * 0.36;
         return d / r * sin((r - R) * 60.) * exp(-pow((r - R) * 14., 2.)) * (1. - life);
       }
+      float vh(vec2 i){ return fract(sin(dot(i, vec2(269.5, 183.3))) * 43758.5453); }
+      float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f); return mix(mix(vh(i), vh(i + vec2(1., 0.)), f.x), mix(vh(i + vec2(0., 1.)), vh(i + vec2(1., 1.)), f.x), f.y); }
     ` + sh.fragmentShader.replace('#include <tonemapping_fragment>', `if (uRain > 0.01) {
         vec3 V = cameraPosition - vWp; float dist = length(V); V /= dist;
         vec2 rp = rip(vWp.xz * 3.2, uTime) + rip(vWp.xz * 2.1 + 13.7, uTime * 0.9 + 3.);
@@ -471,6 +473,19 @@ function ribbon(o0, y0, o1, y1, vLen, keep) {
         float glance = pow(1. - clamp(V.y, 0., 1.), 14.);                       // looking along the road, it is a mirror; looking down at it, it is just dark
         vec3 wet = gl_FragColor.rgb * 0.6;
         gl_FragColor.rgb = mix(gl_FragColor.rgb, mix(wet, uSky * 0.95, clamp(glance * 0.7 + ring * 0.3, 0., 0.8)), uRain);
+        /* Standing water, as on the wet lanes of the cycling game: in some stretches of the lap the rain collects in pools a few metres across.
+           A pool is a mirror: bright sky where you look down into it, the darker treeline where you look along it, and rings where the drops land. */
+        float stretch = smoothstep(0.5, 0.62, vn(vWp.xz * 0.011 + 3.7));                    /* which parts of the circuit hold water */
+        float pn = vn(vWp.xz * 0.13 + 11.) * 0.72 + vn(vWp.xz * 0.5) * 0.28;
+        float pool = smoothstep(0.53, 0.6, pn) * stretch * smoothstep(0.55, 1., uRain);
+        gl_FragColor.rgb *= 1. - 0.3 * smoothstep(0.44, 0.53, pn) * (1. - smoothstep(0.53, 0.6, pn)) * stretch * uRain;      /* a darker, soaked margin round each pool */
+        if (pool > 0.004) {
+          float e = clamp(V.y + ring * 0.06, 0., 1.);
+          float ang = atan(V.z, V.x), treeTop = 0.035 + 0.11 * vn(vec2(ang * 7., 2.3)) + 0.03 * vn(vec2(ang * 31., 9.1));      /* how high the trees stand in the direction the pool is mirroring */
+          vec3 seen = mix(mix(vec3(0.07, 0.11, 0.08), uSky, 0.22), uSky * 1.25, smoothstep(treeTop - 0.012, treeTop + 0.012, e));      /* below that line the pool shows dark trees, above it bright sky */
+          vec3 water = mix(gl_FragColor.rgb * 0.4, seen, 0.58 + 0.42 * pow(1. - e, 5.));
+          gl_FragColor.rgb = mix(gl_FragColor.rgb, water, pool * 0.93);
+        }
       }
       #include <tonemapping_fragment>`);
   }; add(ribbon(-ROAD_HALF, j => BH(j, -ROAD_HALF), ROAD_HALF, j => BH(j, ROAD_HALF), 40, j => !tun[j]), mRoad);
