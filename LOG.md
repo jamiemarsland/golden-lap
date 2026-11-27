@@ -1064,3 +1064,8 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - James: "update the trailer with new rain". Re-recorded the two rain shots (the swoop where the weather turns, and the wet lap) on the current game, so the trailer now shows the shiny wet road with real reflections and the puddles.
 - The recorder had stopped working after the new start screen hid START until you choose a controller; it now picks keyboard first.
 - Re-rendered all three: golden-lap-trailer.mp4, golden-lap-trailer-rain.mp4, golden-lap-trailer-smudge.mp4.
+
+## Weather forecast on the start screen (v80, 27 Nov)
+- James: "how we do something like this on the start screen? might be nice to show the actual date and the forecast?" (a screenshot of a TV-style 7-day forecast).
+- A forecast strip under the title: Today in a yellow box, then the next six days with the date ("Sat 28th"), a small drawn weather picture and the conditions. In practice mode Today is greyed out.
+- The game can do this because the weather is worked out from the date, the same for everyone. But it went round five conditions in a fixed loop, which a forecast would give away (rain every fifth day). From 28 Nov each day steps on by a hashed 1–4 places instead: never the same two days running, all five equally common over a year. Today (Rainy dusk) is unchanged, so today's board stays fair.

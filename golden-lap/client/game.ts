@@ -1007,7 +1007,14 @@ function tickCheck(dt) {
 // ---------- ghost: your best lap, recorded 20 times a second, drives the lap again as a faint car ----------
 let otherBoard = [];      // the board you are not driving on, shown beside yours on the start screen
 let daily = false, dayNo = Math.floor(Date.now() / 86400000);      // days since 1970, UTC: everyone in the world gets the same condition on the same day
-const todayKey = () => DAILY[dayNo % DAILY.length];
+// The weather for any day. Until 27 Nov 2026 it went round DAILY in a fixed loop; from the 28th each day steps on by a
+// hashed 1 to 4 places, so it never repeats two days running and no longer comes round like clockwork. Same for everyone, worked out from the date alone.
+const WX0 = 20784, wxMemo = {};
+function wxIdx(d) { if (d <= WX0) return d % DAILY.length; if (wxMemo[d] != null) return wxMemo[d];
+  let k = WX0, i = WX0 % DAILY.length; for (; k < d; ) { k++; let h = Math.imul(k ^ 0x9e3779b9, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+    i = (i + 1 + (h >>> 0) % (DAILY.length - 1)) % DAILY.length; } return wxMemo[d] = i; }
+const wxKey = d => DAILY[wxIdx(d)];
+const todayKey = () => wxKey(dayNo);
 const ghostKey = () => 'goldenlap.ghost7' + (daily ? '.d' + dayNo : '');      // tied to the circuit version, like the board; a wet lap gets its own ghost
 let ghost = null;
 function loadGhost() { try { ghost = JSON.parse(localStorage.getItem(ghostKey())); if (!ghost || !ghost.s || ghost.s.length < 20) ghost = null; } catch (e) { ghost = null; } }
@@ -1016,8 +1023,20 @@ function setDaily(on) { daily = on; applyEnv(on ? todayKey() : 'dry'); loadGhost
   const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
   dayLabels(); board = []; otherBoard = []; if (typeof refreshBoard === 'function') refreshBoard(); }
 // Today's lap is the default: the day's weather, on a board that starts empty every midnight (UTC). The dry lap is "Practice" and feeds the all-time board.
-function dayLabels() { const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('todayline').innerHTML = daily ? `<b>TODAY'S LAP: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new conditions in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
+const WXI = {      // little forecast pictures, drawn as SVG so they stay crisp under the tape filter
+  golden: '<circle cx="20" cy="20" r="7" fill="#f6b73c"/><g stroke="#f6b73c" stroke-width="2.4" stroke-linecap="round"><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.7 8.7l2.8 2.8M28.5 28.5l2.8 2.8M8.7 31.3l2.8-2.8M28.5 11.5l2.8-2.8"/></g>',
+  rain: '<path d="M11 24a6 6 0 0 1 1-11.9A8 8 0 0 1 27.5 11 6.5 6.5 0 0 1 29 24z" fill="#e8e8e8"/><g stroke="#5fb0ff" stroke-width="2.4" stroke-linecap="round"><path d="M14 28l-2 5M21 28l-2 5M28 28l-2 5"/></g>',
+  fog: '<g stroke="#d8d8d8" stroke-width="2.6" stroke-linecap="round"><path d="M7 13h26M4 20h24M10 27h26M7 34h18"/></g>',
+  dusk: '<path d="M10 26a10 10 0 0 1 20 0z" fill="#ff9a6a"/><g stroke="#ff9a6a" stroke-width="2.4" stroke-linecap="round"><path d="M20 8v4M8 14l2.8 2.8M32 14l-2.8 2.8"/></g><path d="M4 30h32" stroke="#b6a4d0" stroke-width="2.4" stroke-linecap="round"/>',
+  raindusk: '<path d="M11 24a6 6 0 0 1 1-11.9A8 8 0 0 1 27.5 11 6.5 6.5 0 0 1 29 24z" fill="#9c97c4"/><g stroke="#7fb9ff" stroke-width="2.4" stroke-linecap="round"><path d="M14 28l-2 5M21 28l-2 5M28 28l-2 5"/></g>' };
+const WXN = { golden: 'Golden', rain: 'Rain', fog: 'Fog', dusk: 'Dusk', raindusk: 'Rainy dusk' };
+const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], nth = n => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
+function forecast() { let h = '';
+  for (let i = 0; i < 7; i++) { const d = dayNo + i, k = wxKey(d), dt = new Date(d * 86400000), lbl = i ? DOW[dt.getUTCDay()] + ' ' + nth(dt.getUTCDate()) : 'Today';
+    h += `<div class="fc${i ? '' : ' now'}${!i && !daily ? ' off' : ''}"><i>${lbl}</i><svg viewBox="0 0 40 40">${WXI[k]}</svg><b>${WXN[k]}</b></div>`; }
+  $('wx').innerHTML = h; }
+function dayLabels() { forecast(); const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
+  $('todayline').innerHTML = daily ? `<b>TODAY'S LAP: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new weather in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
   $('daybtn').textContent = daily ? 'Practice in the dry' : "Back to today's lap"; $('dayhint').style.display = 'none'; }
 setInterval(() => { if ($('start').style.display !== 'none') dayLabels(); }, 60000);
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;
