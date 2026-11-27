@@ -7,8 +7,8 @@ RAIN = bool(os.environ.get('RAIN'))   # RAIN=1: the weather turns mid-shot, just
 CUTS = [(0, 'swooprain', 4.6), (6.8, 'tunfast', 0.5),] if RAIN else [(0, 'swoop', 4.6), (6.2, 'tunfast', 0.15),]   # the tunnel cut starts once the car is into the long right, so the motion carries across the cut
 CUTS += [ (8.1, 'lapgolden', 19.8), (9.8, 'laprain', 9.6), (11.7, 'lapdusk', 60.6), (13.4, 'laphud', 73.4), (16.0, 'lapgolden', 79.0)]
 SOON = bool(os.environ.get('SOON'))   # SOON=1: 'COMING SOON' instead of the address, and a Brazilian voice over the end card
-VO = 'vo-crowd.wav'   # the voice (starts 0.9 s in) over a grandstand crowd, mixed in ffmpeg from vo/br/e1.mp3 + bed.mp3 (steady crowd) + crowd.mp3 1-4.2 s (roar after the last word)
-OUT, END = 17.7, (27.5 if SOON else 23.0)
+VO = 'vo-crowd.wav'   # the voice (starts 0.9 s in) over a grandstand crowd, mixed in ffmpeg from vo/br/f3.mp3 (one breath) + bed.mp3 (steady crowd) + crowd.mp3 1-4.2 s (roar after the last word)
+OUT, END = 17.7, (25.1 if SOON else 23.0)
 FULL = 'position:absolute;left:0;top:0;width:1920px;height:1080px'
 vids = []
 for i, (t0, clip, m0) in enumerate(CUTS):
@@ -23,18 +23,14 @@ end = [('t-name', 18.2, 'GOLDEN LAP', 'name'), ('t-line', 19.0, 'One lap. Steere
 for i, a, w, cls in end:
     els.append(f'      <div id="{i}" class="clip {cls}" data-start="{a}" data-duration="{round(END - a, 2)}" data-track-index="2"><span id="{i}-in">{w}</span></div>')
     tl.append(f'tl.fromTo("#{i}-in", {{ opacity: 0, y: 16 }}, {{ opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }}, {a});')
-if SOON:   # English subtitles for the Portuguese line, timed to his words (voice starts 0.6 s into the card)
-    V = OUT + 0.6
-    subs = [(0.16, 1.9, 'One lap...'), (1.82, 4.35, 'Just one.'), (4.44, 5.3, 'Perfect.'), (5.36, 9.0, 'Can you <b id="sb-em">do it?</b>')]
+if SOON:   # English subtitles for the Portuguese line, timed to his words (voice starts 1 s into the card)
+    V = OUT + 1.0
+    subs = [(0.22, 1.1, 'One lap...'), (1.14, 1.85, 'Just one.'), (1.88, 2.7, 'Perfect.'), (2.74, 6.1, 'Can you <b id="sb-em">do it?</b>')]
     for i, (a, b, w) in enumerate(subs):
         a, b = round(V + a, 2), round(V + b, 2)
         els.append(f'      <div id="sb{i}" class="clip sub" data-start="{a}" data-duration="{round(b - a, 2)}" data-track-index="7"><span id="sb{i}-in">{w}</span></div>')
         tl.append(f'tl.fromTo("#sb{i}-in", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.08 }}, {a});')
-    tl.append(f'tl.fromTo("#sb-em", {{ opacity: 0, scale: 0.8 }}, {{ opacity: 1, scale: 1, duration: 0.12, ease: "back.out(3)" }}, {round(V + 6.16, 2)});')
-# a small, quiet 'this is the real game' tag over the opening (James, 27 Nov)
-els.append('      <div id="real" class="clip" data-start="0.4" data-duration="3.6" data-track-index="8"><span id="real-in"><i></i>REAL GAMEPLAY</span></div>')
-tl.append('tl.fromTo("#real-in", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0.4);')
-tl.append('tl.to("#real-in", { opacity: 0, duration: 0.5, ease: "power1.in" }, 3.45);')
+    tl.append(f'tl.fromTo("#sb-em", {{ opacity: 0, scale: 0.8 }}, {{ opacity: 1, scale: 1, duration: 0.12, ease: "back.out(3)" }}, {round(V + 3.26, 2)});')
 cols = ['#5e2414', '#e2562b', '#f0b53a', '#f3e6c8', '#2f9b96']   # the helmet's colours, plus mustard and brown
 bands = ''.join(f'<i id="s{k}" style="top:{k * 16}px;background:{c}"></i>' for k, c in enumerate(cols))
 els.insert(0, f'      <div id="card" class="clip" data-start="{OUT}" data-duration="{round(END - OUT, 2)}" data-track-index="1"></div>')
@@ -65,9 +61,6 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
       .line {{ position: absolute; left: 160px; top: 566px; width: 1600px; text-align: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 60px; color: #f3e6c8; z-index: 4; }}
       .sub {{ position: absolute; left: 160px; top: 1008px; width: 1600px; text-align: center; font-family: Inter, sans-serif; font-weight: 500; font-style: italic; font-size: 30px; color: #e8dcc0; z-index: 5; }}
       .sub span {{ display: inline-block; }} .sub b {{ display: inline-block; color: #f0b53a; font-weight: 800; text-transform: uppercase; }}
-      #real {{ position: absolute; left: 0; top: 54px; width: 1920px; text-align: center; z-index: 6; }}
-      #real span {{ display: inline-block; padding: 7px 18px 7px 14px; background: rgba(20,14,10,.75); border-radius: 4px; font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: .32em; color: #f3e6c8; }}
-      #real i {{ display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #e2562b; margin: 0 12px 2px 0; vertical-align: middle; }}
       .url {{ position: absolute; left: 160px; top: {896 if SOON else 916}px; width: 1600px; text-align: center; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 50px; letter-spacing: .14em; color: #f0b53a; z-index: 4; }}
     </style>
   </head>
@@ -77,7 +70,7 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
 {NL.join(vids)}
 {NL.join(els)}
       <audio id="away" class="clip" src="assets/away.wav" data-start="{OUT}" data-duration="5.3" data-track-index="5" data-volume="1"></audio>{f'''
-      <audio id="vo" class="clip" src="assets/{VO}" data-start="{OUT}" data-duration="9.8" data-track-index="6" data-volume="1.8"></audio>''' if SOON else ''}
+      <audio id="vo" class="clip" src="assets/{VO}" data-start="{OUT}" data-duration="7.32" data-track-index="6" data-volume="1.8"></audio>''' if SOON else ''}
     </div>
     <script>
       window.__timelines = window.__timelines || {{}};
