@@ -1696,11 +1696,23 @@ function toGrid() {
 }
 const tagOf = c => { const t = { phone: 'PHONE, PRO', 'phone-simple': 'PHONE, BEGINNER', hands: 'HANDS, PRO', keys: 'KEYS, PRO', 'keys-simple': 'KEYS, BEGINNER', 'hands-simple': 'HANDS, BEGINNER' }[c]; return t ? ` <small>${t}</small>` : ''; };
 function setEasy(v) { easy = v; try { localStorage.setItem('goldenlap.easy', v ? '1' : '0'); } catch (e) {} $('modeB').className = easy ? 'on' : ''; $('modeP').className = easy ? '' : 'on'; }
+// Earlier days' boards: small arrows on the TODAY heading step back a day at a time (up to 60 days), showing that day's weather and times.
+let pastDay = null, pastBoard = [];
+function showDay(d) { if (d >= dayNo) { pastDay = null; drawTop(); return; }
+  pastDay = d; pastBoard = null; drawTop();
+  fetch('/api/board?day=' + d, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(o => { if (pastDay === d) { pastBoard = o && Array.isArray(o.all) ? o.all : []; drawTop(); } }).catch(() => { if (pastDay === d) { pastBoard = []; drawTop(); } });
+}
+$('lb').addEventListener('click', e => { const a = e.target.closest('[data-go]'); if (!a) return; e.stopPropagation(); showDay((pastDay ?? dayNo) + +a.dataset.go); });
 function drawTop() {
   const table = (list, cap, none) => { const rows = list.slice().sort((a, b) => a.t - b.t).slice(0, 10);
     return '<caption>' + cap + '</caption>' + (rows.length ? rows.map((b, i) => `<tr><td>${i + 1}</td><td>${(b.n || '---').replace(/[<>&]/g, '')}${tagOf(b.c)}</td><td>${fmt(b.t)}</td></tr>`).join('') : `<tr><td>${none}</td></tr>`); };
   const today = table(daily ? board : otherBoard, 'TODAY', 'Nobody yet today. Be first.'), all = table(daily ? otherBoard : board, 'ALL TIME, DRY', 'No times yet.');
-  $('lb').innerHTML = today; $('lbAll').innerHTML = all; $('lb').className = 'lbt' + (daily ? '' : ' dim'); $('lbAll').className = 'lbt' + (daily ? ' dim' : '');      /* the board you are about to drive on is the bright one */
+  let shown = today;
+  if (remote) { const d = pastDay ?? dayNo, dt = new Date(d * 86400000), back = d > dayNo - 60 ? '<i class="dg" data-go="-1" title="The day before">&#8249;</i>' : '<i class="dg off">&#8249;</i>',
+      fwd = pastDay != null ? '<i class="dg" data-go="1" title="The next day">&#8250;</i>' : '<i class="dg off">&#8250;</i>';
+    if (pastDay == null) shown = today.replace('<caption>TODAY</caption>', `<caption>${back}TODAY${fwd}</caption>`);
+    else shown = table(pastBoard || [], `${back}${DOW[dt.getUTCDay()].toUpperCase()} ${nth(dt.getUTCDate()).toUpperCase()} &middot; ${WXN[wxKey(d)].toUpperCase()}${fwd}`, pastBoard ? 'No laps that day.' : '...'); }
+  $('lb').innerHTML = shown; $('lbAll').innerHTML = all; $('lb').className = 'lbt' + (daily ? '' : ' dim') + (pastDay != null ? ' past' : ''); $('lbAll').className = 'lbt' + (daily ? ' dim' : '');      /* the board you are about to drive on is the bright one */
   $('lb2').innerHTML = daily ? today : all;
 }
 function drawBoard() {

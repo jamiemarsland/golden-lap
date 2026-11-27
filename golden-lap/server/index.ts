@@ -79,8 +79,13 @@ export default capsule({
     }).index("by_code", ["code"]),
   },
   endpoints: {
-    board: endpoint({ mode: "read", method: "GET", path: "/api/board" }, async (ctx: any, req: any) =>
-      json(await board(ctx, trackFor(new URL(req.url, "https://golden-lap.space.fast").searchParams.get("daily") === "1")))),
+    board: endpoint({ mode: "read", method: "GET", path: "/api/board" }, async (ctx: any, req: any) => {
+      const q = new URL(req.url, "https://golden-lap.space.fast").searchParams;
+      // ?day=N reads an earlier day's board (days since 1970, UTC), up to 60 days back. Those boards are closed: nothing can be posted to them.
+      const day = Math.floor(Number(q.get("day")));
+      if (q.has("day") && Number.isFinite(day) && day < today() && day >= today() - 60) return json({ ...(await board(ctx, `${TRACK}d${day}`)), for: day });
+      return json(await board(ctx, trackFor(q.get("daily") === "1")));
+    }),
     lap: endpoint({ mode: "write", method: "POST", path: "/api/lap" }, async (ctx: any, req: any) => {
       let body: any = null;
       try { body = await req.json(); } catch { body = null; }

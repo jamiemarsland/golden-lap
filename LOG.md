@@ -1085,3 +1085,8 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - James: "add english subtitles - and make it a little bit louder". Italic subtitles at the foot of the end card, timed to his words: "One lap..." / "Just one." / "Perfect." / "Can you DO IT?", with DO IT? popping in yellow on the shouted "consegue". Voice and crowd up about 2 dB.
 - James: "add a subtle 'real gameplay' or smth near the start". A small REAL GAMEPLAY tag, with a red recording dot, top centre over the first 4 seconds of the Spa swoop, fading in and out. It's in the builder, so every trailer version gets it.
 - James: "remove the real gameplay - kinda distracting" (gone), and "the voice at the end sounds a little janky - can we put it into one clip so it sounds like one sentence". The old take had a 2-second gap in the middle. Five new takes with the line written as one run ("Uma volta, só uma, perfeita... você CONSEGUE?!"); picked f3: 3.7 s, no gap over a quarter of a second, still a question, last word on top (+2.2 dB, then lifted 4 dB more). Card back down to 25.1 s; subtitles retimed to the new words.
+
+## Earlier days' leaderboards (v82, 27 Nov)
+- James: "we're gonna need a subtle way to show previous leaderboards".
+- The server already kept each day's laps apart but only served today's. /api/board?day=N now serves any of the last 60 days (read only; you can't post to a past day).
+- On the start screen the TODAY heading has faint ‹ › arrows. ‹ steps back a day: the heading becomes e.g. "THU 26TH · CLEAR" with that day's times, slightly dimmed; › steps forward and back to TODAY. Days before the daily boards began say "No laps that day."
