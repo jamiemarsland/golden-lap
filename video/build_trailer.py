@@ -23,6 +23,14 @@ end = [('t-name', 18.2, 'GOLDEN LAP', 'name'), ('t-line', 19.0, 'One lap. Steere
 for i, a, w, cls in end:
     els.append(f'      <div id="{i}" class="clip {cls}" data-start="{a}" data-duration="{round(END - a, 2)}" data-track-index="2"><span id="{i}-in">{w}</span></div>')
     tl.append(f'tl.fromTo("#{i}-in", {{ opacity: 0, y: 16 }}, {{ opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }}, {a});')
+if SOON:   # English subtitles for the Portuguese line, timed to his words (voice starts 0.6 s into the card)
+    V = OUT + 0.6
+    subs = [(0.16, 1.9, 'One lap...'), (1.82, 4.35, 'Just one.'), (4.44, 5.3, 'Perfect.'), (5.36, 9.0, 'Can you <b id="sb-em">do it?</b>')]
+    for i, (a, b, w) in enumerate(subs):
+        a, b = round(V + a, 2), round(V + b, 2)
+        els.append(f'      <div id="sb{i}" class="clip sub" data-start="{a}" data-duration="{round(b - a, 2)}" data-track-index="7"><span id="sb{i}-in">{w}</span></div>')
+        tl.append(f'tl.fromTo("#sb{i}-in", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.08 }}, {a});')
+    tl.append(f'tl.fromTo("#sb-em", {{ opacity: 0, scale: 0.8 }}, {{ opacity: 1, scale: 1, duration: 0.12, ease: "back.out(3)" }}, {round(V + 6.16, 2)});')
 cols = ['#5e2414', '#e2562b', '#f0b53a', '#f3e6c8', '#2f9b96']   # the helmet's colours, plus mustard and brown
 bands = ''.join(f'<i id="s{k}" style="top:{k * 16}px;background:{c}"></i>' for k, c in enumerate(cols))
 els.insert(0, f'      <div id="card" class="clip" data-start="{OUT}" data-duration="{round(END - OUT, 2)}" data-track-index="1"></div>')
@@ -51,7 +59,9 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
       #stripes i {{ position: absolute; left: 0; width: 1920px; height: 16px; transform-origin: 0 50%; }}
       .name {{ position: absolute; left: 60px; top: 150px; width: 1800px; text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 214px; letter-spacing: .01em; color: #f3e6c8; text-shadow: 5px 5px 0 #f0b53a, 10px 10px 0 #e2562b, 15px 15px 0 #b8371f, 20px 20px 0 #5e2414; transform: skewX(-10deg); z-index: 4; }}
       .line {{ position: absolute; left: 160px; top: 566px; width: 1600px; text-align: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 60px; color: #f3e6c8; z-index: 4; }}
-      .url {{ position: absolute; left: 160px; top: 916px; width: 1600px; text-align: center; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 50px; letter-spacing: .14em; color: #f0b53a; z-index: 4; }}
+      .sub {{ position: absolute; left: 160px; top: 1008px; width: 1600px; text-align: center; font-family: Inter, sans-serif; font-weight: 500; font-style: italic; font-size: 30px; color: #e8dcc0; z-index: 5; }}
+      .sub span {{ display: inline-block; }} .sub b {{ display: inline-block; color: #f0b53a; font-weight: 800; text-transform: uppercase; }}
+      .url {{ position: absolute; left: 160px; top: {896 if SOON else 916}px; width: 1600px; text-align: center; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 50px; letter-spacing: .14em; color: #f0b53a; z-index: 4; }}
     </style>
   </head>
   <body>
@@ -60,7 +70,7 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
 {NL.join(vids)}
 {NL.join(els)}
       <audio id="away" class="clip" src="assets/away.wav" data-start="{OUT}" data-duration="5.3" data-track-index="5" data-volume="1"></audio>{f'''
-      <audio id="vo" class="clip" src="assets/{VO}" data-start="{OUT}" data-duration="9.8" data-track-index="6" data-volume="1.4"></audio>''' if SOON else ''}
+      <audio id="vo" class="clip" src="assets/{VO}" data-start="{OUT}" data-duration="9.8" data-track-index="6" data-volume="1.8"></audio>''' if SOON else ''}
     </div>
     <script>
       window.__timelines = window.__timelines || {{}};

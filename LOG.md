@@ -1082,3 +1082,4 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
   - The first crowd sound faded out by itself after 4 s, so it had gone by the end of his line. Now a steady generated crowd bed under the whole card, only a few dB under him, plus a big roar that swells right after the last word.
   - New takes with the last word shouted ("Você... CONSEGUE?!"); picked the one where "consegue" is loudest against the rest (+4.4 dB) and lifted that word another 4 dB. Card is 27.5 s long.
   - Opening now the rain version (weather turns on the climb at Spa): RAIN=1 SOON=1 python3 build_trailer.py.
+- James: "add english subtitles - and make it a little bit louder". Italic subtitles at the foot of the end card, timed to his words: "One lap..." / "Just one." / "Perfect." / "Can you DO IT?", with DO IT? popping in yellow on the shouted "consegue". Voice and crowd up about 2 dB.
