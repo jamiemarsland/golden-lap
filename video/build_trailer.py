@@ -6,7 +6,9 @@ import os
 RAIN = bool(os.environ.get('RAIN'))   # RAIN=1: the weather turns mid-shot, just after the plunge into the swoop, and the shot runs a little longer
 CUTS = [(0, 'swooprain', 4.6), (6.8, 'tunfast', 0.5),] if RAIN else [(0, 'swoop', 4.6), (6.2, 'tunfast', 0.15),]   # the tunnel cut starts once the car is into the long right, so the motion carries across the cut
 CUTS += [ (8.1, 'lapgolden', 19.8), (9.8, 'laprain', 9.6), (11.7, 'lapdusk', 60.6), (13.4, 'laphud', 73.4), (16.0, 'lapgolden', 79.0)]
-OUT, END = 17.7, 23.0
+SOON = bool(os.environ.get('SOON'))   # SOON=1: 'COMING SOON' instead of the address, and a Brazilian voice over the end card
+VO = 'vo-br.mp3'
+OUT, END = 17.7, (25.2 if SOON else 23.0)
 FULL = 'position:absolute;left:0;top:0;width:1920px;height:1080px'
 vids = []
 for i, (t0, clip, m0) in enumerate(CUTS):
@@ -17,7 +19,7 @@ els, tl = [], []
 for i, (a, b, w) in enumerate(words):
     els.append(f'      <div id="w{i}" class="clip word" data-start="{a}" data-duration="{round(b - a, 2)}" data-track-index="2"><span id="w{i}-in">{w}</span></div>')
     tl.append(f'tl.fromTo("#w{i}-in", {{ opacity: 0, y: 10 }}, {{ opacity: 1, y: 0, duration: 0.14, ease: "power3.out" }}, {a});')
-end = [('t-name', 18.2, 'GOLDEN LAP', 'name'), ('t-line', 19.0, 'One lap. Steered with your bare hands.', 'line'), ('t-board', 19.9, '<b>1</b><i>YOUR NAME</i><u>--:--.---</u>', 'board'), ('t-cap', 20.3, 'ONE WORLD LEADERBOARD. EVERY LAP COUNTS.', 'cap'), ('t-url', 21.0, 'golden-lap.space.fast', 'url')]
+end = [('t-name', 18.2, 'GOLDEN LAP', 'name'), ('t-line', 19.0, 'One lap. Steered with your bare hands.', 'line'), ('t-board', 19.9, '<b>1</b><i>YOUR NAME</i><u>--:--.---</u>', 'board'), ('t-cap', 20.3, 'ONE WORLD LEADERBOARD. EVERY LAP COUNTS.', 'cap'), ('t-url', 21.0, 'COMING SOON' if SOON else 'golden-lap.space.fast', 'url')]
 for i, a, w, cls in end:
     els.append(f'      <div id="{i}" class="clip {cls}" data-start="{a}" data-duration="{round(END - a, 2)}" data-track-index="2"><span id="{i}-in">{w}</span></div>')
     tl.append(f'tl.fromTo("#{i}-in", {{ opacity: 0, y: 16 }}, {{ opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }}, {a});')
@@ -57,7 +59,8 @@ open('trailer/index.html', 'w').write(f"""<!doctype html>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{END}" data-width="1920" data-height="1080">
 {NL.join(vids)}
 {NL.join(els)}
-      <audio id="away" class="clip" src="assets/away.wav" data-start="{OUT}" data-duration="5.3" data-track-index="5" data-volume="1"></audio>
+      <audio id="away" class="clip" src="assets/away.wav" data-start="{OUT}" data-duration="5.3" data-track-index="5" data-volume="1"></audio>{f'''
+      <audio id="vo" class="clip" src="assets/{VO}" data-start="18.6" data-duration="6.32" data-track-index="6" data-volume="1.6"></audio>''' if SOON else ''}
     </div>
     <script>
       window.__timelines = window.__timelines || {{}};

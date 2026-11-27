@@ -1029,14 +1029,14 @@ const WXI = {      // little forecast pictures, drawn as SVG so they stay crisp 
   fog: '<g stroke="#d8d8d8" stroke-width="2.6" stroke-linecap="round"><path d="M7 13h26M4 20h24M10 27h26M7 34h18"/></g>',
   dusk: '<path d="M10 26a10 10 0 0 1 20 0z" fill="#ff9a6a"/><g stroke="#ff9a6a" stroke-width="2.4" stroke-linecap="round"><path d="M20 8v4M8 14l2.8 2.8M32 14l-2.8 2.8"/></g><path d="M4 30h32" stroke="#b6a4d0" stroke-width="2.4" stroke-linecap="round"/>',
   raindusk: '<path d="M11 24a6 6 0 0 1 1-11.9A8 8 0 0 1 27.5 11 6.5 6.5 0 0 1 29 24z" fill="#9c97c4"/><g stroke="#7fb9ff" stroke-width="2.4" stroke-linecap="round"><path d="M14 28l-2 5M21 28l-2 5M28 28l-2 5"/></g>' };
-const WXN = { golden: 'Golden', rain: 'Rain', fog: 'Fog', dusk: 'Dusk', raindusk: 'Rainy dusk' };
+const WXN = { golden: 'Sunny', rain: 'Rain', fog: 'Fog', dusk: 'Clear', raindusk: 'Rain' };      // the weather only, not the time of day (James)
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], nth = n => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
 function forecast() { let h = '';
   for (let i = 0; i < 7; i++) { const d = dayNo + i, k = wxKey(d), dt = new Date(d * 86400000), lbl = i ? DOW[dt.getUTCDay()] + ' ' + nth(dt.getUTCDate()) : 'Today';
     h += `<div class="fc${i ? '' : ' now'}${!i && !daily ? ' off' : ''}"><i>${lbl}</i><svg viewBox="0 0 40 40">${WXI[k]}</svg><b>${WXN[k]}</b></div>`; }
   $('wx').innerHTML = h; }
 function dayLabels() { forecast(); const left = 86400000 - Date.now() % 86400000, hh = Math.floor(left / 3600000), mm = Math.floor(left % 3600000 / 60000);
-  $('todayline').innerHTML = daily ? `<b>TODAY'S LAP: ${CONDS[todayKey()].name}</b> <span>&nbsp;·&nbsp; new weather in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
+  $('todayline').innerHTML = daily ? `<b>TODAY'S LAP: ${WXN[todayKey()].toUpperCase()}</b> <span>&nbsp;·&nbsp; new weather in ${hh} h ${mm} m</span>` : `<b>PRACTICE: DRY</b> <span>&nbsp;·&nbsp; counts for the all-time board</span>`;
   $('daybtn').textContent = daily ? 'Practice in the dry' : "Back to today's lap"; $('dayhint').style.display = 'none'; }
 setInterval(() => { if ($('start').style.display !== 'none') dayLabels(); }, 60000);
 let rec = [], recT = 0, gp = 0, gq = 0, wantShot = false;

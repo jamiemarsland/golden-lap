@@ -1069,3 +1069,11 @@ User, on the trailer: "the rain is bad, check out how we did weather on our zwif
 - James: "how we do something like this on the start screen? might be nice to show the actual date and the forecast?" (a screenshot of a TV-style 7-day forecast).
 - A forecast strip under the title: Today in a yellow box, then the next six days with the date ("Sat 28th"), a small drawn weather picture and the conditions. In practice mode Today is greyed out.
 - The game can do this because the weather is worked out from the date, the same for everyone. But it went round five conditions in a fixed loop, which a forecast would give away (rain every fifth day). From 28 Nov each day steps on by a hashed 1–4 places instead: never the same two days running, all five equally common over a year. Today (Rainy dusk) is unchanged, so today's board stays fair.
+
+## Forecast says the weather only (v81, 27 Nov)
+- James: "we dont need to say dusk - just the weather", "golden should say sunny". Forecast labels now read Sunny, Rain, Fog, Clear (dusk), Rain (rainy dusk), and the line under it says TODAY'S LAP: RAIN.
+
+## "Coming soon" trailer with a Brazilian voice (27 Nov)
+- James: a version that says COMING SOON instead of the address, with a breathless young Brazilian man over the end card.
+- Line (Portuguese): "Uma volta... Só uma. Perfeita. Você consegue?" — "One lap. Just one. Perfect. Can you?" Three ElevenLabs v3 takes (Davi Andrei, Gustavo Barros, Matheus Moretti); Gustavo's, slightly hoarse and ending as a real question, is used. The end card holds 2 s longer (25.2 s) to let him finish.
+- Built with SOON=1 python3 build_trailer.py → golden-lap-trailer-soon.mp4.
