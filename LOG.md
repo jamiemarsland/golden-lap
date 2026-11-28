@@ -2,6 +2,8 @@
 
 A running record for the video. Newest entries at the bottom. Times are local.
 
+> **The film's angle (James, 27 Nov):** lean into one question: *can I build a world-class F1 game in just one day?* The title and thumbnail should promise that, the way "129 hours to design a menu" (Enrico Tartarotti, with the Linear team) does: a huge bold headline, the object held up to camera, rough red hand-drawn arrows and circles over the top. The clock is the story, so every entry here has a time on it. To decide when cutting: which day counts as "the one day"? The first entry is 24 Nov 17:05 and the work has carried on since, so either the film covers the first day honestly and treats the rest as polish, or it is "one day of building" counted in hours.
+
 ## 2026-11-24
 
 ### 17:05 — The question
@@ -1112,3 +1114,17 @@ Playing on the projector, James still had to walk to the laptop for the first ST
 - If the phone is already going when you come back to the start screen, it shows a big START.
 - Browsers can hold sound back until someone clicks the page. If that happens after a phone start, the screen says CLICK OR PRESS ANY KEY FOR SOUND.
 - The finish panel now shows the week's forecast and today's line ("TODAY'S LAP: RAIN · new weather in…") at the top, and the board has a caption ("TODAY'S BOARD · RAIN" or "ALL TIME · DRY").
+
+## The film's angle (27 Nov)
+James: "when we make the youtube video - i'd like to lean into the idea - can i build a world class F1 game in just 1 day". He shared a reference thumbnail for the style: "129 hours to design a menu" (The Ridiculous Engineering Of Boring Software, Enrico Tartarotti with the Linear team). It has a huge red headline, the thing held to camera, and red marker scribbles. Noted at the top of this log too.
+
+## Spacefast banner: mockup (27 Nov, not live yet)
+James asked for spacefast.com as the advertiser on the first banner across the track after the Spa section. That is the blue footbridge on THE CLIMB, the Kemmel-style straight after Eau Rouge. The yellow bridge comes before it.
+- Mocked up in `index-mock.html` only. Two versions: (a) the bridge's own blue with white heavy italic SPACEFAST.COM and yellow pinstripes, like a period sponsor board; (b) cream with black lower-case spacefast.com and red pinstripes.
+- The ad panel is 2.4 m tall instead of 1.5 m so the lettering reads at speed.
+- Box faces put the lettering on backwards. It took three tries to find the right flip: first mirrored, then upside down, then right. A good small "not quite" moment.
+
+## v86 · The front wheels stay on the road at Eau Rouge (28 Nov)
+James: "on eu rouge the front left tyre kinda looks like its floating in mid air". There were two causes.
+- **The car trailed the road.** Its height was smoothed, and at 280 km/h on Raidillon that left it up to 20 cm behind the road: sunk in on the climb, hanging above it over the crest. The tyre's dark contact shadow sits under the car, so on the climb it was buried under the tarmac, and the tyre had nothing under it. Now the car follows the hill as it comes, and only the small leftover is smoothed.
+- **The car is one rigid block.** It tips and leans as a whole, so over a twisting crest, or leaning hard in a fast corner, the road under a front wheel falls away from it. Each front wheel now finds the road under itself and moves up or down to meet it, up to 9 cm up and 11 cm down. All six suspension pieces on each side and the contact shadow move with it. Through the swoop the wheels now move about ±4 cm, which is believable suspension. With the old code they would have needed the full 9 cm.

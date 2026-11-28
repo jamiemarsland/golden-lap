@@ -611,17 +611,19 @@ const tyreT = tyreMap(false), tyreBlurT = tyreMap(true);
 const tyreMat = new THREE.MeshPhongMaterial({ map: tyreT, shininess: 22, specular: 0x333333 });
 const tyreGeo = (() => { const pr = [[0.205, -0.172], [0.25, -0.188], [0.3, -0.184], [0.33, -0.155], [0.343, -0.095], [0.346, 0], [0.343, 0.095], [0.33, 0.155], [0.3, 0.184], [0.25, 0.188], [0.205, 0.172]];
   const g = new THREE.LatheGeometry(pr.map(q => new THREE.Vector2(q[0], q[1])), 40); g.rotateZ(Math.PI / 2); return g; })();
-const fw = [];
+const fw = [], _wp = new V3(), _wo = new V3();
+// a suspension part: the first point is fixed to the tub, the second rides up and down with the wheel
+const susRod = (a, b, r, m) => fw[fw.length - 1].rods.push([rod(cock, a, b, r, m), a, b]);
 for (const s of [-1, 1]) {
   const hub = new THREE.Group(); hub.position.set(s * 0.8, 0.335, -1.3); cock.add(hub);
   const spin = new THREE.Mesh(tyreGeo, tyreMat); hub.add(spin);
-  fw.push({ hub, spin, y0: 0.335 });
+  fw.push({ hub, spin, y0: 0.335, dy: 0, rods: [], s });
   const o = (x, y, z) => new V3(s * x, y, z);
   // inner ends sit just inside the tapered nose, so every arm visibly meets the bodywork (they used to float a few cm off it)
-  rod(cock, o(0.14, 0.48, -1.1), o(0.62, 0.5, -1.38), 0.012, carbon); rod(cock, o(0.11, 0.44, -1.75), o(0.62, 0.5, -1.38), 0.012, carbon);
-  rod(cock, o(0.22, 0.22, -1.05), o(0.62, 0.2, -1.38), 0.014, carbon); rod(cock, o(0.1, 0.28, -1.8), o(0.62, 0.2, -1.38), 0.014, carbon);
-  rod(cock, o(0.6, 0.22, -1.38), o(0.12, 0.49, -1.36), 0.011, metal);
-  rod(cock, o(0.22, 0.4, -1.2), o(0.62, 0.4, -1.26), 0.008, metal);
+  susRod(o(0.14, 0.48, -1.1), o(0.62, 0.5, -1.38), 0.012, carbon); susRod(o(0.11, 0.44, -1.75), o(0.62, 0.5, -1.38), 0.012, carbon);
+  susRod(o(0.22, 0.22, -1.05), o(0.62, 0.2, -1.38), 0.014, carbon); susRod(o(0.1, 0.28, -1.8), o(0.62, 0.2, -1.38), 0.014, carbon);
+  susRod(o(0.12, 0.49, -1.36), o(0.6, 0.22, -1.38), 0.011, metal);
+  susRod(o(0.22, 0.4, -1.2), o(0.62, 0.4, -1.26), 0.008, metal);
   // mirror
   rod(cock, o(0.33, 0.56, -0.6), o(0.46, 0.66, -0.62), 0.008, carbon);
   box(cock, 0.17, 0.095, 0.06, s * 0.47, 0.68, -0.62, carbon);
@@ -699,8 +701,8 @@ const refl = [-1, 1].map(s => { const m = new THREE.Mesh(new THREE.CircleGeometr
     box(w.hub, 0.1, 0.34, 0.2, -s * 0.2, 0, 0, carbon);
     const duct = box(w.hub, 0.12, 0.12, 0.26, -s * 0.27, 0.02, -0.16, carbon); duct.rotation.y = s * 0.3;
     const o = (x, y, z) => new V3(s * x, y, z);
-    rod(cock, o(0.6, 0.5, -1.3), o(0.2, 0.36, -1.02), 0.007, metal);              // damper link
-    rod(cock, o(0.58, 0.3, -1.3), o(0.24, 0.3, -0.98), 0.004, pale);              // brake line
+    w.rods.push([rod(cock, o(0.2, 0.36, -1.02), o(0.6, 0.5, -1.3), 0.007, metal), o(0.2, 0.36, -1.02), o(0.6, 0.5, -1.3)]);      // damper link
+    w.rods.push([rod(cock, o(0.24, 0.3, -0.98), o(0.58, 0.3, -1.3), 0.004, pale), o(0.24, 0.3, -0.98), o(0.58, 0.3, -1.3)]);       // brake line
     rod(cock, o(0.22, 0.52, -1.08), o(0.22, 0.5, -1.7), 0.006, carbon);
   });
   // tub top: pale cockpit edge, small marks, aerial
@@ -767,7 +769,8 @@ addShadow(carObj, -0.3); rivals.forEach(r => addShadow(r.mesh, 0));
 // a tight, dark patch right where each tyre touches the road
 const patchT = tex(64, 64, (g, w, h) => { const gr = g.createRadialGradient(w / 2, h / 2, 2, w / 2, h / 2, w / 2); gr.addColorStop(0, 'rgba(0,0,0,.9)'); gr.addColorStop(0.55, 'rgba(0,0,0,.6)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
 for (const [x, z] of [[-0.8, -1.3], [0.8, -1.3], [-0.8, 1.25], [0.8, 1.25]]) { const g = new THREE.PlaneGeometry(0.62, 1.0); g.rotateX(-Math.PI / 2);
-  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ map: patchT, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 })); m.position.set(x, 0.035, z); carObj.add(m); }
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ map: patchT, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 })); m.position.set(x, 0.035, z); carObj.add(m);
+  if (z < 0) fw[x < 0 ? 0 : 1].patch = m; }
 
 // ---------- post ----------
 const VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }';
@@ -1791,6 +1794,8 @@ function frame(dtForced) {
     car.y = Y[loc.i] + SL[loc.i] * ((car.x - P[loc.i].x) * t.x + (car.z - P[loc.i].z) * t.z) + BH(loc.i, loc.lat);
     car.bankS = (car.bankS || 0) + (Math.atan(BANK[loc.i]) * insB[loc.i] * (-sh * t.x - ch * t.z) - (car.bankS || 0)) * Math.min(1, dt * 8);      // how far the car is tipped over by the banking
     car.slope = SL[loc.i] * (-sh * t.x - ch * t.z); car.kv = KV[loc.i];
+    car.yS += car.slope * car.vx * dt;      // follow the hill as it comes, and only smooth what is left over. Smoothing the height alone left the car up to 20 cm
+                                            // behind the road at speed: sunk into it on the way up, hanging above it over a crest like Eau Rouge
     car.yS += (car.y - car.yS) * Math.min(1, dt * 25); car.slopeS += (car.slope - car.slopeS) * Math.min(1, dt * 12);
     const inT = tun[loc.i] ? 1 : 0;
     car.tun += (inT - car.tun) * Math.min(1, dt * 7); car.expo += (1 + 0.9 * inT - car.expo) * Math.min(1, dt * 2.2);
@@ -1879,6 +1884,7 @@ function frame(dtForced) {
   const rough = sf + (car.kerb ? 1.6 * Math.min(1, v / 15) : 0) + (car.off ? 2.2 * Math.min(1, v / 15) : 0) + car.bump * 4;
   carObj.position.set(car.x, car.yS, car.z);
   carObj.rotation.set(Math.atan(car.slopeS) + car.axS * 0.0008 + ns(T, 31, 57, 83) * 0.0015 * rough, car.h, -car.ayS * 0.0012 + ns(T, 27, 49, 71) * 0.002 * rough - (car.bankS || 0));
+  carObj.updateMatrixWorld();      // the front wheels below need where the car is this frame
   const sh = 0.0025 + 0.006 * rough;
   camW.position.set(CAM.pos[0] + ns(T, 53, 97, 131) * 0.002 * rough, CAM.pos[1] + ns(T, 61, 89, 143) * 0.004 * rough, CAM.pos[2]);
   camW.rotation.set(CAM.pitch + ns(T, 47, 83, 127) * sh, CAM.yaw + (portrait ? -0.05 : 0) + ns(T, 43, 79, 113) * sh * 0.6, CAM.roll - car.ayS * 0.0012 + ns(T, 37, 67, 101) * sh * 0.8);
@@ -1891,7 +1897,16 @@ function frame(dtForced) {
     w.hub.rotation.y = car.steer; w.spin.rotation.x = car.spin;
     if (i === 0) { const tb = clamp(car.brk, 0, 1); lampV += (tb - lampV) * Math.min(1, dt * (tb > lampV ? 14 : 5)); const b = lampV;      /* quick to light, slower to fade */
       brakeLamp.material.color.setRGB(0.16 + 0.84 * b, 0.03 + 0.25 * b, 0.03 + 0.07 * b); brakeHalo.material.opacity = 0.5 * b * b; brakeHot.material.opacity = 0.8 * b * b * b; }
-    w.hub.position.y = w.y0 + ns(T + i * 7, 71, 113, 157) * 0.006 * rough;
+    // Suspension. The car is drawn as one rigid body tipped to the road under its middle, so over a twisting crest like Eau Rouge,
+    // or leaning in a fast corner, the road under a front wheel falls away from it and the tyre hung in the air. Now each front
+    // wheel finds the road beneath itself and rides up or down to meet it, and its arms follow.
+    _wp.set(w.s * 0.8, 0, -1.3); carObj.localToWorld(_wp);
+    const l = locate(_wp.x, _wp.z, car.idx, 12), t = TAN[l.i];
+    const want = clamp(Y[l.i] + SL[l.i] * ((_wp.x - P[l.i].x) * t.x + (_wp.z - P[l.i].z) * t.z) + BH(l.i, l.lat) - _wp.y, -0.11, 0.09);      // a little more droop than bump
+    w.dy += (want - w.dy) * Math.min(1, dt * 30);
+    w.hub.position.y = w.y0 + w.dy + ns(T + i * 7, 71, 113, 157) * 0.006 * rough;
+    for (const [m, a, b] of w.rods) { _wo.copy(b); _wo.y += w.dy; setRod(m, a, _wo); }
+    if (w.patch) w.patch.position.y = 0.035 + w.dy;
   });
   const saw = ns(T, 9, 17, 29) * 0.05 * sf + ns(T, 23, 41, 7) * Math.min(0.25, car.slip * 1.2) * (v > 8 ? 1 : 0);
   rim.rotation.z = clamp(car.steer * 11, -1.9, 1.9) + saw;
@@ -2006,7 +2021,7 @@ $('start').addEventListener('click', ev => {
 });
 
 // handle for testing and for scripted B-roll
-window.G = { startState, smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
+window.G = { fw, startState, smudge, brakeLamp, speedProfile, PROFX, DS, get easyPace() { return easyPace; }, set steerOnly(v) { steerOnly = v; }, diag, note, watchHands, phone, pairPhone, closePhone, startReplay, endReplay, TVCAMS, set lastRec(v) { lastRec = v; }, get rT() { return rT; }, applyEnv, setDaily, CONDS, get ENV() { return ENV; }, get daily() { return daily; }, packLap, unpackLap, get rival() { return rival; }, set rival(v) { rival = v; showDare(); }, get mine() { return mine; }, startCheck, hc, get checking() { return checking; }, get ghost() { return ghost; }, set ghost(v) { ghost = v; }, ghostCar, makeCard, shot, progress, selfie, renderSelfie, rearG, camSC, camSW, get gridRev() { return gridRev; }, seg, startSeg, onSeg, paintBackdrop, beep, face, onFace, startFace, drawDriver, snd, car, setEasy, get easy() { return easy; }, hand, onHands, get feel() { return feel; }, toGrid, startPreview, refl, SECTOR_END, get secRows() { return secRows; }, finish, set usedAuto(v) { usedAuto = v; }, get mode() { return mode; }, get board() { return board; }, P, Y, K, tun, city, nearIdx, iTun0, iTun1, iCity0, set portrait(v) { portrait = v; resize(); }, lap, frame, placeOnTrack, CAM, passB, set auto(v) { autopilot = v; }, get auto() { return autopilot; }, N, PROF, TRACK_LEN };
 })();
 
 }
