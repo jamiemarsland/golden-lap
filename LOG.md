@@ -1162,3 +1162,12 @@ James sent two shots from the preview lap, THE TUNNEL and INTO THE CITY, and ask
 - Blur on and off at 280 km/h.
 - The tyre-and-helmet frame held still while the world streams past.
 `G.CAM` is live in the page, so all of these can be captured with the recorder.
+
+### Camera section: shots recorded (28 Nov)
+Everything is in `video/raw/camera/`. Each pair is the same stretch at the same speed on autopilot, with one setting changed.
+- `cmp-height.mp4`: eye at 0.95 m vs 1.70 m. At head height the helmet drops out of frame and the road stops rushing; it turns into a TV camera.
+- `cmp-lens.mp4`: 92° vs 60°, in the tunnel. At 60° the walls and lights slow down, and the tyre and mirror fill the frame.
+- `cmp-blur.mp4`: blur on vs off on the run down to the swoop. The difference shows best in motion, not in a still.
+- Single full-frame clips of each (`h095`, `h170`, `fov92`, `fov60`, `blur-on`, `blur-off`), plus `locked.mp4`, the normal view, for the "frame held still while the world streams past" beat.
+- `golden-clean.png`, `golden-lines.png`, `golden-overlay.png`: the tunnel frame clean, with golden-section lines, and with lines plus a golden spiral. **The finding for the reveal:** the horizon sits right on the upper golden line, and the tunnel's vanishing point lands almost exactly on the top-right golden intersection. The spiral is a looser fit, with its eye up in the wall rather than on the vanishing point, so lead with the lines.
+Recorded from a temporary copy of the game that exposed the blur setting, then deleted. The live game is unchanged.
