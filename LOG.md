@@ -1190,3 +1190,23 @@ Published as an artifact: https://claude.ai/artifact/TUc9omryf1dx8JgmhwJ8Te (sou
 - **Rules:** every explanation plays over full-speed driving, with no more than about 30 s between flat-out shots; the clock stays on screen; each decision gets a numbered marker.
 - **Twelve key decisions**, with times, listed on the page.
 - **Day one checks out against the log:** first frame 17:25 (20 min), online 17:39 (34 min), hands 06:08, 1:00.340 at 13:12, 0:53.513 after the corners were opened (v31, 13:49), challenge links 16:36. All inside 24 hours.
+
+### Storyboard v2: the box of tricks (28 Nov)
+James: "what about the stuff claude did that we have no idea how it did it - like recreating the world, building the tracks... the wire underneath (if this is really how claude did it). I think thats the gold".
+
+All of it is really how it's built (read from index.html), and now filmed in `video/raw/tricks/`:
+- `layers.mp4`: one continuous shot at speed. The whole world in wireframe, then flat colour, then the tape. Golden Hour's "underneath it looks like this", for real.
+- `climb-wire.mp4`, `climb-tape.mp4`: from the cockpit straight up until the whole circuit lies below like a model.
+- The numbers, counted from the running game:
+  - 60 control points.
+  - 4,035 m of road, chopped every 3 m into 1,345 slices.
+  - 161 objects in the world.
+  - 9,903 copies of a handful of shapes. Every tree is one lumpy ball wobbled by a sine wave, copied 3,301 times with a trunk and a bush each, and one in ten is tinted purple like the footage.
+  - The forest behind is one flat dark-green wall, 62 m out and 15 m tall.
+  - The city is one painted art deco window bay, repeated.
+  - The car is 113 simple parts.
+  - 23 textures, all painted in code; not one photograph, the tarmac included.
+  - Puddles are a second camera, upside down under the road.
+- Storyboard now 20 panels, about 8:02, with seven black-box sections. Box 01 is "Underneath, it's wire", box 03 is "Sixty dots make a circuit" (with the climb), and box 04 is new: "The box of tricks".
+- Still to film for the tricks: the car taken apart, the single tree ball, one window tile, and the upside-down puddle camera.
+- Recorded from a temporary copy of the game that exposed the scenes (since deleted). Gotcha for next time: in this version of Three.js, wireframe needs one material per object. A single shared one, or a scene-wide override, stops the renderer.
