@@ -20,15 +20,17 @@ SHOTS = {
  8: [('film', 'lap.mp4', 10, 1), ('raw', 'nose-before.png', 0, 0.8), ('film', 'lap.mp4', 30, 0.6)],
  9: [('tricks', 'climb-wire.mp4', 0, 1), ('tricks', 'climb-tape.mp4', 1, 0.8)],
  10: [('tricks', 'tree-ball.mp4', 0.5, 1), ('tricks', 'forest-grows.mp4', 1.5, 1), ('tricks', 'car-apart-wire.mp4', 1, 1), ('tricks', 'textures-sheet.png', 0, 0.8), ('tricks', 'puddle-compare.png', 0, 0.8)],
- 11: [('film', 'laphud.mp4', 55, 1)], 12: [('film', 'lapdusk.mp4', 58, 1)], 13: [('film', 'laphud.mp4', 6, 1)],
- 14: [('stills', 'helmet-live.png', 0, 1), ('film', 'gridrev.mp4', 1, 1.4)], 15: [('film', 'lapgolden.mp4', 60, 1)],
- 16: [('film', 'newcorners.mp4', 4, 1)], 17: [('stills', 'diagnostics.png', 0, 1)], 18: [('stills', 'helmet-live.png', 0, 1)],
- 19: [('stills', 'start.png', 0, 1)], 20: [('film', 'raintunnel.mp4', 2, 1), ('film', 'swooprain.mp4', 5, 1), ('film', 'laprain.mp4', 40, 1)],
- 21: [('film', 'lapgolden.mp4', 74, 1)], 22: [('film', 'fx.mp4', 3.5, 1), ('top', T, 17.7, 1.2)],
+ 11: [('film', 'laphud.mp4', 55, 1)], 12: [('film', 'lapdusk.mp4', 58, 1)], 13: [('film', 'swooprain.mp4', 4, 1), ('tricks', 'puddle-compare.png', 0, 0.8), ('film', 'raintunnel.mp4', 6, 1)],
+ 14: [('stills', 'start-forecast.png', 0, 1), ('film', 'weather.mp4', 0.5, 1), ('stills', 'finish-board.png', 0, 1)],
+ 15: [('film', 'laphud.mp4', 6, 1)],
+ 16: [('stills', 'helmet-live.png', 0, 1), ('film', 'gridrev.mp4', 1, 1.4)], 17: [('film', 'lapgolden.mp4', 60, 1)],
+ 18: [('film', 'newcorners.mp4', 4, 1)], 19: [('stills', 'diagnostics.png', 0, 1)], 20: [('stills', 'helmet-live.png', 0, 1)],
+ 21: [('stills', 'start.png', 0, 1)], 22: [('top', 'golden-lap-trailer-smudge.mp4', 2, 1), ('raw', 'nose-before.png', 0, 0.7), ('film', 'swoop.mp4', 4.6, 1)],
+ 23: [('film', 'lapgolden.mp4', 74, 1)], 24: [('film', 'fx.mp4', 3.5, 1), ('top', T, 17.7, 1.2)],
 }
 FIXED = {1: 17.7, 3: 6.0}                     # the trailer runs its own length; the title card is short
-TOSHOOT = {4: 'You on camera, the original YouTube Short beside you, pointing at it', 16: 'The steering dying mid-lap: COASTING, the car runs on into the barrier',
-           18: 'Your brother at the laptop, hands up, crashing. Or you telling it to camera', 19: 'Scanning the code; the phone becomes the wheel; driving on the projector'}
+TOSHOOT = {4: 'You on camera, the original YouTube Short beside you, pointing at it', 18: 'The steering dying mid-lap: COASTING, the car runs on into the barrier',
+           20: 'Your brother at the laptop, hands up, crashing. Or you telling it to camera', 21: 'Scanning the code; the phone becomes the wheel; driving on the projector'}
 VOICE, RATE = 'Daniel', 182
 def clean(vo): return re.sub(r'\s+', ' ', re.sub(r'\([^)]*\)', ' ', vo)).strip()
 def hms(s): s = max(0, int(round(s))); return f'{s // 3600:02d}:{s % 3600 // 60:02d}:{s % 60:02d}'
@@ -83,6 +85,14 @@ for n, p in enumerate(P, 1):
     if p.get('beat'):
         overlays.append(f'      <div id="bt{n}" class="clip beat" data-start="{t:.2f}" data-duration="1.6" data-track-index="6"><span id="btw{n}">{p["beat"].upper()}…</span></div>')
         tl.append(f'tl.fromTo("#btw{n}", {{ scale: 1.6, opacity: 0 }}, {{ scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2)" }}, {t:.2f}); tl.to("#btw{n}", {{ opacity: 0, duration: 0.3 }}, {t + 1.25:.2f});')
+    ns = ([p['note']] if p.get('note') else []) + [x for x in p.get('notes', []) if x != p.get('note')]
+    if ns:
+        each = min(6.5, max(2.6, (dur - 0.6) / len(ns))); nt = t + 0.3
+        who = p.get('noteby', "JAMES'S NOTE" if len(ns) == 1 else "JAMES'S NOTES").upper()
+        for k, x in enumerate(ns):
+            overlays.append(f'      <div id="nt{n}_{k}" class="clip note" data-start="{nt:.2f}" data-duration="{each:.2f}" data-track-index="8"><div id="ntc{n}_{k}" class="nc"><b>{e(who)}{f" · {k + 1}/{len(ns)}" if len(ns) > 1 else ""}</b><q>{e(x)}</q></div></div>')
+            tl.append(f'tl.fromTo("#ntc{n}_{k}", {{ y: 30, opacity: 0, rotation: -4 }}, {{ y: 0, opacity: 1, rotation: -1.5, duration: 0.35, ease: "back.out(1.6)" }}, {nt:.2f});')
+            nt += each
     if n in TOSHOOT:
         overlays.append(f'      <div id="ts{n}" class="clip shoot" data-start="{t:.2f}" data-duration="{dur:.2f}" data-track-index="7"><b>TO SHOOT</b>{e(TOSHOOT[n])}</div>')
     t += dur
@@ -107,8 +117,12 @@ open(os.path.join(ROOT, 'animatic', 'index.html'), 'w').write(f'''<!doctype html
       .cap span {{ display: inline-block; font: 600 38px/1.3 Inter, sans-serif; color: #fff; background: rgba(0,0,0,.66); padding: 10px 22px; border-radius: 8px; }}
       .beat {{ position: absolute; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; pointer-events: none; }}
       .beat span {{ display: inline-block; font-family: 'Archivo Black', sans-serif; font-size: 230px; color: #e0412a; transform: skewX(-10deg); text-shadow: 8px 8px 0 #1c110b; }}
-      .shoot {{ position: absolute; left: 50%; top: 150px; transform: translateX(-50%); z-index: 7; width: 1200px; text-align: center; font: 600 30px Inter, sans-serif; color: #fff; background: rgba(160,30,20,.86); padding: 16px 26px; border-radius: 8px; }}
+      .shoot {{ position: absolute; right: 70px; top: 150px; z-index: 7; width: 900px; text-align: center; font: 600 30px Inter, sans-serif; color: #fff; background: rgba(160,30,20,.86); padding: 16px 26px; border-radius: 8px; }}
       .shoot b {{ display: block; font: 700 22px 'JetBrains Mono', monospace; letter-spacing: .3em; margin-bottom: 6px; color: #ffd9a8; }}
+      .note {{ position: absolute; left: 70px; top: 150px; width: 760px; z-index: 9; }}
+      .note .nc {{ background: #f3e2a4; color: #2a1810; padding: 18px 26px 22px; border-radius: 6px; box-shadow: 8px 8px 0 rgba(0,0,0,.45); }}
+      .note b {{ display: block; font: 700 22px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8a3a1c; margin-bottom: 8px; }}
+      .note q {{ display: block; font: italic 400 40px/1.25 'Playfair Display', serif; }}
       .card {{ position: absolute; inset: 0; z-index: 4; background: #1c110b; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; }}
       .card .tl {{ font: 400 54px 'Playfair Display', serif; font-style: italic; color: #f0b53a; }}
       .card .th {{ font: 400 104px 'Archivo Black', sans-serif; color: #f3e6c8; text-shadow: 6px 6px 0 #e2562b, 12px 12px 0 #5e2414; }}

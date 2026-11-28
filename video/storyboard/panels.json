@@ -36,7 +36,7 @@
  },
  {
   "t": "0:46",
-  "d": 30,
+  "d": 40,
   "clock": "24:00:00",
   "k": "story",
   "title": "Tuesday, 17:05: this video",
@@ -44,17 +44,19 @@
   "dec": [
    1
   ],
+  "note": "do you think we could make a browser based racing sim that looked like this?",
   "screen": "James on camera, the original YouTube Short playing on a screen beside him. He points at it as he talks: the helmet, the front tyre, the hands. Keep the Short brief and credit it on screen; it is someone else's footage. Then a cut to the chat with the one line typed. Caption: TUE 24 NOV \u00b7 17:05. The clock starts. TO SHOOT.",
-  "vo": "To explain, we go back to a Tuesday evening, and this. Old Formula One onboard footage. Look where the camera is, on the driver's shoulder. The helmet. That front tyre. Two hands sawing at the wheel. And the picture, soft and washed out, like a tape that's been played too many times. So I asked Claude one question: could we make a racing game in a browser that looks like this? Not in a game engine. One web page.",
+  "vo": "To explain, we go back to a Tuesday evening, and this. Old Formula One onboard footage. Look where the camera is, on the driver's shoulder. The helmet. That front tyre. Two hands sawing at the wheel. And the picture, soft and washed out, like a tape that's been played too many times. So I asked Claude one question: could we make a racing game in a browser that looks like this? Not in a game engine. One web page. And from then on, we had a deal. I'm the art director. Claude is the coder. I never write a line. My job is taste: look at it, and say what's wrong. Its job is to build it. Then we test it, and go again.",
   "snd": "Music under; engine bed low."
  },
  {
-  "t": "1:16",
+  "t": "1:26",
   "d": 35,
   "clock": "23:40:00",
   "k": "box",
   "box": "01",
   "title": "Underneath, it's wire",
+  "note": "We still don't have that film quality that's in the video. How do we get that?",
   "im": "wire",
   "dec": [
    2
@@ -64,7 +66,7 @@
   "snd": "Engine low under the wire, full the moment the tape goes on."
  },
  {
-  "t": "1:51",
+  "t": "2:01",
   "d": 8,
   "clock": null,
   "k": "action",
@@ -75,7 +77,7 @@
   "snd": "Engine at full volume, tunnel echo."
  },
  {
-  "t": "1:59",
+  "t": "2:09",
   "d": 45,
   "clock": null,
   "k": "box",
@@ -90,33 +92,35 @@
   "snd": "Each comparison plays with its own engine sound."
  },
  {
-  "t": "2:44",
+  "t": "2:54",
   "d": 22,
   "clock": "23:32:00",
   "k": "story",
   "title": "Looking: not quite",
+  "note": "The helmet is perfect :)",
   "im": "nosebefore",
   "screen": "Rapid \"before\" stills, each struck out in red marker: wheel hovering in the barrier, a black slab for a shadow, no tyre marks. Then the helmet, circled: PERFECT. DO NOT TOUCH.",
   "vo": "Then I started looking. That's the whole job, really. You look, and say what's wrong. The wheel hovered in the barrier. The shadow was a black slab. One thing at a time, it fixed them. The one thing I never asked it to change, was the helmet.",
   "snd": "Music, engine low."
  },
  {
-  "t": "3:06",
+  "t": "3:16",
   "d": 30,
   "clock": "23:25:00",
   "k": "box",
   "box": "03",
   "title": "Sixty dots make a circuit",
+  "note": "can we take the best bits from the best grand prixs, e.g. the swooping bit at Spa, the Monza fast corner, the tunnel and Monte Carlo?",
   "im": "aerialwire",
   "dec": [
    4
   ],
   "screen": "The climb (raw/tricks/climb-wire.mp4, climb-tape.mp4): from the cockpit, straight up, until the whole lap lies below like a model. Then the sixty control points light up one by one, the curve threads through them, and each famous corner flashes its caption.",
-  "vo": "Here's the whole thing from above. And it's made from sixty dots. Claude placed them, a swoop like Spa, a long right like Monza, the tunnel from Monaco, then drew one smooth curve through every dot, and chopped it into slices every three metres. One thousand, three hundred and forty-five slices. Six metres of tarmac each side, a kerb wherever the curve gets tight. Four kilometres of road, from sixty dots.",
+  "vo": "Here's the whole thing from above. The idea was mine: the best bits of the best circuits, in one lap. Claude made it from sixty dots. It placed them, a swoop like Spa, a long right like Monza, the tunnel from Monaco, then drew one smooth curve through every dot, and chopped it into slices every three metres. One thousand, three hundred and forty-five slices. Six metres of tarmac each side, a kerb wherever the curve gets tight. Four kilometres of road, from sixty dots.",
   "snd": "Wind as the camera climbs; the engine falls away below."
  },
  {
-  "t": "3:36",
+  "t": "3:46",
   "d": 28,
   "clock": "23:24:00",
   "k": "box",
@@ -128,26 +132,28 @@
   "snd": "A tick on each trick; engine up between."
  },
  {
-  "t": "4:04",
+  "t": "4:14",
   "d": 20,
   "clock": "23:20:00",
   "k": "story",
   "title": "Online in 34 minutes",
+  "note": "I want there to be a leaderboard. The lap time should be about 1 min. It will be a 1 lap challenge, maybe call it the golden lap.",
   "im": "hud",
   "dec": [
    5
   ],
   "screen": "Caption 17:39: LIVE. The public address appears. First lap posted: 1:44.066 \u00b7 JAMIE M. The computer's lap beside it: 1:10.8.",
-  "vo": "Thirty-four minutes in, it was online, with a leaderboard for the whole world, published by Spacefast. So I had a go. One minute forty-four. The computer, which never misses a braking point, did one minute ten.",
+  "vo": "My next note: one lap, about a minute, a leaderboard, and call it the Golden Lap. Thirty-four minutes in, it was online, with a leaderboard for the whole world, published by Spacefast. So I had a go. One minute forty-four. The computer, which never misses a braking point, did one minute ten.",
   "snd": "A flat little thud on 1:44."
  },
  {
-  "t": "4:24",
+  "t": "4:34",
   "d": 30,
   "clock": "22:20:00",
   "k": "box",
   "box": "05",
   "title": "The sound is the speed",
+  "note": "the sound is incredibly important",
   "im": "dusk",
   "dec": [
    6
@@ -157,7 +163,49 @@
   "snd": "Engine up 6 dB, then dead silence."
  },
  {
-  "t": "4:54",
+  "t": "5:04",
+  "d": 34,
+  "clock": "18:00:00",
+  "k": "story",
+  "title": "Rain, by taste",
+  "im": "swooprain",
+  "dec": [
+   10
+  ],
+  "note": "the rain is bad. check out how we did weather on our zwift golden hour ride, that rain was perfect",
+  "notes": [
+   "the rain is bad",
+   "those puddles arent very good tbh",
+   "honestly they dont look like puddles, there's no reflection at all?",
+   "still too many puddles",
+   "when its raining and im in the tunnel it looks like its not raining"
+  ],
+  "screen": "A chain of note cards, each struck through as the fix lands, each over its before and after: flat rain lines, then rain borrowed from the cycling game; flat puddles, then the upside-down camera (raw/tricks/puddle-compare); too many puddles, then half as many; dry the moment you leave the tunnel, then rain that keeps falling outside it.",
+  "vo": "Then weather. My first note on the rain: it's bad. Look at how we did it in my cycling game. So Claude went and read it, and borrowed it. Then puddles. Not very good. Honestly, they don't look like puddles, there's no reflection. So it put a second camera upside down under the road. Still too many puddles. Half as many. And in the tunnel, it looked like it had stopped raining outside. Fixed. Five notes, five builds, five tests. None of that is code. It's taste.",
+  "snd": "Rain bed; a pencil scratch as each note is struck through."
+ },
+ {
+  "t": "5:38",
+  "d": 26,
+  "clock": "15:00:00",
+  "k": "story",
+  "title": "A different sky every day",
+  "im": "start-forecast",
+  "dec": [
+   13
+  ],
+  "note": "i wonder if the leaderboard should start anew every day? ... or maybe an all time leaderboard, and a daily leaderboard?",
+  "notes": [
+   "might be nice to show the actual date and the forecast?",
+   "we dont need to say dusk, just the weather",
+   "golden should say sunny"
+  ],
+  "screen": "The start screen with its seven-day forecast (stills/start-forecast). Then the finish panel: the forecast on top, today's board underneath (stills/finish-board). The weather grid cycles behind: sunny, rain, fog, clear, rainy dusk.",
+  "vo": "Then I wondered, should the leaderboard start again every day? So now there's today's lap. The same circuit, under a different sky every day, the same for everyone in the world, with its own board. And because the weather is worked out from the date, the game knows what's coming. So I asked for a forecast, like the telly. Then I trimmed it, because it said dusk. Nobody says dusk. Just the weather.",
+  "snd": "Music lifts; engine low."
+ },
+ {
+  "t": "6:04",
   "d": 24,
   "clock": "12:00:00",
   "k": "loop",
@@ -169,27 +217,28 @@
    7
   ],
   "screen": "The clock flashes red at 12:00:00. Over a twitchy keyboard lap: the first time on the board, 1:44.066. Four attempts at the steering, struck out one by one in red marker.",
-  "vo": "Twelve hours gone. It looks incredible. It sounds incredible. But nobody can drive it. On a keyboard the car twitches like it's scared of the road. Four goes at fixing the steering, and it still feels wrong. A racing game you can't drive is a screensaver.",
+  "vo": "Twelve hours gone. It looks incredible. It sounds incredible. But nobody can drive it. On a keyboard the car twitches like it's scared of the road. Four goes at fixing the steering, and it still feels wrong. A racing game you can't drive is a screensaver. My notes had made it beautiful. They couldn't make it drivable.",
   "snd": "Music drops to a ticking pulse that stays until loop 2 closes."
  },
  {
-  "t": "5:18",
+  "t": "6:28",
   "d": 25,
   "clock": "10:40:00",
   "k": "box",
   "box": "06",
   "beat": "So",
   "title": "So I raced with my bare hands",
+  "note": "I've seen some music apps where folks control sound by their hands, I kinda feel like something like this would be amazing, so I didn't have to click little keys on my keyboard",
   "im": "helmet-live",
   "dec": [
    8
   ],
   "screen": "The camera view: knuckles found, a yellow line between them, its tilt becoming the wheel angle. Fists close: the brake lamp lights. The player dressed as the driver, in the helmet. Clock ticking in the corner.",
-  "vo": "So, with half the day left, I gambled on a slightly silly idea. What if I just held my hands up, like a wheel? The camera finds my two hands. The tilt of the line between them is the steering. Squeeze, and it brakes. And because it can see me, it puts me in the helmet. If this didn't work, I'd just thrown away hours I didn't have.",
+  "vo": "So, with half the day left, I gambled on a slightly silly idea of mine. What if I just held my hands up, like a wheel? The camera finds my two hands. The tilt of the line between them is the steering. Squeeze, and it brakes. And because it can see me, it puts me in the helmet. If this didn't work, I'd just thrown away hours I didn't have.",
   "snd": "Ticking under; engine revving on the grid with the hands."
  },
  {
-  "t": "5:43",
+  "t": "6:53",
   "d": 16,
   "clock": "08:20:00",
   "k": "action",
@@ -201,7 +250,7 @@
   "snd": "Ticking fades low; engine and music up."
  },
  {
-  "t": "5:59",
+  "t": "7:09",
   "d": 12,
   "clock": "05:00:00",
   "k": "loop",
@@ -214,7 +263,7 @@
   "snd": "Engine, then a dull thud. Silence."
  },
  {
-  "t": "6:11",
+  "t": "7:21",
   "d": 28,
   "clock": "04:20:00",
   "k": "box",
@@ -228,12 +277,14 @@
   "snd": "Ticking returns."
  },
  {
-  "t": "6:39",
+  "t": "7:49",
   "d": 26,
   "clock": "03:00:00",
   "k": "story",
   "beat": "But",
   "title": "But then my brother tried it",
+  "noteby": "My brother's notes",
+  "note": "too abrupt. too sensitive. could you squeeze fists to brake, like you would naturally?",
   "im": "helmet-live",
   "dec": [
    8,
@@ -244,13 +295,14 @@
   "snd": "Engine stuttering and crashing; ticking loud."
  },
  {
-  "t": "7:05",
+  "t": "8:15",
   "d": 24,
   "clock": "01:40:00",
   "k": "loop",
   "loop": "close2",
   "beat": "So",
   "title": "So your phone is the wheel",
+  "note": "im playing through my projector, and my laptop is not close to me. can i play again without walking to the laptop?",
   "im": "start",
   "dec": [
    11
@@ -260,23 +312,27 @@
   "snd": "Ticking stops dead on the first tilt."
  },
  {
-  "t": "7:29",
-  "d": 22,
+  "t": "8:39",
+  "d": 26,
   "clock": "00:50:00",
   "k": "action",
   "beat": "And",
-  "title": "And the last fifty minutes",
-  "im": "swooprain",
+  "title": "And the last fifty minutes: final notes",
+  "im": "golden",
   "dec": [
-   10,
    12
   ],
-  "screen": "The clock spins down from 00:50:00 at speed, red. Full-speed montage, one thing per cut: rain borrowed from the cycling game, puddles that reflect, the front wheels kept on the road at Eau Rouge, the sponsor banner cut because nobody can read it at 280.",
-  "vo": "Fifty minutes left, and I couldn't stop. Rain, borrowed from my cycling game. Puddles. And a sponsor banner, which I cut, because at two hundred and eighty, nobody can read it.",
+  "notes": [
+   "those smudges are great, lets add to the game",
+   "on eau rouge the front left tyre kinda looks like its floating in mid air",
+   "we cant really read it, so im minded to remove it"
+  ],
+  "screen": "The clock spins down from 00:50:00, red. Three last note cards over full-speed footage, each answered: lens smudges in the game; the front tyre pinned to the road at Eau Rouge (before and after); the Spacefast banner going by as a blur, then gone.",
+  "vo": "Fifty minutes left, and the notes kept coming. Those smudges on the lens in the trailer? Put them in the game. At Eau Rouge, the front tyre looks like it's floating. Pin it to the road. And a sponsor banner, which I cut, because at two hundred and eighty, nobody can read it.",
   "snd": "Engine and music together, the loudest moment, with the ticking on top."
  },
  {
-  "t": "7:51",
+  "t": "9:05",
   "d": 24,
   "clock": "00:00:00",
   "k": "loop",
@@ -288,14 +344,14 @@
   "snd": "Music resolves; a beat of silence after \"judge that\"."
  },
  {
-  "t": "8:15",
+  "t": "9:29",
   "d": 25,
   "clock": null,
   "k": "hook",
   "title": "Payoff: back to the tape",
   "im": "endcard",
   "screen": "The opening frame again. Filter off, then on. End card from the trailer, with the Claude and Spacefast logos and the address.",
-  "vo": "None of it needed me to write code. It needed an eye, the patience to keep saying not quite, and a brother willing to crash a lot. The link's below. My time's on the board. Come and beat it.",
+  "vo": "None of it needed me to write code. My job was taste. Claude's was code. It needed an eye, the patience to keep saying not quite, and a brother willing to crash a lot. The link's below. My time's on the board. Come and beat it.",
   "snd": "Engine fades into the distance."
  }
 ]

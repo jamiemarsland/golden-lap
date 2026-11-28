@@ -34,7 +34,7 @@ h2 { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spac
 /* rules */
 .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
 .rule { border-top: 3px solid var(--orange); padding-top: 12px; }
-.rule:nth-child(2) { border-color: var(--mustard); } .rule:nth-child(3) { border-color: var(--teal); } .rule:nth-child(4) { border-color: var(--marker); } .rule:nth-child(5) { border-color: var(--fg); }
+.rule:nth-child(1) { border-color: #f3e2a4; } .rule:nth-child(2) { border-color: var(--orange); } .rule:nth-child(3) { border-color: var(--mustard); } .rule:nth-child(4) { border-color: var(--teal); } .rule:nth-child(5) { border-color: var(--marker); } .rule:nth-child(6) { border-color: var(--fg); }
 .rule b { display: block; font-size: 16px; margin-bottom: 4px; }
 .rule p { margin: 0; color: var(--mute); font-size: 14px; }
 /* panels */
@@ -74,6 +74,13 @@ dt { font: 700 11px/1.9 var(--mono); letter-spacing: .1em; text-transform: upper
 dd { margin: 0; font-size: 14px; }
 dd.vo { font-style: italic; color: var(--fg); border-left: 2px solid var(--orange); padding-left: 10px; }
 @media (max-width: 460px) { dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } dd { margin-bottom: 8px; } }
+/* James's notes: the art director's words, as cards */
+.notes { background: #f3e2a4; color: #2a1810; border-radius: 4px; padding: 10px 14px 12px; transform: rotate(-.6deg); box-shadow: 3px 3px 0 rgba(0,0,0,.35); display: flex; flex-direction: column; gap: 6px; }
+.notes .nl { font: 700 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #8a3a1c; }
+.notes q { font-family: var(--hand); font-size: 17px; line-height: 1.3; quotes: "\201C" "\201D"; }
+.notes q + q { border-top: 1px dashed rgba(42,24,16,.3); padding-top: 6px; }
+.who { font-weight: 700; padding: 1px 6px; border-radius: 3px; }
+.w-james { background: var(--mustard); color: #1c110b; } .w-claude { background: #d97757; color: #1c110b; } .w-both { background: var(--fg); color: #1c110b; } .w-tester { background: var(--teal); color: #08201f; }
 /* decisions */
 .decs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 28px; }
 .decs li { display: flex; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); scroll-margin-top: 20px; }
@@ -95,7 +102,7 @@ a { color: var(--mustard); }
   <h1>Can I build a pro F1 game <span class="scrawl">in one day?</span></h1>
   <div class="stripes"><i style="background:#5e2414"></i><i style="background:#e2562b"></i><i style="background:#f0b53a"></i><i style="background:#f3e6c8"></i><i style="background:#2f9b96"></i></div>
   <div class="meta"><span>Runtime <b>{{RUNTIME}}</b></span><span>Panels <b>{{NPANELS}}</b></span><span>Black-box sections <b>{{NBOX}}</b></span><span>Key decisions <b>12</b></span><span>Clock <b>24 hours of work</b></span></div>
-  <p class="lede">The story is the clock, and the clock is the enemy. It opens on the trailer, asks the one-day question with 24 hours on screen, and answers it when the clock runs out. The whole build really did take less than a day of work, over a few evenings, so the film tells it as one day. From halfway it runs as a chain of buts and sos: it looks incredible, but nobody can drive it. So I raced with my bare hands, and it worked, but then it broke. So Claude built a black box, but then my brother tried it, and it was horrible to watch. So your phone became the wheel. In between, seven times, we open the lid and show how Claude actually made it: the wire underneath, a circuit from sixty dots, a forest from one lumpy ball. That's the gold, the way it was in the Golden Hour Ride film.</p>
+  <p class="lede">Two of us made it: me as art director, Claude as coder. I never wrote a line; I looked, and said what was wrong, in notes you will see on screen in my own words. The story is the clock, and the clock is the enemy. It opens on the trailer, asks the one-day question with 24 hours on screen, and answers it when the clock runs out. The whole build really did take less than a day of work, over a few evenings, so the film tells it as one day. From halfway it runs as a chain of buts and sos: it looks incredible, but nobody can drive it. So I raced with my bare hands, and it worked, but then it broke. So Claude built a black box, but then my brother tried it, and it was horrible to watch. So your phone became the wheel. In between, seven times, we open the lid and show how Claude actually made it: the wire underneath, a circuit from sixty dots, a forest from one lumpy ball. That's the gold, the way it was in the Golden Hour Ride film.</p>
 </header>
 
 <section>
@@ -110,6 +117,7 @@ a { color: var(--mustard); }
 <section>
   <h2>Rules for the edit</h2>
   <div class="rules">
+    <div class="rule"><b>Note, build, test</b><p>I'm the art director, Claude is the coder. Every feature is my note in my own words on a card, Claude's build, then a test, and usually another note. It is taste, learnt by building and trying, wrapped in the one-day clock.</p></div>
     <div class="rule"><b>Lean into the action</b><p>Every explanation plays over driving at full speed, never over a static slide. No more than about 30 seconds without a shot flat out with the engine up.</p></div>
     <div class="rule"><b>The clock never leaves</b><p>A 24-hour countdown sits top right from panel 2 until it hits zero. It goes red and ticks at the danger points: 12 hours left and nobody can drive it, 5 hours left and it breaks, 3 hours left and my brother can't drive it, the last fifty minutes. The ticking is the soundtrack of the jeopardy.</p></div>
     <div class="rule"><b>Open the black box</b><p>Seven short sections show how it works inside, each in plain steps with real numbers. Same graphic each time: the frame drops into a box and the lid lifts.</p></div>
@@ -128,7 +136,7 @@ a { color: var(--mustard); }
 
 <section>
   <h2>Key decisions</h2>
-  <p class="sub">The choices that made it work, with when they happened. Each one appears in the film where it is made.</p>
+  <p class="sub">The choices that made it work, when they happened, and whose call each was: mine as art director, Claude's as coder, or the beta tester's.</p>
   <ol class="decs">{{DECS}}</ol>
 </section>
 

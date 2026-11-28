@@ -1257,3 +1257,27 @@ James: "can you cut the rough animatic".
 - **Footage:** everything that exists is cut in, including the trailer as the hook, wire to tape, the camera comparisons, the climb, and the box of tricks.
 - **Sound:** footage drops under the voice and goes full volume where there is no voice. Loudness is normalised to -16 LUFS.
 - Check: 0 errors. The remaining warnings are a few captions that follow the guide voice too quickly, which is fine for a rough cut.
+
+### Storyboard v5 and animatic v2: me as art director (28 Nov)
+James: "its missing the story of me as art director - coming up with the style, coming up with the idea of using the best bits of f1 circuits... my role was as art director, claudes was coder... weather, the forecast, the leaderboard, the steering mechanisms, and each one was kinda problem, solution, we learnt by building and then testing. it was taste. But all wrapped in the 1 day story."
+
+- **The deal is said out loud in the setup:** "I'm the art director. Claude is the coder. I never write a line. My job is taste... Its job is to build it. Then we test it, and go again."
+- **James's notes on screen, in his own words.** Yellow note cards, quoted from this log, at the moment each feature starts:
+  - the first question
+  - "we still don't have that film quality"
+  - "the helmet is perfect"
+  - the best bits of the best grands prix
+  - one lap, a leaderboard, "call it the golden lap"
+  - "the sound is incredibly important"
+  - the hands idea from music apps
+  - the projector note that led to GO AGAIN on the phone
+  - the final three: smudges, the floating tyre, the unreadable banner
+
+  The brother's notes are credited to him.
+- **Two new taste panels in the first half:**
+  - **"Rain, by taste":** five notes, five builds, five tests. Bad rain, then the cycling game's rain. Flat puddles, "no reflection", the upside-down camera. "Still too many puddles". Raining in the tunnel.
+  - **"A different sky every day":** "should the leaderboard start anew every day?", today's lap with its own board, a forecast "like the telly", then trimmed because "nobody says dusk".
+- **The shape:** the first half (24h to 12h) is the art director making it beautiful and a game. The midpoint now says "My notes had made it beautiful. They couldn't make it drivable." The second half is the steering chain.
+- **Each decision is credited** to James, Claude, both, or the tester. Of 13 decisions, 9 were James's calls.
+- New stills: the start screen with its forecast, and the finish panel with forecast and board (`video/storyboard/stills/`).
+- Storyboard: 24 panels. Animatic: 8:20 with the guide voice.
