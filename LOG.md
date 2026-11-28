@@ -1171,3 +1171,8 @@ Everything is in `video/raw/camera/`. Each pair is the same stretch at the same 
 - Single full-frame clips of each (`h095`, `h170`, `fov92`, `fov60`, `blur-on`, `blur-off`), plus `locked.mp4`, the normal view, for the "frame held still while the world streams past" beat.
 - `golden-clean.png`, `golden-lines.png`, `golden-overlay.png`: the tunnel frame clean, with golden-section lines, and with lines plus a golden spiral. **The finding for the reveal:** the horizon sits right on the upper golden line, and the tunnel's vanishing point lands almost exactly on the top-right golden intersection. The spiral is a looser fit, with its eye up in the wall rather than on the vanishing point, so lead with the lines.
 Recorded from a temporary copy of the game that exposed the blur setting, then deleted. The live game is unchanged.
+
+## Spacefast banner: dropped (28 Nov)
+James: "not sure about the banner idea - we cant really read it, so at this point im minded to remove it". It never went live. The mockup page (`index-mock.html`) and the recorder's mockup switch are gone, and so is the backup of the pre-banner clips (old takes, from before the Eau Rouge fix). The footbridge on the climb stays plain blue.
+
+Kept as film material, as a small "idea that didn't make it" beat: the mockups in `video/raw/spacefast/`, and `golden-lap-trailer-soon-spacefast.mp4`, where the bridge goes by as a blur in about a second. That blur is the reason it was cut: at 280 km/h on tape, a sponsor board can't be read.
