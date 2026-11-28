@@ -1231,3 +1231,19 @@ All of it is really how it's built (read from index.html), and now filmed in `vi
 - **00:00: the clock runs out.** Loop 1 closes.
 
 20 panels, about 8:00.
+
+### Storyboard v4: but, so, but, so (28 Nov)
+James: "do we have the whole - i could race with my hands - so clever, but kinda unusable - i got my brother to beta test the idea, and it was kinda horrible to watch it fail. These feels like a good beat. We are kinda following the idea of story, of but the, but then this happened, but then this happened."
+
+The second half is now a chain where each fix causes the next problem. The beat word is marked in red on each panel:
+- **But** nobody can drive it (12:00 left; keyboard, 1:44).
+- **So** I raced with my bare hands (10:40).
+- **And** it drives: 1:00.340, "so clever, for about an hour" (08:20).
+- **But** then it breaks: the steering dies (05:00).
+- **So** Claude built a black box: a hand with no fingers (04:20).
+- **But** then my brother tried it (03:00). His three notes were the first user test in the log: "too abrupt", "too sensitive", and "can I squeeze to brake?". So we built squeeze to brake, calmer steering and Beginner mode. Better, but still not usable by most people.
+- **So** your phone is the wheel (01:40). Loop 2, "can anyone drive it?", closes here.
+- **And** the last fifty minutes: rain, puddles, Eau Rouge, the banner cut.
+- The clock runs out, then the payoff: "...and a brother willing to crash a lot."
+
+22 panels, about 8:40. To shoot: the brother's test (or James telling it on camera), and the phone wheel being scanned and driven on the projector.

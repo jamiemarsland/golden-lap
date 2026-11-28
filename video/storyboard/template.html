@@ -34,7 +34,7 @@ h2 { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spac
 /* rules */
 .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
 .rule { border-top: 3px solid var(--orange); padding-top: 12px; }
-.rule:nth-child(2) { border-color: var(--mustard); } .rule:nth-child(3) { border-color: var(--teal); } .rule:nth-child(4) { border-color: var(--fg); }
+.rule:nth-child(2) { border-color: var(--mustard); } .rule:nth-child(3) { border-color: var(--teal); } .rule:nth-child(4) { border-color: var(--marker); } .rule:nth-child(5) { border-color: var(--fg); }
 .rule b { display: block; font-size: 16px; margin-bottom: 4px; }
 .rule p { margin: 0; color: var(--mute); font-size: 14px; }
 /* panels */
@@ -68,6 +68,7 @@ h2 { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spac
 .chip.dc:hover, .chip.dc:focus-visible { color: var(--fg); border-color: var(--fg); outline: none; }
 h3 { margin: 0; font-size: 19px; line-height: 1.25; text-wrap: balance; }
 h3 .n { font: 700 13px var(--mono); color: var(--mute); margin-right: 10px; }
+h3 .beat { font-family: var(--hand); font-weight: 400; color: var(--marker); font-size: 1.1em; }
 dl { margin: 0; display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 8px 12px; }
 dt { font: 700 11px/1.9 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
 dd { margin: 0; font-size: 14px; }
@@ -94,7 +95,7 @@ a { color: var(--mustard); }
   <h1>Can I build a pro F1 game <span class="scrawl">in one day?</span></h1>
   <div class="stripes"><i style="background:#5e2414"></i><i style="background:#e2562b"></i><i style="background:#f0b53a"></i><i style="background:#f3e6c8"></i><i style="background:#2f9b96"></i></div>
   <div class="meta"><span>Runtime <b>{{RUNTIME}}</b></span><span>Panels <b>{{NPANELS}}</b></span><span>Black-box sections <b>{{NBOX}}</b></span><span>Key decisions <b>12</b></span><span>Clock <b>24 hours of work</b></span></div>
-  <p class="lede">The story is the clock, and the clock is the enemy. It opens on the trailer, asks the one-day question with 24 hours on screen, and answers it when the clock runs out. The whole build really did take less than a day of work, over a few evenings, so the film tells it as one day. At halfway, the jeopardy arrives: it looks incredible and nobody can drive it. Then, with four hours left, it breaks. In between, seven times, we open the lid and show how Claude actually made it: the wire underneath, a circuit from sixty dots, a forest from one lumpy ball. That's the gold, the way it was in the Golden Hour Ride film.</p>
+  <p class="lede">The story is the clock, and the clock is the enemy. It opens on the trailer, asks the one-day question with 24 hours on screen, and answers it when the clock runs out. The whole build really did take less than a day of work, over a few evenings, so the film tells it as one day. From halfway it runs as a chain of buts and sos: it looks incredible, but nobody can drive it. So I raced with my bare hands, and it worked, but then it broke. So Claude built a black box, but then my brother tried it, and it was horrible to watch. So your phone became the wheel. In between, seven times, we open the lid and show how Claude actually made it: the wire underneath, a circuit from sixty dots, a forest from one lumpy ball. That's the gold, the way it was in the Golden Hour Ride film.</p>
 </header>
 
 <section>
@@ -110,8 +111,9 @@ a { color: var(--mustard); }
   <h2>Rules for the edit</h2>
   <div class="rules">
     <div class="rule"><b>Lean into the action</b><p>Every explanation plays over driving at full speed, never over a static slide. No more than about 30 seconds without a shot flat out with the engine up.</p></div>
-    <div class="rule"><b>The clock never leaves</b><p>A 24-hour countdown sits top right from panel 2 until it hits zero. It goes red and ticks at the danger points: 12 hours left and nobody can drive it, 4 hours left and it breaks, the last two hours. The ticking is the soundtrack of the jeopardy.</p></div>
+    <div class="rule"><b>The clock never leaves</b><p>A 24-hour countdown sits top right from panel 2 until it hits zero. It goes red and ticks at the danger points: 12 hours left and nobody can drive it, 5 hours left and it breaks, 3 hours left and my brother can't drive it, the last fifty minutes. The ticking is the soundtrack of the jeopardy.</p></div>
     <div class="rule"><b>Open the black box</b><p>Seven short sections show how it works inside, each in plain steps with real numbers. Same graphic each time: the frame drops into a box and the lid lifts.</p></div>
+    <div class="rule"><b>But, so, but, so</b><p>Every beat in the second half starts with "but" or "so", never "and then". Each fix causes the next problem. The beat word is marked on each panel in red.</p></div>
     <div class="rule"><b>Name the decisions</b><p>Each key decision gets a numbered marker on screen the moment it is made, so the viewer sees the choices, not just the result.</p></div>
   </div>
 </section>
@@ -135,7 +137,9 @@ a { color: var(--mustard); }
   <ul class="shots">
     <li><em>You on camera</em> with the original YouTube Short on a screen beside you, pointing at the helmet, tyre and hands (panel 4). Keep the Short brief and credit it.</li>
     <li><em>The chat</em>, the first question typed, as a screen recording (panel 4).</li>
-    <li><em>Your hands</em> steering on the webcam, with the game beside you (panel 13).</li>
+    <li><em>Your hands</em> steering on the webcam, with the game beside you (panel 14).</li>
+    <li><em>Your brother's test</em>: any footage of him crashing with his hands. If there is none, you on camera telling it (panel 18).</li>
+    <li><em>The phone wheel</em>: scanning the code, tilting, the car turning on the projector behind you (panel 19).</li>
     <li><em>Title card</em>: the Golden Hour banner with the Claude and Spacefast logos (panel 3).</li>
     <li><em>The black-box graphic</em>: frame drops into a box, lid lifts. Used seven times.</li>
     <li><em>Red-marker overlays</em> for the headline and the "not quite" strikes, in the thumbnail style.</li>
