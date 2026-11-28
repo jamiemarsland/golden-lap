@@ -1247,3 +1247,13 @@ The second half is now a chain where each fix causes the next problem. The beat 
 - The clock runs out, then the payoff: "...and a brother willing to crash a lot."
 
 22 panels, about 8:40. To shoot: the brother's test (or James telling it on camera), and the phone wheel being scanned and driven on the projector.
+
+### Rough animatic (28 Nov)
+James: "can you cut the rough animatic".
+
+`golden-lap-animatic.mp4`, 6:52, built as a HyperFrames project (`video/animatic/`) by `video/build_animatic.py`, straight from the storyboard's panel data (`video/storyboard/panels.json`). Change the storyboard, run both builders, and the animatic follows.
+- **Guide voice:** the Mac's Daniel reads each panel's draft line, so the timing is roughly real. A panel is as long as its line plus a breath, so the plan of about 8:40 tightened to 6:52. James's own takes replace these, as in the first cut.
+- **On screen:** each panel's number, title and kind; the 24-hour clock, ticking down from one danger point to the next; the BUT / SO beat words slammed up; the voice lines as captions; red TO SHOOT slates over the four shots still to film (James with the Short, the steering dying, the brother's test, the phone wheel).
+- **Footage:** everything that exists is cut in, including the trailer as the hook, wire to tape, the camera comparisons, the climb, and the box of tricks.
+- **Sound:** footage drops under the voice and goes full volume where there is no voice. Loudness is normalised to -16 LUFS.
+- Check: 0 errors. The remaining warnings are a few captions that follow the guide voice too quickly, which is fine for a rough cut.
