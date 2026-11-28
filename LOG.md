@@ -1210,3 +1210,24 @@ All of it is really how it's built (read from index.html), and now filmed in `vi
 - Storyboard now 20 panels, about 8:02, with seven black-box sections. Box 01 is "Underneath, it's wire", box 03 is "Sixty dots make a circuit" (with the climb), and box 04 is new: "The box of tricks".
 - Still to film for the tricks: the car taken apart, the single tree ball, one window tile, and the upside-down puddle camera.
 - Recorded from a temporary copy of the game that exposed the scenes (since deleted). Gotcha for next time: in this version of Three.js, wireframe needs one material per object. A single shared one, or a scene-wide override, stops the renderer.
+
+### Box of tricks filmed, and storyboard v3: the clock is the enemy (28 Nov)
+**Filmed** (`video/raw/tricks/`), from a temporary copy of the game that exposed the scenes (since deleted):
+- `car-apart.mp4`, `car-apart-wire.mp4`: the car flies apart into its 113 pieces and back together, solid on a grey stage, then in wire on black.
+- `tree-ball.mp4`: the game's one tree shape, turning, wire then lit.
+- `forest-grows.mp4`: the real forest filling in around the stopped car, from 1 copy to 3,301.
+- `textures-sheet.png` (and `textures/`): all 21 textures, saved straight from the game. Every one is painted in code: grass, kerbs, armco, the tarmac, the art deco window, the pit building, the grandstand crowd (coloured confetti), the helmet stripes, the dials.
+- `puddle-camera.mp4`, `puddle-compare.png`: what the second, upside-down camera under the road sees in the rain, beside the road it is reflected in.
+- Gotchas: setting the fog to null stops the game's loop, so set its density to zero instead; a black car on a black stage disappears, hence the grey stage; once the countdown ends the car drives off, so pin it in place for staged shots.
+
+**James's notes on the story:** "this isnt very interesting to folks i think - ...can I beat the computer's lap with my bare hands"; "i think we could lean into time jeopardy more"; "like the can i build in 1 day idea (even though we didnt). thats a good story - cuz we spent less than a day on the whole thing in actual time, but we present as one day to make it more interesting".
+
+**Storyboard v3** (same link). The bet is gone. The 24-hour clock is the story, counting down the whole build as one day of work. A small caption at the end says plainly that it was 24 hours of work over a few evenings. The danger points:
+- **12:00 left: "Halfway, and nobody can drive it".** Loop 2 opens: a racing game you can't drive is a screensaver. The ticking starts.
+- **10:40: the hands gamble.** "If this didn't work, I'd just thrown away hours I didn't have."
+- **08:20: "It drives".** Loop 2 closes and the ticking stops.
+- **04:00: "Four hours left, and it breaks".** Loop 3 opens, and the black box closes it at 03:10.
+- **02:00: "The last two hours".** The montage, with the clock spinning down.
+- **00:00: the clock runs out.** Loop 1 closes.
+
+20 panels, about 8:00.
