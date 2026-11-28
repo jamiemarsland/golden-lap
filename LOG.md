@@ -4,6 +4,8 @@ A running record for the video. Newest entries at the bottom. Times are local.
 
 > **The film's angle (James, 27 Nov):** lean into one question: *can I build a world-class F1 game in just one day?* The title and thumbnail should promise that, the way "129 hours to design a menu" (Enrico Tartarotti, with the Linear team) does: a huge bold headline, the object held up to camera, rough red hand-drawn arrows and circles over the top. The clock is the story, so every entry here has a time on it. To decide when cutting: which day counts as "the one day"? The first entry is 24 Nov 17:05 and the work has carried on since, so either the film covers the first day honestly and treats the rest as polish, or it is "one day of building" counted in hours.
 
+> **Film section to include: "Why this camera angle looks so fast" (James, 28 Nov: "it should defo be a section").** See the 28 Nov entry at the bottom for the full breakdown.
+
 ## 2026-11-24
 
 ### 17:05 — The question
@@ -1131,3 +1133,32 @@ James: "on eu rouge the front left tyre kinda looks like its floating in mid air
 
 ## Trailers re-shot with v86 (28 Nov)
 All six laps were re-recorded from the live game, so the front wheels stay planted through Eau Rouge. Then the dry, rain, coming-soon and smudge trailers were rendered again. The live game has no Spacefast banner yet, so neither do these trailers: the bridge on the climb is still plain blue. The banner version, `golden-lap-trailer-soon-spacefast.mp4`, is the old take, from before the fix.
+
+## Film section: why this camera angle looks so fast (28 Nov)
+James sent two shots from the preview lap, THE TUNNEL and INTO THE CITY, and asked: "is there any science behind why this angle is so good - is it using the golden ratio or anything like that? and why is it so great and showing speed". Then: "please log this for the youtube video - it should defo be a section".
+
+**The honest answer first: no golden ratio.** The whole camera is five numbers, tuned by eye until it looked like the footage from the very first message (`CAM` in index.html):
+`pos: 0.30 m left of centre, 0.95 m up, 0.20 m back · looks 7° right, 9° down · tilted 3° · field of view 92°`
+
+**The happy accident, worth a graphic:**
+- Tipping the camera 9° down puts the horizon about 40% of the way down the screen, in the thirds/golden-section band.
+- In the tunnel shot the vanishing point sits about 64% across, near 0.618. That is mostly the tunnel bending right; on a straight it sits near the middle.
+- So nobody designed it with the golden ratio. Tuning by eye wandered into the same zone painters use. That makes a good on-screen reveal: draw the golden spiral over the frame, and it nearly fits.
+
+**Why it reads as speed (one point per beat):**
+1. **The eye is low.** At 0.95 m the camera is lower than your eyes in an ordinary car, nearly at helmet height in a single-seater. How fast the road seems to stream past depends on speed divided by eye height. So the same 180 km/h looks faster here than from a road car, and much faster than from a TV camera on a pole.
+2. **The lens is very wide.** 92° is the vertical field of view, about 120° across a 16:9 screen, roughly GoPro wide. Wide lenses stretch the edges, so walls, barriers and tunnel lights speed up and smear as they reach the sides. Peripheral vision is what judges speed, and this angle fills it with movement.
+3. **Fixed things up close.** The tyre, suspension arms, mirror and helmet never move in frame, while everything behind them rushes past. The brain reads speed from that contrast. It ties in with the v86 fix: the floating tyre bothered James because the tyre is the thing that ties the car to the road.
+4. **Repeating patterns.** Tunnel lights, kerb stripes and armco posts pass at a steady beat, and how often they flick by tells you your speed. The tunnel works so well because its lights do that and also all point into the vanishing point.
+5. **Off-centre and tilted.** Sitting behind and to the left of the helmet, slightly tilted, frames the shot like a camera mounted on the car rather than a player's eyes. The 3° tilt is a mild Dutch angle, which adds unease and energy.
+6. **Effects that grow with speed.** The blur streaks outward from the vanishing point: gentle at town speeds, heavy near top speed (`blur = 0.03·s + 0.3·s^2.2`). Add shake from the road surface and kerbs, plus the tape smear and ghosting. All of them grow with speed, so you feel it before you read the number on screen.
+
+**The line to land it:** it wasn't designed with a formula. It copies the low, wide, off-centre spot where 90s teams bolted their onboard cameras, which is the one place on a car where speed looks its most frightening.
+
+**Shots to get for this section:**
+- The same stretch with the camera at 0.95 m and at 1.7 m (head height).
+- FOV 92 against FOV 60 (road and walls suddenly look slow).
+- The golden-section overlay on the tunnel frame.
+- Blur on and off at 280 km/h.
+- The tyre-and-helmet frame held still while the world streams past.
+`G.CAM` is live in the page, so all of these can be captured with the recorder.
