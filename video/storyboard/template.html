@@ -1,0 +1,169 @@
+<title>Golden Lap Storyboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Permanent+Marker&display=swap">
+<style>
+/* Layout: a film board. Header question, the loop map along the running time, then frames in running order, then the decisions. One dark world: the tape and the helmet's colours. */
+:root {
+  --bg: #140d09; --panel: #1f1510; --line: #3a2a1f; --fg: #f3e6c8; --mute: #b5a58a;
+  --orange: #e2562b; --mustard: #f0b53a; --teal: #2f9b96; --brown: #5e2414; --marker: #e0412a;
+  --display: 'Archivo Black', 'Arial Black', Impact, sans-serif; --body: Inter, system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace; --hand: 'Permanent Marker', 'Comic Sans MS', cursive;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 80px; }
+.eyebrow { font: 700 12px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mustard); }
+header h1 { font-family: var(--display); font-weight: 400; font-size: clamp(34px, 6.4vw, 76px); line-height: .98; letter-spacing: -.01em; margin: 14px 0 0; text-wrap: balance; transform: skewX(-6deg); transform-origin: left; }
+header h1 .scrawl { position: relative; white-space: nowrap; }
+header h1 .scrawl::after { content: ""; position: absolute; left: -2%; right: -2%; bottom: -.08em; height: .14em; background: var(--marker); border-radius: 40% 60% 50% 50%; transform: rotate(-1.5deg); opacity: .9; }
+.stripes { display: grid; gap: 0; margin: 26px 0 22px; }
+.stripes i { display: block; height: 7px; }
+.meta { display: flex; flex-wrap: wrap; gap: 10px 28px; font: 500 13px var(--mono); color: var(--mute); }
+.meta b { color: var(--fg); font-weight: 700; }
+.lede { max-width: 66ch; color: var(--fg); font-size: 17px; margin: 18px 0 0; }
+section { margin-top: 56px; }
+h2 { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .01em; margin: 0 0 6px; }
+.sub { color: var(--mute); margin: 0 0 20px; max-width: 70ch; }
+/* loop map */
+.map { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px 16px 10px; }
+.map svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; font-size: 13px; color: var(--mute); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
+/* rules */
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.rule { border-top: 3px solid var(--orange); padding-top: 12px; }
+.rule:nth-child(2) { border-color: var(--mustard); } .rule:nth-child(3) { border-color: var(--teal); } .rule:nth-child(4) { border-color: var(--fg); }
+.rule b { display: block; font-size: 16px; margin-bottom: 4px; }
+.rule p { margin: 0; color: var(--mute); font-size: 14px; }
+/* panels */
+.board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 820px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.panel.k-loop { border-color: var(--marker); }
+.frame { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: #000; }
+.frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.panel.k-box .frame { outline: 3px solid var(--mustard); outline-offset: -3px; }
+.tc, .clk { position: absolute; font: 700 12px/1 var(--mono); padding: 6px 8px; border-radius: 4px; background: rgba(10, 6, 4, .78); }
+.tc { left: 10px; top: 10px; color: var(--fg); }
+.clk { right: 10px; top: 10px; color: var(--marker); letter-spacing: .06em; }
+.clk::before { content: "CLOCK "; color: var(--mute); }
+.tcard { position: absolute; inset: 0; background: #1c110b; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 6px; padding: 16px; }
+.tcard .tl { font-family: var(--hand); color: var(--mustard); font-size: clamp(14px, 2.2vw, 20px); }
+.tcard .th { font-family: var(--display); font-size: clamp(20px, 3.4vw, 34px); line-height: 1.05; color: var(--fg); text-shadow: 3px 3px 0 var(--orange); }
+.tcard .tw { font-size: clamp(12px, 1.7vw, 16px); color: var(--fg); }
+.tcard .tn { font: 700 clamp(11px, 1.4vw, 13px) var(--mono); letter-spacing: .2em; color: var(--mute); text-transform: uppercase; margin-top: 4px; }
+.lg { display: inline-block; vertical-align: -2px; }
+.lg.c { color: #d97757; font-size: 1.15em; line-height: 1; }
+.lg.s { width: .9em; height: .9em; background: #3ddc84; border-radius: 3px; }
+.body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 700 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--mute); text-decoration: none; }
+.chip.k-hook { background: var(--orange); border-color: var(--orange); color: #1c110b; }
+.chip.k-story { background: transparent; color: var(--fg); }
+.chip.k-box { background: var(--mustard); border-color: var(--mustard); color: #1c110b; }
+.chip.k-action { background: var(--teal); border-color: var(--teal); color: #08201f; }
+.chip.k-loop, .chip.lp { background: transparent; border-color: var(--marker); color: var(--marker); }
+.chip.dc:hover, .chip.dc:focus-visible { color: var(--fg); border-color: var(--fg); outline: none; }
+h3 { margin: 0; font-size: 19px; line-height: 1.25; text-wrap: balance; }
+h3 .n { font: 700 13px var(--mono); color: var(--mute); margin-right: 10px; }
+dl { margin: 0; display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 8px 12px; }
+dt { font: 700 11px/1.9 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+dd { margin: 0; font-size: 14px; }
+dd.vo { font-style: italic; color: var(--fg); border-left: 2px solid var(--orange); padding-left: 10px; }
+@media (max-width: 460px) { dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } dd { margin-bottom: 8px; } }
+/* decisions */
+.decs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 28px; }
+.decs li { display: flex; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); scroll-margin-top: 20px; }
+.decs li:target { background: rgba(240, 181, 58, .08); }
+.dn { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--orange); color: #1c110b; font: 700 14px/34px var(--mono); text-align: center; }
+.decs .dt { font: 700 11px var(--mono); letter-spacing: .12em; color: var(--mustard); }
+.decs b { display: block; font-size: 15px; margin: 2px 0 2px; }
+.decs p { margin: 0; color: var(--mute); font-size: 14px; }
+.shots { columns: 2 300px; column-gap: 32px; padding-left: 18px; margin: 0; }
+.shots li { margin: 0 0 8px; break-inside: avoid; }
+.shots em { color: var(--mustard); font-style: normal; font-weight: 600; }
+a { color: var(--mustard); }
+@media (prefers-reduced-motion: no-preference) { .panel { transition: border-color .2s; } .panel:hover { border-color: var(--mute); } }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">This Little Thing · film storyboard · Golden Lap</div>
+  <h1>Can I build a pro F1 game <span class="scrawl">in one day?</span></h1>
+  <div class="stripes"><i style="background:#5e2414"></i><i style="background:#e2562b"></i><i style="background:#f0b53a"></i><i style="background:#f3e6c8"></i><i style="background:#2f9b96"></i></div>
+  <div class="meta"><span>Runtime <b>{{RUNTIME}}</b></span><span>Panels <b>19</b></span><span>Black-box sections <b>6</b></span><span>Key decisions <b>12</b></span><span>Day one <b>Tue 17:05 → Wed 17:05</b></span></div>
+  <p class="lede">The story is the clock. It opens on the trailer, asks the one-day question with 24 hours on screen, and answers it when the clock runs out. Halfway through, a second question takes over: can I beat the computer's lap with my bare hands? In between, six times, we open the lid and show how it works inside, the way the Golden Hour Ride film did.</p>
+</header>
+
+<section>
+  <h2>The loops</h2>
+  <p class="sub">Every bar is a panel, in running order. Arcs are questions the film opens and later answers. Click a bar to jump to its panel.</p>
+  <div class="map"><svg id="map" viewBox="0 0 1000 210" role="img" aria-label="Running order with the three loops"></svg></div>
+  <div class="legend">
+    <span><i style="background:var(--orange)"></i>Hook</span><span><i style="background:var(--fg)"></i>Story</span><span><i style="background:var(--mustard)"></i>Inside the black box</span><span><i style="background:var(--teal)"></i>Action, no words</span><span><i style="background:var(--marker)"></i>Loop opens or closes</span>
+  </div>
+</section>
+
+<section>
+  <h2>Rules for the edit</h2>
+  <div class="rules">
+    <div class="rule"><b>Lean into the action</b><p>Every explanation plays over driving at full speed, never over a static slide. No more than about 30 seconds without a shot flat out with the engine up.</p></div>
+    <div class="rule"><b>The clock never leaves</b><p>From panel 2 to panel 16, a 24-hour countdown sits top right. Real times from the log appear as captions: 17:25 first frame, 17:39 online, 06:02 hands, 13:12 the one-minute lap.</p></div>
+    <div class="rule"><b>Open the black box</b><p>Six short sections show how it works inside, each in plain steps with real numbers. Same graphic each time: the frame drops into a box and the lid lifts.</p></div>
+    <div class="rule"><b>Name the decisions</b><p>Each key decision gets a numbered marker on screen the moment it is made, so the viewer sees the choices, not just the result.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>The board</h2>
+  <p class="sub">Stills are from footage that already exists, except where a panel says TO SHOOT. Voice lines are a first draft for you to say in your own words.</p>
+  <div class="board">
+{{CARDS}}
+  </div>
+</section>
+
+<section>
+  <h2>Key decisions</h2>
+  <p class="sub">The choices that made it work, with when they happened. Each one appears in the film where it is made.</p>
+  <ol class="decs">{{DECS}}</ol>
+</section>
+
+<section>
+  <h2>Still to shoot or make</h2>
+  <ul class="shots">
+    <li><em>You on camera</em> with the original YouTube Short on a screen beside you, pointing at the helmet, tyre and hands (panel 4). Keep the Short brief and credit it.</li>
+    <li><em>The chat</em>, the first question typed, as a screen recording (panel 4).</li>
+    <li><em>Your hands</em> steering on the webcam, with the game beside you (panels 12–13).</li>
+    <li><em>Title card</em>: the Golden Hour banner with the Claude and Spacefast logos (panel 3).</li>
+    <li><em>The black-box graphic</em>: frame drops into a box, lid lifts. Used six times.</li>
+    <li><em>Red-marker overlays</em> for the headline and the "not quite" strikes, in the thumbnail style.</li>
+    <li><em>Track drawing</em> from the real control points: dots, curve, tarmac, kerbs (panel 9). The first cut has it.</li>
+    <li><em>Engine pitch lines</em> for the sound section (panel 11).</li>
+    <li><em>Already shot</em>: trailer, filter off/on, all laps, camera comparisons and golden lines (video/raw/camera), the diagnostics screenshot.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+(() => {
+  const segs = {{SEGS}}, loops = {{LOOPS}}, T = {{TOTAL}}, svg = document.getElementById('map'), NS = 'http://www.w3.org/2000/svg';
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const col = { hook: css('--orange'), story: css('--fg'), box: css('--mustard'), action: css('--teal'), loop: css('--marker') };
+  const L = 20, R = 980, x = s => L + (R - L) * s / T, BAR = 150;
+  const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
+  // loops: arcs above the bar, lifted by depth
+  loops.forEach(([a, b, label, n]) => { const h = [0, 96, 58, 58][n], xa = x(a), xb = x(b);
+    el('path', { d: `M${xa},${BAR - 4} C${xa},${BAR - h} ${xb},${BAR - h} ${xb},${BAR - 4}`, fill: 'none', stroke: col.loop, 'stroke-width': n === 1 ? 3 : 2, 'stroke-dasharray': n === 3 ? '6 5' : 'none' });
+    for (const [xx, open] of [[xa, true], [xb, false]]) el('circle', { cx: xx, cy: BAR - 4, r: 4.5, fill: open ? col.loop : css('--panel'), stroke: col.loop, 'stroke-width': 2 });
+    const t = el('text', { x: (xa + xb) / 2, y: BAR - h * 0.75 - 6, 'text-anchor': 'middle', fill: col.loop, 'font-family': css('--mono'), 'font-size': 12, 'font-weight': 700 }); t.textContent = label; });
+  // segments
+  segs.forEach(([s, d, k, n]) => { const a = el('a', { href: '#p' + n });
+    const r = el('rect', { x: x(s) + 0.6, y: BAR, width: Math.max(2, x(s + d) - x(s) - 1.2), height: 22, rx: 2, fill: col[k] }, a);
+    const ti = el('title', {}, r); ti.textContent = 'Panel ' + n; });
+  // minute ticks
+  for (let m = 0; m * 60 <= T; m++) { el('line', { x1: x(m * 60), x2: x(m * 60), y1: BAR + 26, y2: BAR + 32, stroke: css('--mute') });
+    const t = el('text', { x: x(m * 60), y: BAR + 48, 'text-anchor': 'middle', fill: css('--mute'), 'font-family': css('--mono'), 'font-size': 11 }); t.textContent = m + ':00'; }
+})();
+</script>

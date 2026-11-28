@@ -1176,3 +1176,17 @@ Recorded from a temporary copy of the game that exposed the blur setting, then d
 James: "not sure about the banner idea - we cant really read it, so at this point im minded to remove it". It never went live. The mockup page (`index-mock.html`) and the recorder's mockup switch are gone, and so is the backup of the pre-banner clips (old takes, from before the Eau Rouge fix). The footbridge on the climb stays plain blue.
 
 Kept as film material, as a small "idea that didn't make it" beat: the mockups in `video/raw/spacefast/`, and `golden-lap-trailer-soon-spacefast.mp4`, where the bridge goes by as a blur in about a second. That blur is the reason it was cut: at 280 km/h on tape, a sponsor board can't be read.
+
+## The film's storyboard (28 Nov)
+James: "could you do a storyboard of the youtube film we are going to make", with these notes: the hook is the trailer; "the concept is - can i build a pro f1 game in 1 day, thats the story"; like the Golden Hour film, "show inside the black box"; "the key decisions we made"; the title card is the Golden Hour one plus Claude and Spacefast; "hook, and a loop that we close later, and maybe we open another loop mid way through"; "the action is incredible, so we should really lean into that"; the golden-ratio question ("why is the video so watchable"); and the original YouTube Short in the film, with James on camera pointing at it.
+
+Published as an artifact: https://claude.ai/artifact/TUc9omryf1dx8JgmhwJ8Te (source: `video/storyboard/`, built by `build.py` from `template.html` and `stills/`).
+- **Shape:** 19 panels, about 7:24.
+  - Hook: the trailer.
+  - Loop 1, opened at 0:20 with a 24-hour clock on screen: can I build it in one day? It closes when the clock hits zero at Wed 17:05.
+  - Loop 2, opened at the midpoint (Wed 06:02, hands): can I beat the computer's lap with my bare hands? It closes at 0:53.513.
+  - A small loop 3, "then a stranger played it, and it broke", carries the black-box story into the days after, then the payoff and the link.
+- **Six "inside the black box" sections:** the look, why it's so watchable (the camera science and golden lines), the circuit, the sound, the hands, and the literal black box.
+- **Rules:** every explanation plays over full-speed driving, with no more than about 30 s between flat-out shots; the clock stays on screen; each decision gets a numbered marker.
+- **Twelve key decisions**, with times, listed on the page.
+- **Day one checks out against the log:** first frame 17:25 (20 min), online 17:39 (34 min), hands 06:08, 1:00.340 at 13:12, 0:53.513 after the corners were opened (v31, 13:49), challenge links 16:36. All inside 24 hours.
